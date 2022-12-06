@@ -18,7 +18,11 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
+            'full_name' => fake()->name(),
+            'avatar' => fake()->imageUrl,
+            'about' => fake()->sentence(10),
+            'website' => fake()->url(),
+            'role_id' => 1,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
