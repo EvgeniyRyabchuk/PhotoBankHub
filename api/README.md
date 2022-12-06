@@ -150,6 +150,8 @@ Change property in file .env from local on public
 
 ``` FILESYSTEM_DISK=public ```
 
+``` php artisan storage:link ```
+
 Add to filesystem config file 
 
 ```php 

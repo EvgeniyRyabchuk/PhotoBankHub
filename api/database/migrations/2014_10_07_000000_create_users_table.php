@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('full_name', 300);
             $table->string('avatar', 4096);
 
-            $table->string('about', 3000);
-            $table->string('website', 255);
+            $table->string('about', 3000)->nullable();
+            $table->string('website', 255)->nullable();
 
             $table->foreignId('phone_id')
                 ->nullable()

@@ -10,14 +10,16 @@ class AuthController extends Controller
 {
 
     public function register(Request $request) {
-        $name = $request->name;
+        $full_name = $request->full_name;
         $email = $request->email;
         $password = $request->password;
 
         $user = User::create([
-            'name' => $name,
+            'full_name' => $full_name,
             'email' => $email,
             'password' => \Illuminate\Support\Facades\Hash::make($password),
+            'avatar' => '/',
+            'role_id' => 1
         ]);
 
         return response()->json("OK");
