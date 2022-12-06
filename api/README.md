@@ -1,66 +1,172 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+### Install Laravel 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. Если проект только что устнолен 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+``` composer create-project laravel/laravel api ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+``` php artisan migrate:refresh --seed ```
 
-## Learning Laravel
+``` php artisan serve ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. Если проект скачанный с гитхаба
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+create .env file if not exist and fill such property like DB_CONNECTION
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+``` composer i ```
 
-## Laravel Sponsors
+``` php artisan key:generate```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+``` php artisan migrate:refresh --seed ```
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
 
-## Contributing
+### Passport Authorization Installation 
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Install passport 
 
-## Code of Conduct
+``` composer require laravel/passport ``` 
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. Migrate table from this package  
 
-## Security Vulnerabilities
+``` php artisan migrate ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3. Creating public & private access key and two oauth clients 
 
-## License
+``` php artisan passport:install ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+4. Creating public & private access key 
+
+``` php artisan passport:keys ```
+
+5. Create one oauth client for retrieve someone user 
+
+``` php artisan passport:client --password ``` 
+
+5. Move passport config file to laravel config folder 
+
+``` php artisan vendor:publish --tag=passport-config ```
+
+5. Move passport migration file to laravel migration folder
+
+``` php artisan vendor:publish --tag=passport-migrations ```
+
+
+#### Code edit for passport
+
+add: 
+
+use Laravel\Passport\HasApiTokens; 
+
+and 
+
+use HasApiTokens; 
+
+in User Model 
+
+
+Create AuthController with command 
+
+``` php artisan make:controller AuthController ```
+
+Seed Static Oauth Clients for handy development 
+
+``` php artisan make:model OauthClient ```
+
+```php 
+        $client1 = [
+            'id' => 1,
+            'user_id' => null,
+            'name' => "Laravel Personal Access Client",
+            "secret" => "yygu0hUlhcDJttOCsiHhkButCEjEp0rLq6rUrWdP",
+            "provider" => null,
+            "redirect" => "http://localhost",
+            "personal_access_client" => true,
+            "password_client" => false,
+            "revoked" => false,
+            "updated_at" => Carbon::now(),
+            'created_at' => Carbon::now()
+        ];
+
+        $client2 = [
+            'id' => 2,
+            'user_id' => null,
+            'name' => "Laravel Password Grant Client",
+            "secret" => "2zM8Ny0Usfu3LgchNakjVZjwKY8PpTtejZFBwssz",
+            "provider" => "users",
+            "redirect" => "http://localhost",
+            "personal_access_client" => false,
+            "password_client" => true,
+            "revoked" => false,
+            "updated_at" => Carbon::now(),
+            'created_at' => Carbon::now()
+        ];
+
+
+        OauthClient::insert([
+            $client1,
+            $client2
+        ]);
+        
+```
+
+``` php artisan migrate:refresh --seed ```
+
+---
+
+Then in AuthServiceProvider in method boot insert next: 
+
+Passport::tokensExpireIn(now()->addDays(15)); 
+
+Passport::refreshTokensExpireIn(now()->addDays(30));
+
+Passport::personalAccessTokensExpireIn(now()->addMonths(6));
+
+Passport::ignoreCsrfToken(true);
+
+---  
+
+Then config file that named as auth.php must include this arrya 
+
+```php 
+
+ 'guards' => [
+        'web' => [
+            'driver' => 'session', 
+            'provider' => 'users',
+        ],
+        'api' => [
+            'driver' => 'passport', 
+            'provider' => 'users', 
+        ],
+    ],
+
+```
+
+--- 
+
+Change property in file .env from local on public 
+
+``` FILESYSTEM_DISK=public ```
+
+Add to filesystem config file 
+
+```php 
+
+'private' => [
+        'driver' => 'local',
+        'root' => storage_path('app/private'),
+        'url' => env('APP_URL').'/storage/private/',
+        'visibility' => 'private',
+        'throw' => false,
+    ],
+
+```
+
+
+
+
+
+
+
