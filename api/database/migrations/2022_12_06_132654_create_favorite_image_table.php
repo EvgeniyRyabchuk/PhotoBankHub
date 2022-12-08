@@ -13,9 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tags', function (Blueprint $table) {
+        Schema::create('favorite_image', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 300);
+
+            $table->foreignId('image_id')->constrained('images')
+                ->onUpdate('cascade')->onDelete('cascade');
+
+            $table->foreignId('favorite_id')->constrained('favorites')
+                ->onUpdate('cascade')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -27,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tags');
+        Schema::dropIfExists('favorite_image');
     }
 };

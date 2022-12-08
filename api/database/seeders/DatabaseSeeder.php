@@ -7,13 +7,17 @@ use App\Models\Category;
 use App\Models\Client;
 use App\Models\Collection;
 use App\Models\Creator;
+use App\Models\Favorite;
 use App\Models\Image;
 use App\Models\ImageVariant;
+use App\Models\Like;
 use App\Models\Model;
 use App\Models\OauthClient;
 use App\Models\PhotoModel;
 use App\Models\Role;
+use App\Models\Tag;
 use App\Models\User;
+use App\Models\View;
 use Carbon\Carbon;
 use Database\Factories\CollectionFactory;
 use Illuminate\Database\Seeder;
@@ -62,7 +66,20 @@ class DatabaseSeeder extends Seeder
 
         $this->call(SizeSeeder::class);
 
-        $this->call(ImageVariantSeeder::class);
+//        $this->call(ImageVariantSeeder::class);
+
+        Like::factory(100)->create();
+
+        View::factory(300)->create();
+
+        Tag::factory(50)->create();
+
+        $this->call(TagSeeder::class);
+
+        Favorite::factory(50)->create();
+
+        $this->call(FavoriteSeeder::class);
+
 
     }
 }

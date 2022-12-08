@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Tag extends Model
 {
     use HasFactory;
+
+    public function images() {
+        return $this->belongsToMany(Image::class);
+    }
 }

@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('favorites_images', function (Blueprint $table) {
+        Schema::create('image_tag', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('image_id')->constrained('images')
                 ->onUpdate('cascade')->onDelete('cascade');
 
-            $table->foreignId('favorite_id')->constrained('images')
+            $table->foreignId('tag_id')->constrained('tags')
                 ->onUpdate('cascade')->onDelete('cascade');
 
             $table->timestamps();
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('favorites_images');
+        Schema::dropIfExists('image_tag');
     }
 };

@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Favorite extends Model
 {
     use HasFactory;
+
+    public function images() {
+        return $this->belongsToMany(Image::class);
+    }
+
+    public function client() {
+        return $this->belongsTo(Client::class);
+    }
+
 }

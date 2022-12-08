@@ -11,4 +11,14 @@ class _Utills {
         $nextId = $statement[0]->Auto_increment;
         return $nextId;
     }
+
+    public static function getModelByTableName($tableName) {
+        $folderName = 'App\\Models';
+        $name =  $folderName . '\\' . Str::studly(strtolower(STR::singular($tableName)));
+
+        $clearStr = str_replace('"', "", $name);
+        $_class = new $clearStr();
+        return $_class;
+    }
+
 }
