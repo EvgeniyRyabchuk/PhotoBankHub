@@ -3,8 +3,18 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Category;
+use App\Models\Client;
+use App\Models\Collection;
+use App\Models\Creator;
+use App\Models\Image;
+use App\Models\Model;
 use App\Models\OauthClient;
+use App\Models\PhotoModel;
+use App\Models\Role;
+use App\Models\User;
 use Carbon\Carbon;
+use Database\Factories\CollectionFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,41 +26,38 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(OAuthClientSeeder::class);
+
         $this->call([RoleSeeder::class]);
-         \App\Models\User::factory(10)->create();
 
-        $client1 = [
-            'id' => 1,
-            'user_id' => null,
-            'name' => "Laravel Personal Access Client",
-            "secret" => "yygu0hUlhcDJttOCsiHhkButCEjEp0rLq6rUrWdP",
-            "provider" => null,
-            "redirect" => "http://localhost",
-            "personal_access_client" => true,
-            "password_client" => false,
-            "revoked" => false,
-            "updated_at" => Carbon::now(),
-            'created_at' => Carbon::now()
-        ];
+        $clientRole = Role::where('name', 'client')->first();
+        $creatorRole = Role::where('name', 'creator')->first();
+        $adminRole = Role::where('name', 'admin')->first();
 
-        $client2 = [
-            'id' => 2,
-            'user_id' => null,
-            'name' => "Laravel Password Grant Client",
-            "secret" => "2zM8Ny0Usfu3LgchNakjVZjwKY8PpTtejZFBwssz",
-            "provider" => "users",
-            "redirect" => "http://localhost",
-            "personal_access_client" => false,
-            "password_client" => true,
-            "revoked" => false,
-            "updated_at" => Carbon::now(),
-            'created_at' => Carbon::now()
-        ];
+        User::factory(50)->create()->each(function ($u) use($clientRole, $creatorRole) {
+            if($u->role->id === $clientRole->id) {
+                Client::create([ 'user_id' => $u->id ]);
+            } else if($u->role->id === $creatorRole->id) {
+                Creator::create([ 'user_id' => $u->id ]);
+            }
+        });
+
+        $this->call(StaticUserSeeder::class, false, ['roles' =>
+            compact('adminRole', 'clientRole',  'creatorRole')]
+        );
+
+        $this->call(ContentSubscriptionSeeder::class);
 
 
-        OauthClient::insert([
-            $client1,
-            $client2
-        ]);
+        PhotoModel::factory(50)->create();
+
+        $this->call(ImageOrientationSeeder::class);
+
+        Collection::factory(100)->create();
+
+        $this->call(CategorySeeder::class);
+
+        Image::factory(1)->create();
+
     }
 }

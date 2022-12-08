@@ -24,15 +24,16 @@ class ImageController extends Controller
         $image = Image::make($full_image_path);
         /* insert watermark at bottom-left corner with 5px offset */
 
-        $image->insert($waterMarkPath, 'bottom-left', 5, 5);
-        $image->insert($waterMarkPath, 'bottom-left', 500, 5);
-        $image->insert($waterMarkPath, 'bottom-left', 1000, 5);
-        $image->insert($waterMarkPath, 'bottom-left', 2000, 5);
+        $width = $image->width();
+        $height = $image->height();
+        $shift = 100;
 
-        $image->insert($waterMarkPath, 'top-left', 5, 300);
-        $image->insert($waterMarkPath, 'top-left', 500, 300);
-        $image->insert($waterMarkPath, 'top-left', 1000, 300);
-        $image->insert($waterMarkPath, 'top-left', 2000, 300);
+        for ($y = 0; $y < $height; $y = $y + 500) {
+            for ($x = 0; $x < $width; $x = $x + 500) {
+                $image->insert($waterMarkPath, 'top-left', $x + $shift, $y);
+            }
+            $shift = $shift * -1;
+        }
 
         $image->save($distPath);
 
@@ -47,7 +48,7 @@ class ImageController extends Controller
         }
 
         $imageWithWaterMarkPath =
-            $this->InsertWaterMark('1.png', 'static/watermark_item.png');
+            $this->InsertWaterMark('1.png', 'static/wm_small.png');
 
         return response()->download(
             $imageWithWaterMarkPath

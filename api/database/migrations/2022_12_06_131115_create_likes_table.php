@@ -19,6 +19,9 @@ return new class extends Migration
             $table->foreignId('image_id')->constrained('images')
                 ->onUpdate('cascade')->onDelete('cascade');
 
+            $table->foreignId('client_id')->constrained('clients')
+                ->onUpdate('cascade')->onDelete('cascade');
+
             $table->string('ip', 15);
 
             $table->timestamps();

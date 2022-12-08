@@ -20,7 +20,9 @@ return new class extends Migration
             $table->foreignId('image_orientation_id')->constrained('image_orientations')
                 ->onUpdate('cascade')->onDelete('cascade');
 
-            $table->foreignId('model_id')->constrained('models')
+            $table->foreignId('photo_model_id')
+                ->nullable()
+                ->constrained('photo_models')
                 ->onUpdate('cascade')->onDelete('cascade');
 
             $table->foreignId('category_id')->constrained('categories')
@@ -29,7 +31,9 @@ return new class extends Migration
             $table->foreignId('creator_id')->constrained('creators')
                 ->onUpdate('cascade')->onDelete('cascade');
 
-            $table->foreignId('collection_id')->constrained('creators')
+            $table->foreignId('collection_id')
+                ->nullable()
+                ->constrained('collections')
                 ->onUpdate('cascade')->onDelete('cascade');
 
             $table->boolean('isEditorsChoice')->default(false);
@@ -39,12 +43,6 @@ return new class extends Migration
             $table->string('preview', 4096);
 
             $table->unsignedTinyInteger('people_count')->default(0);
-
-
-
-
-
-
 
 
             $table->timestamps();
@@ -58,6 +56,15 @@ return new class extends Migration
      */
     public function down()
     {
+
+//        $allData = \App\Models\Image::all();
+//
+//        foreach ($allData as $image) {
+//
+//        }
+
         Schema::dropIfExists('images');
+
+
     }
 };

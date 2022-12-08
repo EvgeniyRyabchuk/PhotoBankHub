@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Creator extends Model
 {
     use HasFactory;
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function collections() {
+        return $this->hasMany(Collection::class);
+    }
 }

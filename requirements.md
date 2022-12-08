@@ -154,6 +154,22 @@ https://masoudjahromi.medium.com/easy-way-to-add-watermark-on-images-in-laravel-
     - люди 
     - животные 
 
+    - абстракция 
+    - Графика. Веб-дизайн 
+    - Предметы 
+    - технологии 
+    - машины 
+    - еда 
+    - семья 
+    - путешествия 
+    - природа 
+    - люди 
+    - Редакционные 
+    - Искусство/архитектура
+    - Промышленность
+
+
+
 7. Форматы: 
 
     XS = rounde(original / 17)
@@ -172,7 +188,7 @@ https://masoudjahromi.medium.com/easy-way-to-add-watermark-on-images-in-laravel-
 
     - Original (Raw or Tiff) (originalWidth x originalHeight)
 
-
+8. Image QR-Code 
 
 
 

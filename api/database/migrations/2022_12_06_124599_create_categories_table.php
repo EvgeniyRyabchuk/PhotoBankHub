@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name', 300);
             $table->string('preview', 4096);
-            $table->unsignedTinyInteger('level')->default(0);
+            $table->unsignedSmallInteger('parent_id')->nullable();
+            $table->boolean('isChildExist')->default(false);
             $table->timestamps();
         });
     }

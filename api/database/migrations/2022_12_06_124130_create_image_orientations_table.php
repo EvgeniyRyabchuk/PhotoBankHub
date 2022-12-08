@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('image_orientations', function (Blueprint $table) {
             $table->id();
             $table->string('name', 300);
-            $table->unsignedDecimal('ratio_side_1', 2, 2);
-            $table->unsignedDecimal('ratio_side_2', 2, 2);
+            $table->unsignedDecimal('ratio_side_1', 4);
+            $table->unsignedDecimal('ratio_side_2', 4);
             $table->timestamps();
         });
     }
