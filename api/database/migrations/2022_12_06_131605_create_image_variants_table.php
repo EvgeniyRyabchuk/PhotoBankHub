@@ -25,7 +25,7 @@ return new class extends Migration
 
             $table->string('extension', 255);
 
-            $table->unsignedBigInteger('weights');
+            $table->unsignedBigInteger('size_in_byte');
             $table->unsignedInteger('width');
             $table->unsignedInteger('height');
 

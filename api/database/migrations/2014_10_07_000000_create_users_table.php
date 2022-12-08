@@ -56,7 +56,7 @@ return new class extends Migration
     {
         $d1 = Storage::disk('public')->deleteDirectory('users');
         $d2 = Storage::disk('private')->deleteDirectory('users');
-        
+
         Schema::dropIfExists('users');
     }
 };

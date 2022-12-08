@@ -8,6 +8,7 @@ use App\Models\Client;
 use App\Models\Collection;
 use App\Models\Creator;
 use App\Models\Image;
+use App\Models\ImageVariant;
 use App\Models\Model;
 use App\Models\OauthClient;
 use App\Models\PhotoModel;
@@ -58,6 +59,10 @@ class DatabaseSeeder extends Seeder
         $this->call(CategorySeeder::class);
 
         Image::factory(1)->create();
+
+        $this->call(SizeSeeder::class);
+
+        $this->call(ImageVariantSeeder::class);
 
     }
 }

@@ -41,6 +41,8 @@ return new class extends Migration
             $table->boolean('isFree')->default(false);
 
             $table->string('preview', 4096);
+            $table->string('original', 4096);
+            $table->string('originalExt', 255);
 
             $table->unsignedTinyInteger('people_count')->default(0);
 
@@ -56,15 +58,6 @@ return new class extends Migration
      */
     public function down()
     {
-
-//        $allData = \App\Models\Image::all();
-//
-//        foreach ($allData as $image) {
-//
-//        }
-
         Schema::dropIfExists('images');
-
-
     }
 };

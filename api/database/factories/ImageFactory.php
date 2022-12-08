@@ -71,7 +71,6 @@ class ImageFactory extends Factory
         $image->save($distPath);
         $resultImg = $image;
 
-
         // generating preview image based on original
         $image->resize($width / $previewDivide, $height / $previewDivide);
         $image->encode('jpeg', '70');
@@ -82,11 +81,20 @@ class ImageFactory extends Factory
         $distPath = Storage::disk('public')->path("$distPreviewLocation/$distPreviewName");
         $image->save($distPath);
 
-        return [
-            'resultImg' => $resultImg,
-            'relativeResultImgPath' => $distResLocation . $distResName,
-            'previewPath' => $distPreviewLocation . $distPreviewName
-        ];
+
+        $relativeResultImgPath = $distResLocation . '/' . $distResName;
+        $previewPath = $distPreviewLocation .  '/' . $distPreviewName;
+
+        $resExt = pathinfo($relativeResultImgPath, PATHINFO_EXTENSION);
+        $previewExt = pathinfo($previewPath, PATHINFO_EXTENSION);
+
+        return compact(
+            'resultImg',
+            'relativeResultImgPath',
+            'previewPath',
+            'resExt',
+            'previewExt'
+        );
     }
 
     public function definition()
@@ -121,7 +129,12 @@ class ImageFactory extends Factory
             'collection_id' => $randCreatorCollection->id,
             'isEditorsChoice' => false,
             'isFree' => false,
+
             'preview' => $resultImgData['previewPath'],
+
+            'original' =>  $resultImgData['relativeResultImgPath'],
+            'originalExt' =>  $resultImgData['resExt'],
+
             'people_count' => rand(0, 5)
         ];
     }

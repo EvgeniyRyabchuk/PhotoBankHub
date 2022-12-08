@@ -9,6 +9,9 @@ class Image extends Model
 {
     use HasFactory;
 
+    public function creator() {
+        return $this->belongsTo(Creator::class);
+    }
 
     public function photoModel() {
         return $this->belongsTo(PhotoModel::class);

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('sizes', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 5);
+            $table->string('name', 100);
             $table->unsignedTinyInteger('min_access_level')->default(1);
             $table->unsignedTinyInteger('division_factor')->default(1);
             $table->timestamps();
