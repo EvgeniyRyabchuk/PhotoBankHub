@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('city', 189);
             $table->string('street');
             $table->string('companyName', 300);
-            $table->unsignedSmallInteger('zipCode');
+            $table->unsignedInteger('zipCode');
             $table->string('phone_number', 15);
 
             $table->timestamps();

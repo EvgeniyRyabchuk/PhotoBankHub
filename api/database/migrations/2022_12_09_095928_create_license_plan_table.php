@@ -13,9 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('plan_features', function (Blueprint $table) {
+        Schema::create('license_plan', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 300);
+
+            $table->foreignId('plan_id')->constrained('plans')
+                ->onUpdate('cascade')->onDelete('cascade');
+
+            $table->foreignId('license_id')->constrained('licenses')
+                ->onUpdate('cascade')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -27,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plan_features');
+        Schema::dropIfExists('license_plan');
     }
 };

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 300);
             $table->string('description', 1000);
+            $table->boolean('isStandard')->default(true);
             $table->timestamps();
         });
     }

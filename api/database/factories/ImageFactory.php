@@ -9,9 +9,12 @@ use App\Models\Creator;
 use App\Models\ImageOrientation;
 use App\Models\PhotoModel;
 use Carbon\Carbon;
+use Faker\Core\File;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Storage;
+use Imagick;
 use Intervention\Image\Facades\Image;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Image>

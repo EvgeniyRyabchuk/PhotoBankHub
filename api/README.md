@@ -168,7 +168,19 @@ Add to filesystem config file
 
 
 
+### Schedule set up 
 
+
+1. Show list of task 
+```php artisan schedule:list``` 
+
+2. Run All Tasks Instant 
+
+```php artisan schedule:run```
+
+3. Run process of listening tasks 
+
+```php artisan schedule:work```
 
 
 

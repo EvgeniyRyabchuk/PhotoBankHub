@@ -187,6 +187,7 @@ return [
          */
 
         Intervention\Image\ImageServiceProvider::class,
+//        LaravelQRCode\Providers\QRCodeServiceProvider::class,
 
 
         /*
@@ -213,7 +214,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
-        'Image' => Intervention\Image\Facades\Image::class
+        'Image' => Intervention\Image\Facades\Image::class,
+//        'QRCode' => LaravelQRCode\Facades\QRCode::class,
     ])->toArray(),
 
 ];

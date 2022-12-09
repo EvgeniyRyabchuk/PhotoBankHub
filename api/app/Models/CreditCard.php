@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class CreditCard extends Model
 {
     use HasFactory;
+
+    public function client() {
+        return $this->belongsTo(Client::class);
+    }
 }

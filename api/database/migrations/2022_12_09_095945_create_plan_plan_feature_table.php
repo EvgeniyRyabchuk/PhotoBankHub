@@ -13,9 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('plan_features', function (Blueprint $table) {
+        Schema::create('plan_plan_feature', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 300);
+
+            $table->foreignId('plan_id')->constrained('plans')
+                ->onUpdate('cascade')->onDelete('cascade');
+
+            $table->foreignId('plan_feature_id')->constrained('plan_features')
+                ->onUpdate('cascade')->onDelete('cascade');
+
+
             $table->timestamps();
         });
     }
@@ -27,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plan_features');
+        Schema::dropIfExists('plan_plan_feature');
     }
 };

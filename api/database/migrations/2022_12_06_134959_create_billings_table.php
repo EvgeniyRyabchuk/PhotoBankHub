@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('plan_id')->constrained('plans')
                 ->onUpdate('cascade')->onDelete('cascade');
 
-            $table->foreignId('billing_status_id')->constrained('billing_statuses')
+            $table->foreignId('bill_status_id')->constrained('bill_statuses')
                 ->onUpdate('cascade')->onDelete('cascade');
 
             $table->foreignId('billing_info_id')->constrained('billing_infos')
@@ -28,9 +28,13 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained('clients')
                 ->onUpdate('cascade')->onDelete('cascade');
 
-            $table->unsignedSmallInteger('last_card_numbers');
+            $table->unsignedSmallInteger('last_card_number')
+                ->nullable();
 
-            $table->string('issuer', 300);
+            $table->string('valid_period_type')
+                ->default('monthly'); // monthly or annually
+
+            $table->string('issuer', 300)->nullable();
             $table->timestamps();
         });
     }

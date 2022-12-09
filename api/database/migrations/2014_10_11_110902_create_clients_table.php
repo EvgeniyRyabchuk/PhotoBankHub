@@ -21,9 +21,21 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
+            $table->foreignId('billing_info_id')
+                ->nullable()
+                ->constrained('billing_infos')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreignId('plan_id')
+                ->nullable()
+                ->constrained('plans')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->dateTime('plan_expired_at')->nullable();
 
-            $table->unsignedBigInteger('left_image_count')->default(0); 
+            $table->unsignedBigInteger('left_image_count')->default(0);
 
             $table->timestamps();
         });
