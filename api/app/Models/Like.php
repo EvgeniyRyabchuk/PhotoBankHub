@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Like extends Model
 {
     use HasFactory;
+
+    public function image() {
+        return $this->belongsTo(Image::class);
+    }
+
+    public function client() {
+        return $this->belongsTo(Client::class);
+    }
+
+
 }

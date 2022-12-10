@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class View extends Model
 {
     use HasFactory;
+
+    public function image() {
+        return $this->belongsTo(Image::class);
+    }
+
 }

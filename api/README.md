@@ -183,4 +183,22 @@ Add to filesystem config file
 ```php artisan schedule:work```
 
 
+### Queue for jobs 
+
+1. Installation 
+
+``` php artisan queue:table ```
+
+``` php artisan migrate ```
+
+`QUEUE_CONNECTION=database `
+
+
+2. Run ones 
+
+``` php artisan queue:work --queue=high,default ```
+
+3. Run process 
+
+``` php artisan queue:listen ```
 

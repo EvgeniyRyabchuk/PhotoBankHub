@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class ImageVariant extends Model
 {
     use HasFactory;
+
+    public function image() {
+        return $this->belongsTo(Image::class);
+    }
+
+    public function size() {
+        return $this->belongsTo(Size::class);
+    }
 }

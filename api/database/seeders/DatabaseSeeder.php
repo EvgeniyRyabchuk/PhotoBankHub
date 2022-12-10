@@ -74,7 +74,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(SizeSeeder::class);
 
-//        $this->call(ImageVariantSeeder::class);
+        $this->call(ImageVariantSeeder::class);
 
         Like::factory(100)->create();
 
@@ -138,6 +138,8 @@ class DatabaseSeeder extends Seeder
        }
 
         Download::factory(10)->create();
+
+
 
     }
 }

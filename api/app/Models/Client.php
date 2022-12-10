@@ -31,4 +31,10 @@ class Client extends Model
             'client_id', 'creator_id');
     }
 
+    public function billing() {
+        return $this->hasMany(Billing::class);
+    }
+
+
+
 }

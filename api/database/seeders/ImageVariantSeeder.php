@@ -45,7 +45,7 @@ class ImageVariantSeeder extends Seeder
 
                     $timestamp = Carbon::now()->timestamp;
                     $imgName = $image->id.'_'.$timestamp.'_'."$size->name.$ext";
-                    $location = "/users/$userId/images/$image->id";
+                    $location = "/images/$image->id";
                     Storage::disk('private')->makeDirectory($location);
                     $path =  Storage::disk('private')->path($location . '/' . $imgName);
 

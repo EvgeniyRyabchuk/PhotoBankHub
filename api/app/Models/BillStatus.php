@@ -9,5 +9,7 @@ class BillStatus extends Model
 {
     use HasFactory;
 
-
+    public function billing() {
+        return $this->hasMany(Billing::class);
+    }
 }

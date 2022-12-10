@@ -17,5 +17,12 @@ class Plan extends Model
         return $this->belongsToMany(License::class);
     }
 
+    public function clients() {
+        return $this->hasMany(Client::class);
+    }
+
+    public function billing() {
+        return $this->hasMany(BillStatus::class);
+    }
 
 }

@@ -13,4 +13,8 @@ class BillingInfo extends Model
         return $this->hasOne(Client::class);
     }
 
+    public function billing() {
+        return $this->hasMany(Billing::class);
+    }
+
 }

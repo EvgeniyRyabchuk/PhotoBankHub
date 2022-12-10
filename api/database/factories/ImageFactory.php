@@ -68,7 +68,7 @@ class ImageFactory extends Factory
 
         // generating original image
         $distResName = $getFileName . "_" . Carbon::now()->timestamp . '.png';
-        $distResLocation = "/users/$creator->user_id/images/generated";
+        $distResLocation = "/images/$imgId/generated";
         Storage::disk('private')->makeDirectory($distResLocation);
         $distPath = Storage::disk('private')->path("$distResLocation/$distResName");
         $image->save($distPath);
@@ -79,7 +79,7 @@ class ImageFactory extends Factory
         $image->encode('jpeg', '70');
 
         $distPreviewName = "preview_" . $getFileName . "_" . Carbon::now()->timestamp . '.jpeg';
-        $distPreviewLocation = "/users/$creator->user_id/images/$imgId";
+        $distPreviewLocation = "/images/$imgId";
         Storage::disk('public')->makeDirectory($distPreviewLocation);
         $distPath = Storage::disk('public')->path("$distPreviewLocation/$distPreviewName");
         $image->save($distPath);

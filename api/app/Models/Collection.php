@@ -12,4 +12,8 @@ class Collection extends Model
     public function user() {
         return $this->belongsTo(Creator::class);
     }
+
+    public function images() {
+        return $this->hasMany(Image::class);
+    }
 }

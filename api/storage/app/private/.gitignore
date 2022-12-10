@@ -1,3 +1,4 @@
 *
 !.gitignore
-!static/
+!temp/
+!1.png

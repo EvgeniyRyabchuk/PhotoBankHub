@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class License extends Model
 {
     use HasFactory;
+
+    public function plans() {
+        return $this->belongsToMany(Plan::class);
+    }
 }

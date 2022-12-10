@@ -25,4 +25,16 @@ class Image extends Model
         return $this->belongsToMany(Favorite::class);
     }
 
+    public function collection() {
+        return $this->belongsTo(Collection::class);
+    }
+
+    public function imageOrientation() {
+        return $this->belongsTo(ImageOrientation::class);
+    }
+
+    public function category() {
+        return $this->belongsTo(Category::class);
+    }
+
 }
