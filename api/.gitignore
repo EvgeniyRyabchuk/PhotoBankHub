@@ -17,9 +17,3 @@ yarn-error.log
 /.idea
 /.vscode
 
-storage/app/private/images
-storage/app/public/images
-
-!storage/app/private/temp
-!storage/app/private/1.png
-!storage/app/public/static
