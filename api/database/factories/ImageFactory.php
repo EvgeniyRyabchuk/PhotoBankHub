@@ -57,7 +57,7 @@ class ImageFactory extends Factory
             $image->text($line, $center_x, $y, function ($font) use ($font_size){
                 $font->file(public_path('Roboto/Roboto-Black.ttf'));
                 $font->size($font_size);
-                $font->color('#fdf6e3');
+                $font->color(fake()->hexColor);
                 $font->align('center');
                 $font->valign('top');
             });
@@ -68,7 +68,7 @@ class ImageFactory extends Factory
 
         // generating original image
         $distResName = $getFileName . "_" . Carbon::now()->timestamp . '.png';
-        $distResLocation = "/images/$imgId/generated";
+        $distResLocation = "/images/generated";
         Storage::disk('private')->makeDirectory($distResLocation);
         $distPath = Storage::disk('private')->path("$distResLocation/$distResName");
         $image->save($distPath);
@@ -115,7 +115,7 @@ class ImageFactory extends Factory
 
         $randCreatorCollection = $randCreator->collections->random();
 
-        $bgPath = '/static/placeholder_image.png';
+        $bgPath = '/static/2.jpg';
         $imgData = [
             'name' => $name,
             'creator' => $randCreator
@@ -130,8 +130,8 @@ class ImageFactory extends Factory
             'category_id' => $randCategory->id,
             'creator_id' => $randCreator->id,
             'collection_id' => $randCreatorCollection->id,
-            'isEditorsChoice' => false,
-            'isFree' => false,
+            'isEditorsChoice' => rand(0, 1),
+            'isFree' => rand(0, 1),
 
             'preview' => $resultImgData['previewPath'],
 

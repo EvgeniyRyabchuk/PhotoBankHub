@@ -36,15 +36,25 @@ return new class extends Migration
                 ->constrained('collections')
                 ->onUpdate('cascade')->onDelete('cascade');
 
+            $table->foreignId('image_load_status_id')
+                ->nullable()
+                ->constrained('image_load_statuses')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->boolean('isEditorsChoice')->default(false);
 
             $table->boolean('isFree')->default(false);
 
-            $table->string('preview', 4096);
-            $table->string('original', 4096);
+            $table->string('preview', 4096)
+                ->default('/static/gallery_preview.jpeg');
+            $table->string('original', 4096)
+                ->default('/static/gallery_preview.jpeg');
             $table->string('originalExt', 255);
+            $table->string('temp', 4096)->nullable();
 
             $table->unsignedTinyInteger('people_count')->default(0);
+
 
 
             $table->timestamps();

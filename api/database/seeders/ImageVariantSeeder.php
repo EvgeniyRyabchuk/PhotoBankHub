@@ -34,14 +34,15 @@ class ImageVariantSeeder extends Seeder
 
 
             foreach ($sizes as $size) {
+                $imageIntervention = Image::make($originalPath);
                 if($size->name === 'ORIGINAL') {
                     $ext = $image->originalExt;
                     $path = $image->original;
                     $size_in_byte = File::size(storage_path("app/private/$path"));
                 } else {
                     $ext = 'jpeg';
-                    $width = $originalWidth / $size->division_factor;
-                    $height = $originalHeight / $size->division_factor;
+                    $width = intval($originalWidth / $size->division_factor);
+                    $height = intval($originalHeight / $size->division_factor);
 
                     $timestamp = Carbon::now()->timestamp;
                     $imgName = $image->id.'_'.$timestamp.'_'."$size->name.$ext";
@@ -49,8 +50,16 @@ class ImageVariantSeeder extends Seeder
                     Storage::disk('private')->makeDirectory($location);
                     $path =  Storage::disk('private')->path($location . '/' . $imgName);
 
+//                    if($size->name === 'MAX') {
+//                        dd($width, $height, $size->name);
+//                    }
+
+
                     $imageIntervention->resize($width, $height);
-                    $imageIntervention->encode($ext, 100);
+
+//                    $imageIntervention->widen($width);
+//                    $imageIntervention->heighten($height);
+//                    $imageIntervention->encode($ext, 100);
                     $imageIntervention->save($path);
 
                     $size_in_byte = File::size($path);

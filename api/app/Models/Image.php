@@ -37,4 +37,19 @@ class Image extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function imageLoadStatus() {
+        return $this->belongsTo(ImageLoadStatus::class);
+    }
+
+    public function likes() {
+        return $this->hasMany(Like::class);
+    }
+
+    public function views() {
+        return $this->hasMany(View::class);
+    }
+
+    public function downloads() {
+        return $this->hasMany(Download::class);
+    }
 }

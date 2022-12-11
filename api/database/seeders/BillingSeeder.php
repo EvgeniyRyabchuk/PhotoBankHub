@@ -27,7 +27,7 @@ class BillingSeeder extends Seeder
     ) {
         $isMonthlyPlan = (bool)rand(0, 1);
 
-        $oldBill = new Billing();
+        $bill = new Billing();
         if($isRandStatus) {
             $billingStatus = BillStatus::where('name', '!=', 'New')
                 ->inRandomOrder()
@@ -39,24 +39,24 @@ class BillingSeeder extends Seeder
         }
 
         if($isRandPlan) {
-            $plan= Plan::inRandomOrder()->first();
+            $plan = Plan::inRandomOrder()->first();
         }
 
 
-        $oldBill->billStatus()->associate($billingStatus);
-        $oldBill->plan()->associate($plan);
-        $oldBill->client()->associate($client);
-        $oldBill->billingInfo()->associate($billingInfo);
+        $bill->billStatus()->associate($billingStatus);
+        $bill->plan()->associate($plan);
+        $bill->client()->associate($client);
+        $bill->billingInfo()->associate($billingInfo);
 
         if($billingStatus->name !== 'New') {
-            $oldBill->last_card_number =
+            $bill->last_card_number =
                 mb_substr($card->number, strlen($card->number) - 4, strlen($card->number) - 1);
 
-            $oldBill->issuer = $card->issuer;
-            $oldBill->valid_period_type = $isMonthlyPlan ? 'monthly' : 'annual';
+            $bill->issuer = $card->issuer;
+            $bill->valid_period_type = $isMonthlyPlan ? 'monthly' : 'annual';
         }
 
-        $oldBill->save();
+        $bill->save();
 
         if($billingStatus->name === "Paid") {
             $client->plan_expired_at = $isMonthlyPlan
@@ -64,8 +64,11 @@ class BillingSeeder extends Seeder
                 Carbon::now()->addYear();
 
             $client->left_image_count += $plan->image_count;
-            $client->save();
-        }
 
+        }
+        else {
+            $client->plan_expired_at = Carbon::now()->subMinute();
+        }
+        $client->save();
     }
 }

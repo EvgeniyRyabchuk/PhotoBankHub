@@ -21,4 +21,10 @@ class _Utills {
         return $_class;
     }
 
+
+
+    public static function isDecimal($val)
+    {
+        return is_numeric( $val ) && floor( $val ) != $val;
+    }
 }

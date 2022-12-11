@@ -9,6 +9,16 @@ class ImageVariant extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'image_id' ,
+        'size_id' ,
+        'extension',
+        'size_in_byte' ,
+        'width',
+        'height',
+        'path',
+    ];
+
     public function image() {
         return $this->belongsTo(Image::class);
     }

@@ -9,6 +9,12 @@ class Client extends Model
 {
     use HasFactory;
 
+
+    protected $fillable = [
+        'user_id'
+    ];
+
+
     public function user() {
         return $this->belongsTo(User::class);
     }
@@ -36,5 +42,12 @@ class Client extends Model
     }
 
 
+    public function downloads() {
+        return $this->hasMany(Download::class);
+    }
+
+    public function favorites() {
+        return $this->hasMany(Favorite::class);
+    }
 
 }

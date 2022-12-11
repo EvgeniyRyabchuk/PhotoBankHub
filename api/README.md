@@ -171,6 +171,7 @@ Add to filesystem config file
 ### Schedule set up 
 
 
+
 1. Show list of task 
 ```php artisan schedule:list``` 
 
@@ -182,6 +183,9 @@ Add to filesystem config file
 
 ```php artisan schedule:work```
 
+4. Create cron job command for schedule 
+
+```  php artisan make:command TestCron --command=test:cron ```
 
 ### Queue for jobs 
 
@@ -201,4 +205,11 @@ Add to filesystem config file
 3. Run process 
 
 ``` php artisan queue:listen ```
+
+
+### Create own custom request file for separate validation 
+
+
+``` php artisan make:request RegistrationRequest  ```
+
 

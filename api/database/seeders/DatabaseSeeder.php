@@ -14,6 +14,7 @@ use App\Models\CreditCard;
 use App\Models\Download;
 use App\Models\Favorite;
 use App\Models\Image;
+use App\Models\ImageLoadStatus;
 use App\Models\ImageVariant;
 use App\Models\Like;
 use App\Models\Model;
@@ -61,7 +62,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(ContentSubscriptionSeeder::class);
 
-
         PhotoModel::factory(50)->create();
 
         $this->call(ImageOrientationSeeder::class);
@@ -70,7 +70,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CategorySeeder::class);
 
-        Image::factory(1)->create();
+        $this->call(ImageSeeder::class, false, ['count' => 1]);
 
         $this->call(SizeSeeder::class);
 
@@ -82,28 +82,21 @@ class DatabaseSeeder extends Seeder
 
         Tag::factory(50)->create();
 
-        $this->call(TagSeeder::class);
-
         Favorite::factory(50)->create();
 
-        $this->call(FavoriteSeeder::class);
-
-
-
-        $this->call(LicenseSeeder::class);
-
-        $this->call(PlanFeatureSeeder::class);
-
-        $this->call(PlanSeeder::class);
-
-
-        $this->call(BillStatusSeeder::class);
+        $this->call([
+            TagSeeder::class,
+            FavoriteSeeder::class,
+            LicenseSeeder::class,
+            PlanFeatureSeeder::class,
+            PlanSeeder::class,
+            BillStatusSeeder::class
+        ]);
 
         // create credit card and bill info for all clients
         // and also give random plan
         // and create two bills: first - it's bill with rand status,
         // second - it's bill with a "New" status for check monthly or annual auto payment
-
         foreach (Client::all() as $client) {
             $card = CreditCard::factory(1)->create()->first();
             $info = BillingInfo::factory(1)->create()->first();
@@ -112,7 +105,6 @@ class DatabaseSeeder extends Seeder
             $client->billingInfo()->associate($info);
 
             $isPlanExist = (bool)rand(0, 1);
-
 
             if($isPlanExist) {
                 $plan = Plan::inRandomOrder()->first();
@@ -125,7 +117,6 @@ class DatabaseSeeder extends Seeder
                     'client' => $client,
                     'card' => $card
                 ]);
-
                 $newBill = $this->call(BillingSeeder::class, false, [
                     'billingStatusName' => 'New',
                     'plan' => $plan,
@@ -137,8 +128,13 @@ class DatabaseSeeder extends Seeder
             $client->save();
        }
 
-        Download::factory(10)->create();
+        $clientCount = Client::where('plan_expired_at', '>=', Carbon::now())
+            ->has('plan')->count();
+        if($clientCount > 0) {
+            Download::factory(10)->create();
+        }
 
+      $this->call(ImageLoadStatusSeeder::class);
 
 
     }

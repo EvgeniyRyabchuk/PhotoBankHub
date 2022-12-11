@@ -21,10 +21,12 @@ class DownloadFactory extends Factory
     public function definition()
     {
         $client = Client::where('plan_expired_at', '>=', Carbon::now())
+            ->has('plan')
             ->inRandomOrder()
             ->first();
 
-        $image = Image::inRandomOrder()->first();
+
+        $image = Image::inRandomOrder()->where('isFree', false)->first();
 
         $level = $client->plan->access_level;
         $imageSize = Size::where('min_access_level', '>=', $level)->inRandomOrder()->first();
