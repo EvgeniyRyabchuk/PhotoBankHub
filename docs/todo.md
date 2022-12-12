@@ -8,3 +8,6 @@
    
 4. Email sending 
 
+5. Change php post limit 
+
+6. Imagick on hosting 

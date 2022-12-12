@@ -24,19 +24,8 @@ use App\Http\Controllers\User\UserController;
 //Route::get('storage/{path}', [ImageController::class, 'show'])
 //    ->where('path', '.*');
 
-Route::get('image/{imageId}/download', [ImageController::class, 'download'])
-//    ->where('path', '.*');
-    ->middleware('auth:api');
 
 
-
-
-// Auth routes
-Route::prefix('oauth')
-    ->controller(AuthController::class)
-    ->group(function ($oauth) {
-        $oauth->post('/register', 'register');
-});
 
 Route::controller(ResetPasswordController::class)->group(function () {
     Route::post('send-password-reset-email', 'sendEmailForResetPassword');
@@ -47,39 +36,54 @@ Route::controller(ResetPasswordController::class)->group(function () {
 Route::controller(ImageController::class)
     ->prefix('images')
     ->group(function () {
-
         Route::get('/', 'index');
         Route::get('/{imageId}', 'show');
-        Route::post('/', 'store')->middleware('auth:api');
 
-        Route::put('/{imageId}', 'update');
+        Route::middleware('auth:api')->group(function () {
 
-        Route::delete('/{imageId}', 'delete');
+            Route::post('/', 'store')
+                ->middleware('isCreator');
+
+            Route::put('/{imageId}', 'update')
+                ->middleware('isCreator');
+
+            Route::delete('/{imageId}', 'delete')
+                ->middleware('adminOrCreator');
+
+            Route::get('/{imageId}/download','downloadPreview');
+            Route::get('/{imageId}/sizes/{sizeId}/download','download');
+        });
 
 });
 
 
-Route::middleware('auth:api')->group(function () {
-    // Auth routes
-    Route::controller(AuthController::class)->group(function () {
+// Auth routes
+Route::controller(AuthController::class)->group(function () {
+    Route::post('/register', 'register');
+    Route::middleware('auth:api')->group(function () {
         Route::get('/profile','profile');
         Route::get('/profile-detail','profileDetail');
         Route::delete('/logout', 'logout');
     });
+});
 
 
-    Route::controller(VerifyEmailController::class)->group(function () {
-        Route::post('/email/verification-notification','sendVerifyEmailNotification');
-        Route::post('/email/verify', 'verifyEmail');
-    });
+Route::controller(VerifyEmailController::class)
+    ->middleware('auth:api')
+    ->group(function () {
+    Route::post('/email/verification-notification','sendVerifyEmailNotification');
+    Route::post('/email/verify', 'verifyEmail');
+});
 
-    Route::prefix('users')
-        ->controller(UserController::class)
-        ->group(function () {
-            Route::get('/', 'index');
-            Route::get('/{userId}', 'show');
+Route::prefix('users')
+    ->controller(UserController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{userId}', 'show');
+        Route::middleware('auth:api')->group(function () {
             Route::put('/{userId}', 'update');
             Route::delete('/{userId}', 'delete');
-    });
-
+        });
 });
+
+

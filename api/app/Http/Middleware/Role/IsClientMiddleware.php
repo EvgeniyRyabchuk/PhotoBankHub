@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Http\Middleware\Role;
 
+use App\Models\Role;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class IsCreatorMiddleware
+class IsClientMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,6 +18,10 @@ class IsCreatorMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        $role = Role::where('name', 'client')->first();
+        if(!Auth::user() || Auth::user()->role_id !== $role->id) {
+            abort(401);
+        }
         return $next($request);
     }
 }

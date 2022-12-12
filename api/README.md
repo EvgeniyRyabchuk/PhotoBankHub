@@ -213,3 +213,16 @@ Add to filesystem config file
 ``` php artisan make:request RegistrationRequest  ```
 
 
+### Install imagemagick
+
+For maс 
+
+``` brew install imagemagick ```
+``` brew install ghostscript ```
+
+```brew install pkg-config imagemagick```
+```pecl install imagick```
+
+In php.ini 
+
+`extension=imagick`

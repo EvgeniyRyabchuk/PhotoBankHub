@@ -15,67 +15,70 @@ use Intervention\Image\Facades\Image;
 class ImageHandler {
 
     public $interventionImg;
-    public $srcInterventionImg;
-
+    public $imageFile;
+    public $imageModel;
 
     public $srcWidth;
     public $srcHeight;
-
     public $name = 'default_name';
 
     private static $previewDivide = 10;
 
-    public function __construct(mixed $data, $name)
+    public function __construct($imageFile, $imageModel, $customName = null)
     {
-        $interventionImg = \Intervention\Image\Facades\Image::make($data);
-        $srcInterventionImg = \Intervention\Image\Facades\Image::make($data);
-
-        $this->srcWidth = $srcInterventionImg->width();
-        $this->srcHeight = $srcInterventionImg->height();
-
+        $interventionImg = Image::make($imageFile);
+        $this->imageFile = $imageFile;
         $this->interventionImg = $interventionImg;
-        $this->srcInterventionImg = $srcInterventionImg;
+        $this->imageModel = $imageModel;
 
-        switch ($data) {
-            case $data instanceof Illuminate\Http\UploadedFile:
+        $this->srcWidth = $interventionImg->width();
+        $this->srcHeight = $interventionImg->height();
 
-                break;
-            case is_string($data):
-
-                break;
+        if(is_null($customName)) {
+            $fileName = str_replace(
+                '.', '', trim(
+                str_replace(' ', '_', $this->name)
+            ));
+            $this->name = $fileName;
+        } else {
+            $this->name = $customName;
         }
-        $fileName = str_replace(
-            '.', '', trim(
-            str_replace(' ', '_', $this->name)
-        ));
-        $this->name = $fileName;
     }
 
-    public function saveOriginal($imageId, $ext) {
-        $relativePath = "/images/$imageId/$this->name"."_".time().'_original.'.$ext;
-
-        Storage::disk('private')->put($relativePath, $this->interventionImg);
+    public function saveOriginal() {
+        $imageId = $this->imageModel->id;
+        $filename = $this->name."_".time()."_original.".$this->imageFile->extension();
+        $relativePath = "/images/$imageId/";
+        Storage::disk('private')->putFileAs($relativePath, $this->imageFile, $filename);
         return $relativePath;
     }
 
-    public function savePreview($imgId) : string {
-        $this->interventionImg->resize(
+    public function savePreview() : string {
+        $imageId = $this->imageModel->id;
+        $interventionImg = Image::make($this->imageFile);
+
+        $interventionImg->resize(
             $this->srcWidth / self::$previewDivide,
             $this->srcHeight / self::$previewDivide
         );
-        $this->interventionImg->encode('jpeg', '70');
+
+        $interventionImg->encode('jpeg', '70');
         $distPreviewName = "preview_" . $this->name . "_" . time() . '.jpeg';
-        $distPreviewLocation = "/images/$imgId";
+        $distPreviewLocation = "/images/$imageId";
         Storage::disk('public')->makeDirectory($distPreviewLocation);
         $relativePath = "$distPreviewLocation/$distPreviewName";
 
         $distPath = Storage::disk('public')->path($relativePath);
-        $this->interventionImg->save($distPath);
+        $interventionImg->save($distPath);
+        self::getImageWithWaterMark("public", $relativePath, false);
         return $relativePath;
     }
 
 
-    public static function getImageRation($width, $height) {
+    public static function getImageRation($data) {
+        $interventionImg = Image::make($data);
+        $width = $interventionImg->width();
+        $height = $interventionImg->height();
         $divisor = gmp_intval( gmp_gcd( $width, $height ) );
         $str =  $width / $divisor . ':' . $height / $divisor;
 
@@ -87,18 +90,15 @@ class ImageHandler {
         return [$r1, $r2, $str];
     }
 
-    public function saveResized($originalPath, $imageId) : array {
-        $distSizeList = [];
+    public function saveResized($originalPath) : void {
+        $imageId = $this->imageModel->id;
         $sizes = Size::all();
 
-        $originalFullPath = Storage::disk('private')->path($originalPath);
-
         foreach ($sizes as $size) {
-
-            $imageIntervention = Image::make($originalFullPath);
+            $imageIntervention = Image::make($this->imageFile);
 
             if($size->name === 'ORIGINAL') {
-                $ext = $this->interventionImg->extension;
+                $ext = $this->imageFile->extension();
                 $path = $originalPath;
                 $size_in_byte = File::size(storage_path("app/private/$path"));
             } else {
@@ -106,17 +106,13 @@ class ImageHandler {
                 $width = intval($this->srcWidth / $size->division_factor);
                 $height = intval($this->srcHeight / $size->division_factor);
 
-                $timestamp = Carbon::now()->timestamp;
-                $imgName = $imageId.'_'.$timestamp.'_'."$size->name.$ext";
+                $imgName = $imageId.'_'.time().'_'."$size->name.$ext";
                 $location = "/images/$imageId";
                 Storage::disk('private')->makeDirectory($location);
-                $path =  Storage::disk('private')->path($location . '/' . $imgName);
+                $path = Storage::disk('private')->path($location . '/' . $imgName);
 
                 $imageIntervention->resize($width, $height);
 
-//                    $imageIntervention->widen($width);
-//                    $imageIntervention->heighten($height);
-//                    $imageIntervention->encode($ext, 100);
                 $imageIntervention->save($path);
                 $size_in_byte = File::size($path);
                 $path = $location . '/' . $imgName;
@@ -131,14 +127,39 @@ class ImageHandler {
                 'height' => $height,
                 'path' => $path,
             ]);
-
-            $distSizeList[] = [
-                'name' => $size->name,
-                'payload' => $resizedImg
-            ];
         }
 
-        return $distSizeList;
+    }
+
+
+    public static function getImageWithWaterMark($srcImageFileDriver, $privateSrcImgPath, $isNew = true) : string {
+        $full_image_path = Storage::disk($srcImageFileDriver)->path($privateSrcImgPath);
+        $waterMarkPath = Storage::disk('public')->path('static/wm_small.png');
+
+        if($isNew) {
+            $distPath = Storage::disk('private')
+                ->path('temp'. "/newImageWIthWatermark_".time().".png") ;
+        } else {
+            $distPath = $full_image_path;
+        }
+
+        $image = Image::make($full_image_path);
+        /* insert watermark at bottom-left corner with 5px offset */
+
+        $width = $image->width();
+        $height = $image->height();
+        $shift = 100;
+
+        for ($y = 0; $y < $height; $y = $y + 500) {
+            for ($x = 0; $x < $width; $x = $x + 500) {
+                $image->insert($waterMarkPath, 'top-left', $x + $shift, $y);
+            }
+            $shift = $shift * -1;
+        }
+
+        $image->save($distPath);
+
+        return $image->basePath();
     }
 
 }

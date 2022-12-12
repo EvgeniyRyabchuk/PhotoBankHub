@@ -2,9 +2,7 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\IsAdminMiddleware;
 use App\Http\Middleware\IsClientMiddleware;
-use App\Http\Middleware\IsCreatorMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -46,8 +44,8 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            IsClientMiddleware::class,
-            IsCreatorMiddleware::class
+
+
         ],
     ];
 
@@ -69,5 +67,13 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+        'isClient' => \App\Http\Middleware\Role\IsClientMiddleware::class,
+        'isCreator' => \App\Http\Middleware\Role\IsCreatorMiddleware::class,
+        'isAdmin' => \App\Http\Middleware\Role\isAdminMiddleware::class,
+
+        'adminOrCreator' => \App\Http\Middleware\Role\AdminOrCreatorMiddleware::class,
+
+
     ];
 }

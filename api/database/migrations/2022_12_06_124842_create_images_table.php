@@ -50,7 +50,9 @@ return new class extends Migration
                 ->default('/static/gallery_preview.jpeg');
             $table->string('original', 4096)
                 ->default('/static/gallery_preview.jpeg');
-            $table->string('originalExt', 255);
+            $table->string('originalExt', 255)
+                ->default('jpeg');
+
             $table->string('temp', 4096)->nullable();
 
             $table->unsignedTinyInteger('people_count')->default(0);

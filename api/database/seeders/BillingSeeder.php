@@ -64,7 +64,6 @@ class BillingSeeder extends Seeder
                 Carbon::now()->addYear();
 
             $client->left_image_count += $plan->image_count;
-
         }
         else {
             $client->plan_expired_at = Carbon::now()->subMinute();

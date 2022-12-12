@@ -6,7 +6,7 @@ function App() {
 
   const download = () => {
       axios({
-          url: 'http://127.0.0.1:8000/api/image/31/download', //your url
+          url: 'http://127.0.0.1:8000/api/images/1/download', //your url
           method: 'GET',
           responseType: 'blob', // important
           headers: {

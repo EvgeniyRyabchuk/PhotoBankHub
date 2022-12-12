@@ -9,6 +9,12 @@ class Download extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'client_id',
+        'image_id',
+        'size_id',
+    ];
+
     public function image() {
         return $this->belongsTo(Image::class);
     }
