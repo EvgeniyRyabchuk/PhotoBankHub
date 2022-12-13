@@ -6,11 +6,11 @@ function App() {
 
   const download = () => {
       axios({
-          url: 'http://127.0.0.1:8000/api/images/1/download', //your url
+          url: 'http://127.0.0.1:8000/api/images/5/variants/33/download', //your url
           method: 'GET',
           responseType: 'blob', // important
           headers: {
-              Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiZTE3YjgzMDRhZWJmMWI0M2MyODdkZThlNGVlNjJmOWQxZmI1YjBkZWJhNzY3ZmZlMTdlNjE3YzdkNzZjNzM2ZGNmNDJhMzM2MjlkZjU0ZmMiLCJpYXQiOjE2NzAzNTQzNDUuNTY0NjkzLCJuYmYiOjE2NzAzNTQzNDUuNTY0Njk1LCJleHAiOjE2NzE2NTAzNDUuNTU2MTcxLCJzdWIiOiIxMSIsInNjb3BlcyI6W119.NZ_Cg3WQN5wITdV9r9zQBrknb6b41B41le46STYGjk5iLCEJgxsyN4dOXuuOT4rMD7wwEufPVdsKgTkT8KxVrrgT9F8s2N4_NgpORexojTu6UBBh7k0SDU07USRGe-Nd-FuhqyARXh5LJpeZy11dpeunW0trl3uNBLMqaeqh_XwPwZGjNhDjneZMpGHwYjUGGalUAfhwy3ypK5ykVLBDRB_W7TJga7wY4qwFU6nlUPxAPoOshn5pkCmKjZXM9UHPrPQRMYvzHYzUKkEPBXtsSwxWrzytaK9aS3ivdYdQ8xSDFL0OOIslkNsqllbVfPpxLoWEp3IGCPG90CqU1en1y3i-NGUwqC7h5TZF6wPNUliSwev3wx0UpdcUPUL_jrXA_bJUF_7gnhs0PWtXr8iDzTowTqfUDTFcuoM7R_a0aDWX1jm8aG8vgYTLVU7d6oJ0oFCw2yzEIgAA4Ql36IrgHpEqTsDS8UnahPIprz0_qouh_dvMsIpcorZcsxJKzWwjuVrkW7Q4hDUABL37F3nmOnJFeGF0AaupxKsGJnVUUY1C6lQKGXHGz0pk5FxAtfc9kWqgMOBtLdN8gwjoYp7RZ8qHgQvAEDy5cRksFpBsLQf8ACvO5mZNny6aYub66k951iAkqOctz8PmT7loi7EZFTk7WPG4IN94Jh-lu1x7QWg'
+              Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiNDc0OGZiZmEwN2FlYTlkY2Q5Y2IxYjExYTMwNWM4ODQ3MzVhOWEyODIxYTJkMDc3YzVkNDI5MTU2ODcxZWRiYjJhZjUwNmFlNGRjZDVjNTkiLCJpYXQiOjE2NzA4NTY0OTMuMzk5OTQ3LCJuYmYiOjE2NzA4NTY0OTMuMzk5OTQ5LCJleHAiOjE2NzIxNTI0OTMuMzk0MDQzLCJzdWIiOiI0Iiwic2NvcGVzIjpbXX0.nh1rVNTKyVXLw1R2hDnqtNRLnTky_BoL7cYF3VCB3RS0o0xgNodabt8KIpho-DzpBx4dClqh34iS-LhSDwWOgEk3L1XyOeAjhMc_7lDD1cdlD2sDrzULg7sOQiF2CRnevQs84qaT2v-59JYUcf6bkwZhcLFT7S85mJz0OyccFjTo4HYe-t6mrnXb5nRkBr7K48JBXVEiCcPT7SOSozuDSwzP6wZnxmwdHQ7j5_gSyGR1h8ZqRx1-Wj444Lz10hdivJNCDMLQ8Ws-cdWNPnzqOeOOy0mud1YLlA3JeRP5i-6OKCIVaIyhnpgREsLMEVq4u3S_QFxgyv4C_VWIYj6zT7LgBysmpVlzKW3XCTkGS0b5z3vfEPrVuvBMWOnmS3AgmuNHqxcPHTB0FCUOt9qV5yuITCINqRzQfMhRCaIaNL3Y5Rxso-XmNmE1Z74GJv3SMGJWTKJKVoixckxSjF2Z-gz9yoXxxIf5mLfl2WPoqPFKE-1-N4focDtMMlwFGPY8MFbNNLYk6iEwFGobiE2PiMQMVwGte7-coJ5r6RmAOgndXcMGMoUTtIKxX-sHkbqT9T6z7wbA0YmF5WLYeSFoexY3wNf2HHsWWY55BKrm1d8CEnc5uWhFOQWNeBXUxFBB3a10DxiEjMWrizCeIYFSKpiAEKk0YgOsVyn1SkqSbFY'
           }
       }).then((response) => {
           // create file link in browser's memory

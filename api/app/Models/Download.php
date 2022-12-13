@@ -12,15 +12,15 @@ class Download extends Model
     protected $fillable = [
         'client_id',
         'image_id',
-        'size_id',
+        'image_variant_id',
     ];
 
     public function image() {
         return $this->belongsTo(Image::class);
     }
 
-    public function size() {
-        return $this->belongsTo(Size::class);
+    public function imageVariant() {
+        return $this->belongsTo(ImageVariant::class);
     }
 
     public function client() {

@@ -10,6 +10,17 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CreditCardFactory extends Factory
 {
+
+    public function suspended($clientId)
+    {
+
+        return $this->state(function (array $attributes) use ($clientId) {
+            return [
+                'clientId' => $clientId
+            ];
+        });
+    }
+
     /**
      * Define the model's default state.
      *

@@ -2,9 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\BillingInfo;
+use App\Models\BillStatus;
 use App\Models\Client;
 use App\Models\Creator;
+use App\Models\CreditCard;
 use App\Models\Phone;
+use App\Models\Plan;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -20,6 +24,7 @@ class StaticUserSeeder extends Seeder
      */
     public function run($roles)
     {
+        $maxPlan = Plan::orderBy('access_level', 'desc')->first();
         // creating User with role Client
         $client = new Client();
         $clientUser = new User();
@@ -31,6 +36,7 @@ class StaticUserSeeder extends Seeder
         $clientUser->about = fake()->sentence(30);
         $clientUser->role()->associate($roles['clientRole']);
 
+
         $phone = Phone::create([
             'phone_number' => '380982885884',
             'countryCode' => "UA",
@@ -41,9 +47,33 @@ class StaticUserSeeder extends Seeder
 
         $clientUser->phone()->associate($phone);
         $clientUser->save();
-
+        $client->plan()->associate($maxPlan);
         $client->user()->associate($clientUser);
         $client->save();
+
+        $billInfo = BillingInfo::factory(1)->create()->first();
+        $card = CreditCard::factory(1)->create()->first();
+
+        // Paid for plan
+        $this->call(BillingSeeder::class, false, [
+            'billingStatusName' => 'Paid',
+            'plan' => $maxPlan,
+            'billingInfo' => $billInfo,
+            'client' => $client,
+            'card' => $card
+        ]);
+
+        // further bill for payment
+        $this->call(BillingSeeder::class, false, [
+            'billingStatusName' => 'New',
+            'plan' => $maxPlan,
+            'billingInfo' => $billInfo,
+            'client' => $client,
+            'card' => $card
+        ]);
+
+
+
 
 
         // creating User with role Creator

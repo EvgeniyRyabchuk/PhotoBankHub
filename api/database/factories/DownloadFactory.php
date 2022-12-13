@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Client;
 use App\Models\Image;
+use App\Models\ImageVariant;
 use App\Models\Size;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -30,6 +31,8 @@ class DownloadFactory extends Factory
 
         $level = $client->plan->access_level;
         $imageSize = Size::where('min_access_level', '>=', $level)->inRandomOrder()->first();
+        $randVariant = ImageVariant::where(['image_id' => $image->id, 'size_id' => $imageSize->id])->first();
+
 
         $client->left_image_count = $client->left_image_count - 1;
         $client->save();
@@ -37,7 +40,7 @@ class DownloadFactory extends Factory
         return [
             'image_id' => $image->id,
             'client_id' => $client->id,
-            'size_id' => $imageSize->id,
+            'image_variant_id' => $randVariant->id,
             'created_at' => Carbon::now()
         ];
     }

@@ -108,7 +108,6 @@ class ImageController extends Controller
     }
 
     // mode = create or update
-
     protected function saveOrUpdate($mode, $request, $imageId = null) : array {
         $user = Auth::user();
         $creator = $user->creator;
@@ -219,7 +218,6 @@ class ImageController extends Controller
         ];
     }
 
-
     // add image
     public function store(Request $request) {
         $result = $this->saveOrUpdate('create', $request);
@@ -261,33 +259,32 @@ class ImageController extends Controller
     public function downloadPreview(Request $request, $imageId) {
         $image = Image::findOrFail($imageId);
         $filePath = Storage::disk('public')->path($image->preview);
-        return response()->download($filePath)->deleteFileAfterSend();
+//        return response()->download($filePath)->deleteFileAfterSend();
+        return response()->download($filePath);
     }
 
     // download image
-    public function download(Request $request, $imageId, $sizeId) {
+    public function download(Request $request, $imageId, $imageVariantId) {
         $user = Auth::user();
         $image = Image::findOrFail($imageId);
-        $size = Size::findOrFail($sizeId);
-
-        //TODO: check if image is free
+        $imageVariant = ImageVariant::findOrFail($imageVariantId);
 
         if($image->isFree !== true) {
             // checking access
             if ($user->role->name === 'client') {
                 $client = $user->client;
-                if ($client->plan->access_level >= $size->min_access_level) {
+                if ($client->plan->access_level >= $imageVariant->size->min_access_level) {
                     if (Carbon::parse($client->plan_expired_at)->gt(Carbon::now())) {
                         if ($client->left_image_count > 0) {
                             $alreadyHaveDownload = Download::where([
                                     'client_id' => $client->id,
-                                    'image_id' => $image->id]
-                            )->first();
+                                    'image_id' => $image->id
+                                ])->first();
                             if(!$alreadyHaveDownload) {
                                 Download::create([
                                     'client_id' => $client->id,
                                     'image_id' => $image->id,
-                                    'size_id' => $size->id
+                                    'image_variant_id' => $imageVariant->size->id
                                 ]);
                                 $client->left_image_count--;
                                 $client->save();
@@ -317,9 +314,8 @@ class ImageController extends Controller
             }
         }
 
-        $imageVariant = ImageVariant::where(['image_id' => $image->id, 'size_id' => $size->id])->first();
         $path = Storage::disk('private')->path($imageVariant->path);
 
-        return response()->download($path)->deleteFileAfterSend();
+        return response()->download($path);
     }
 }

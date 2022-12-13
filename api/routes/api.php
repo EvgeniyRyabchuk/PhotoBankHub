@@ -51,7 +51,7 @@ Route::controller(ImageController::class)
                 ->middleware('adminOrCreator');
 
             Route::get('/{imageId}/download','downloadPreview');
-            Route::get('/{imageId}/sizes/{sizeId}/download','download');
+            Route::get('/{imageId}/variants/{variantId}/download','download');
         });
 
 });

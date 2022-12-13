@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('image_id')->constrained('images')
                 ->onUpdate('cascade')->onDelete('cascade');
 
-            $table->foreignId('size_id')->constrained('sizes')
+            $table->foreignId('image_variant_id')->constrained('image_variants')
                 ->onUpdate('cascade')->onDelete('cascade');
 
             $table->foreignId('client_id')->constrained('clients')

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('expire_year', 4);
             $table->string('cvc', 4);
             $table->string('issuer', 300);
+            $table->string('isMain')->default(true);
 
             $table->timestamps();
         });

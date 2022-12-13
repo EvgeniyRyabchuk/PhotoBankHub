@@ -25,6 +25,7 @@ class BillingSeeder extends Seeder
         $client,
         $card
     ) {
+
         $isMonthlyPlan = (bool)rand(0, 1);
 
         $bill = new Billing();
@@ -34,7 +35,6 @@ class BillingSeeder extends Seeder
                 ->first();
         } else {
             $billingStatus = BillStatus::where('name', $billingStatusName)
-                ->inRandomOrder()
                 ->first();
         }
 
@@ -65,9 +65,7 @@ class BillingSeeder extends Seeder
 
             $client->left_image_count += $plan->image_count;
         }
-        else {
-            $client->plan_expired_at = Carbon::now()->subMinute();
-        }
+
         $client->save();
     }
 }
