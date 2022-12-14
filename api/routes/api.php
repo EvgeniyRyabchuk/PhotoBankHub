@@ -15,6 +15,7 @@ use App\Http\Controllers\User\ClientController;
 use App\Http\Controllers\User\CreatorController;
 use App\Http\Controllers\Bill\BillingController;
 use App\Http\Controllers\Bill\BillingInfoController;
+use App\Http\Controllers\Bill\CreditCardController;
 
 
 /*
@@ -110,9 +111,33 @@ Route::prefix('photo-models')
             Route::delete('/{photoModelId}', 'delete');
         });
 
-
         Route::get('ethnicities', 'getAllEthnicity');
         Route::get('genders', 'getAllGender');
 
 });
 
+
+Route::prefix('credit-cards')
+    ->middleware('isClient')
+    ->controller(CreditCardController::class)
+    ->group(function () {
+
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::put('/{creditCardId}', 'update');
+        Route::delete('/{creditCardId}', 'delete');
+});
+
+Route::controller(CategoryController::class)
+    ->prefix('categories')
+    ->group(function () {
+
+        Route::get('/', 'index');
+        Route::middleware('isAdmin')
+            ->group(function () {
+
+            Route::post('/', 'store');
+            Route::put('/{categoryId}', 'update');
+            Route::delete('/{categoryId}', 'delete');
+    });
+});

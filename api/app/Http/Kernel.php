@@ -51,7 +51,25 @@ class Kernel extends HttpKernel
         'adminOrCreatorAuth:api' => [
             'auth:api',
             \App\Http\Middleware\Role\AdminOrCreatorMiddleware::class,
-        ]
+        ],
+
+       'isClient' => [
+           'auth:api',
+           \App\Http\Middleware\Role\IsClientMiddleware::class,
+
+        ],
+
+        'isCreator' =>[
+            'auth:api',
+            \App\Http\Middleware\Role\IsCreatorMiddleware::class
+
+        ],
+        'isAdmin' => [
+            'auth:api',
+            \App\Http\Middleware\Role\isAdminMiddleware::class
+        ],
+
+
 
     ];
 
@@ -74,11 +92,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        'isClient' => \App\Http\Middleware\Role\IsClientMiddleware::class,
-        'isCreator' => \App\Http\Middleware\Role\IsCreatorMiddleware::class,
-        'isAdmin' => \App\Http\Middleware\Role\isAdminMiddleware::class,
-
-        'adminOrCreator' => \App\Http\Middleware\Role\AdminOrCreatorMiddleware::class,
 
 
     ];

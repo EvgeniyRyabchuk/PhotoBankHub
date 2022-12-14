@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name', 300);
-            $table->string('preview', 4096);
+            $table->string('preview', 4096)
+                ->default('static/placeholder_image.png');
             $table->unsignedSmallInteger('parent_id')->nullable();
             $table->boolean('isChildExist')->default(false);
             $table->timestamps();

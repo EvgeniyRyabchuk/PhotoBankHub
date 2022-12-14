@@ -60,6 +60,9 @@ return new class extends Migration
         $d3 = Storage::disk('public')->deleteDirectory('images');
         $d4 = Storage::disk('private')->deleteDirectory('images');
 
+        $d5 = Storage::disk('public')->deleteDirectory('photoModels');
+        $d6 = Storage::disk('public')->deleteDirectory('ctegories');
+
         Schema::dropIfExists('users');
     }
 };
