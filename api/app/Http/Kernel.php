@@ -47,6 +47,12 @@ class Kernel extends HttpKernel
 
 
         ],
+
+        'adminOrCreatorAuth:api' => [
+            'auth:api',
+            \App\Http\Middleware\Role\AdminOrCreatorMiddleware::class,
+        ]
+
     ];
 
     /**

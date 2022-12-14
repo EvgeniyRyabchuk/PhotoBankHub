@@ -144,6 +144,9 @@ Then config file that named as auth.php must include this arrya
 
 ```
 
+Publish passport config
+```php artisan vendor:publish --tag=passport-config```
+
 --- 
 
 Change property in file .env from local on public 
@@ -213,7 +216,7 @@ Add to filesystem config file
 ``` php artisan make:request RegistrationRequest  ```
 
 
-### Install imagemagick
+### Install imagemagick (for support tiff, raw formats)
 
 For maс 
 
@@ -226,3 +229,5 @@ For maс
 In php.ini 
 
 `extension=imagick`
+`post_max_size = 100M`
+`upload_max_filesize = 100M` 

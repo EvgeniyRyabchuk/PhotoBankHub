@@ -29,7 +29,10 @@ class ImageController extends Controller
 {
     // fetching gallery
     public function index(Request $request) {
+        // search by photo model
         $limit = $request->limit ?? 10;
+        $order = $request->order;
+        $orderDirection = $request->orderDirection ?? 'desc';
 
         $search = $request->search ?? null;
         $creatorFullName = $request->creator_full_name ?? null;
@@ -45,11 +48,14 @@ class ImageController extends Controller
 
         $query = Image::query()->with('creator.user');
         $query->select('images.*');
-        // TODO: why
+
+
         if($search) {
-            $query->where('name', 'LIKE', "%$search%");
-            $query->orWhereHas('tags', function ($q) use ($search) {
-                $q->where('tags.name', 'LIKE', "%$search%");
+            $query->where(function ($q) use($search) {
+                $q->where('name', 'LIKE', "%$search%");
+                $q->orWhereHas('tags', function ($qq) use ($search) {
+                    $qq->where('tags.name', 'LIKE', "%$search%");
+                });
             });
         }
 
@@ -67,6 +73,7 @@ class ImageController extends Controller
             $query->join('users', 'creators.user_id', 'users.id');
             $query->where('users.full_name', "LIKE", "%$creatorFullName%");
         }
+
         //TODO: test
         if($isEditorChoice) {
             $query->where('isEditorsChoice', $isEditorChoice);
@@ -81,6 +88,8 @@ class ImageController extends Controller
         $query->withCount('views');
         $query->withCount('likes');
         $query->withCount('downloads');
+        // order = views_count, likes_count or downloads_count. orderDirection = asc or desc
+        $query->orderBy($order, $orderDirection);
 
         $images = $query->paginate($limit);
 
@@ -108,7 +117,7 @@ class ImageController extends Controller
     }
 
     // mode = create or update
-    protected function saveOrUpdate($mode, $request, $imageId = null) : array {
+    protected function storeOrUpdate($mode, $request, $imageId = null) : array {
         $user = Auth::user();
         $creator = $user->creator;
 
@@ -220,7 +229,7 @@ class ImageController extends Controller
 
     // add image
     public function store(Request $request) {
-        $result = $this->saveOrUpdate('create', $request);
+        $result = $this->storeOrUpdate('create', $request);
         if(!is_null($result["error_message"])) {
             return response()->json(
                 ['message' => $result["error_message"]],
@@ -232,7 +241,7 @@ class ImageController extends Controller
 
     // update image
     public function update(Request $request, $imageId) {
-        $result = $this->saveOrUpdate('update', $request, $imageId);
+        $result = $this->storeOrUpdate('update', $request, $imageId);
         if(!is_null($result["error_message"])) {
             return response()->json(
                 ['message' => $result["error_message"]],
@@ -318,4 +327,6 @@ class ImageController extends Controller
 
         return response()->download($path);
     }
+
+    //TODO: like, views, favorites
 }

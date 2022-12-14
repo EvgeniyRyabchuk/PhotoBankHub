@@ -59,11 +59,13 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call(StaticUserSeeder::class, false, ['roles' =>
-                compact('adminRole', 'clientRole',  'creatorRole')]
+            compact('adminRole', 'clientRole',  'creatorRole')]
         );
 
 
-        User::factory(50)->create()->each(function ($u) use($clientRole, $creatorRole) {
+        User::factory(50)
+            ->create()
+            ->each(function ($u) use($clientRole, $creatorRole) {
             if($u->role->id === $clientRole->id) {
                 Client::create([ 'user_id' => $u->id ]);
             } else if($u->role->id === $creatorRole->id) {
@@ -86,7 +88,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(SizeSeeder::class);
 
-        $this->call(ImageVariantSeeder::class);
+//        $this->call(ImageVariantSeeder::class);
 
         Like::factory(100)->create();
 

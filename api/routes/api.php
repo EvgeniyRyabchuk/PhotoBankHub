@@ -7,6 +7,15 @@ use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\ResetPasswordController;
 use App\Http\Controllers\User\VerifyEmailController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\PhotoModelController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\User\ClientController;
+use App\Http\Controllers\User\CreatorController;
+use App\Http\Controllers\Bill\BillingController;
+use App\Http\Controllers\Bill\BillingInfoController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -24,14 +33,9 @@ use App\Http\Controllers\User\UserController;
 //Route::get('storage/{path}', [ImageController::class, 'show'])
 //    ->where('path', '.*');
 
+//Route::redirect('')
 
 
-
-Route::controller(ResetPasswordController::class)->group(function () {
-    Route::post('send-password-reset-email', 'sendEmailForResetPassword');
-    Route::post('password-reset/{id}/{token}', 'resetPassword')
-        ->name('password.reset');
-});
 
 Route::controller(ImageController::class)
     ->prefix('images')
@@ -67,13 +71,21 @@ Route::controller(AuthController::class)->group(function () {
     });
 });
 
-
 Route::controller(VerifyEmailController::class)
     ->middleware('auth:api')
     ->group(function () {
     Route::post('/email/verification-notification','sendVerifyEmailNotification');
     Route::post('/email/verify', 'verifyEmail');
 });
+
+Route::controller(ResetPasswordController::class)->group(function () {
+    Route::post('send-password-reset-email', 'sendEmailForResetPassword');
+    Route::post('password-reset/{id}/{token}', 'resetPassword')
+        ->name('password.reset');
+});
+
+
+
 
 Route::prefix('users')
     ->controller(UserController::class)
@@ -86,4 +98,21 @@ Route::prefix('users')
         });
 });
 
+
+Route::prefix('photo-models')
+    ->controller(PhotoModelController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::middleware('adminOrCreatorAuth:api')
+            ->group(function () {
+            Route::post('/', 'store');
+            Route::put('/{photoModelId}', 'update');
+            Route::delete('/{photoModelId}', 'delete');
+        });
+
+
+        Route::get('ethnicities', 'getAllEthnicity');
+        Route::get('genders', 'getAllGender');
+
+});
 

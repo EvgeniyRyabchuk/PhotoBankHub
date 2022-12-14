@@ -14,5 +14,13 @@ class PhotoModel extends Model
     }
 
 
+    public function creator() {
+        return $this->belongsTo(
+            Creator::class,
+            'created_by_creator_id',
+            'id'
+        );
+    }
+
 
 }

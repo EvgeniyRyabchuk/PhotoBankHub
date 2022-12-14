@@ -18,15 +18,15 @@ class AdminOrCreatorMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+
         $user = Auth::user();
         $roleAdmin = Role::where('name', 'admin')->first();
         $roleCreator = Role::where('name', 'creator')->first();
 
-        if(!$user) {
-           if($user->role_id !== $roleAdmin->id &&
-               $user->role_id !== $roleCreator->id)
-            abort(401);
-        }
+       if($user->role_id !== $roleAdmin->id &&
+           $user->role_id !== $roleCreator->id)
+        abort(403);
+
         return $next($request);
     }
 }
