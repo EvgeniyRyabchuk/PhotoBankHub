@@ -9,7 +9,7 @@ class Collection extends Model
 {
     use HasFactory;
 
-    public function user() {
+    public function creator() {
         return $this->belongsTo(Creator::class);
     }
 

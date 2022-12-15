@@ -16,8 +16,10 @@ return new class extends Migration
         Schema::create('views', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('image_id')->constrained('images')
-                ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('image_id')
+                ->constrained('images')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
 
             $table->string('ip', 15);
 

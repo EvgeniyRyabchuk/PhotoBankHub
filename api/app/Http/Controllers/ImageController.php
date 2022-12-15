@@ -12,9 +12,11 @@ use App\Models\Download;
 use App\Models\Image;
 use App\Models\ImageOrientation;
 use App\Models\ImageVariant;
+use App\Models\Like;
 use App\Models\PhotoModel;
 use App\Models\Size;
 use App\Models\Tag;
+use App\Models\View;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -45,8 +47,13 @@ class ImageController extends Controller
         $isFree = $request->isFree;
         $peopleCount = $request->people_count;
 
+        $ageRange = json_decode($request->ageRange ?? '[]');
 
-        $query = Image::query()->with('creator.user');
+        $gender = $request->gender;
+        $ethnicity = $request->ethnicity;
+
+
+        $query = Image::query()->with('creator.user', 'photoModel');
         $query->select('images.*');
 
 
@@ -83,6 +90,19 @@ class ImageController extends Controller
         }
         if($peopleCount) {
             $query->where('people_count', $peopleCount);
+        }
+
+        $query->leftJoin('photo_models',
+            'images.photo_model_id',
+            'photo_models.id');
+        if(count($ageRange) === 2) {
+            $query->whereBetween('photo_models.age', $ageRange);
+        }
+        if($gender) {
+            $query->where('photo_models.gender', $gender);
+        }
+        if($ethnicity) {
+            $query->where('photo_models.ethnicity', $ethnicity);
         }
 
         $query->withCount('views');
@@ -229,6 +249,7 @@ class ImageController extends Controller
 
     // add image
     public function store(Request $request) {
+        //TODO: attach categories t image  without children
         $result = $this->storeOrUpdate('create', $request);
         if(!is_null($result["error_message"])) {
             return response()->json(
@@ -327,6 +348,50 @@ class ImageController extends Controller
 
         return response()->download($path);
     }
+
+
+    public function addLike(Request $request, $imageId) {
+        $client = Auth::user()->client;
+        $image = Image::findOrFail($imageId);
+        $likeExist = Like::where([
+           'client_id' => $client->id,
+           'image_id' => $image->id
+        ])->first();
+
+        if(!$likeExist) {
+            $like = new Like();
+            $like->client()->associate($client);
+            $like->image()->associate($image);
+            $like->ip = $request->ip();
+            $like->save();
+        } else {
+            $likeExist->delete();
+        }
+
+        $currentLikeCount = Like::where('image_id', $image->id)->count();
+        return response()->json(compact('currentLikeCount'));
+    }
+
+    public function addView(Request $request, $imageId) {
+        $image = Image::findOrFail($imageId);
+        $viewExist = View::where([
+            'image_id' => $image->id,
+            'ip' => $request->ip()
+        ])->first();
+
+        if($viewExist){
+            return response()->json(['message' => 'view with such ip already exist']);
+        }
+
+        $view = new View();
+        $view->image()->associate($image);
+        $view->ip = $request->ip();
+        $view->save();
+
+        $currentViewCount = View::where('image_id', $image->id)->count();
+        return response()->json(compact('currentViewCount'));
+    }
+
 
     //TODO: like, views, favorites
 }

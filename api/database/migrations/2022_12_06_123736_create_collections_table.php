@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('name', 300);
             $table->string('description', 5000);
             $table->string('backgroundImg', 4096)->nullable();
-            $table->foreignId('creator_id')->constrained('creators')
-                ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('creator_id')
+                ->constrained('creators')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
 
             $table->timestamps();
         });

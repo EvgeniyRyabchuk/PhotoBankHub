@@ -44,7 +44,8 @@ Route::controller(ImageController::class)
         Route::get('/', 'index');
         Route::get('/{imageId}', 'show');
 
-        Route::middleware('auth:api')->group(function () {
+        Route::middleware('auth:api')
+            ->group(function () {
 
             Route::post('/', 'store')
                 ->middleware('isCreator');
@@ -57,7 +58,13 @@ Route::controller(ImageController::class)
 
             Route::get('/{imageId}/download','downloadPreview');
             Route::get('/{imageId}/variants/{variantId}/download','download');
+
+            Route::post('/{imageId}/likes','addLike')
+                ->middleware('isClient');
+
         });
+
+        Route::post('/{imageId}/views','addView');
 
 });
 
@@ -141,3 +148,47 @@ Route::controller(CategoryController::class)
             Route::delete('/{categoryId}', 'delete');
     });
 });
+
+
+Route::prefix('creators/{creatorId}')
+    ->middleware('isCreator')
+    ->controller(CreatorController::class)
+    ->group(function () {
+        Route::get('/collections', 'getCollections');
+
+});
+
+Route::prefix('clients/{clientId}')
+    ->middleware('isClient')
+    ->controller(ClientController::class)
+    ->group(function () {
+
+        Route::prefix('favorites')
+            ->group(function () {
+                Route::get('/', 'getFavorites');
+                Route::post('/', 'addFavorite');
+                Route::put('/{favoriteId}', 'updateFavorite');
+                Route::delete('/{favoriteId}', 'deleteFavorite');
+
+                Route::get('/{favoriteId}/images', 'getImageByFavorite');
+                Route::post('/{favoriteId}/images/', 'addImageToFavorite');
+                Route::delete('/{favoriteId}/images/{imageId}', 'deleteImageFromFavorite');
+
+
+        });
+
+
+    });
+
+
+Route::controller(CollectionController::class)
+    ->prefix('collections')
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::middleware('adminOrCreatorAuth:api')
+            ->group(function () {
+                Route::post('/', 'store');
+                Route::put('/{collectionId}', 'update');
+                Route::delete('/{collectionId}', 'delete');
+            });
+    });
