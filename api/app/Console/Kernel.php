@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Http\Controllers\Bill\BillingController;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,7 +25,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('inspire')->hourly();
 
         $schedule->call(function () {
-            dd('hello');
+//            dd('hello');
+            BillingController::subscriptionCheck();
         })->everyMinute();
 
         $schedule->command('test:cron')

@@ -169,11 +169,9 @@ Add to filesystem config file
 
 ```
 
-
+--- 
 
 ### Schedule set up 
-
-
 
 1. Show list of task 
 ```php artisan schedule:list``` 

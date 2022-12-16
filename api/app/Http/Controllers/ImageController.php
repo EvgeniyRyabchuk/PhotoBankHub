@@ -393,5 +393,6 @@ class ImageController extends Controller
     }
 
 
-    //TODO: like, views, favorites
+    //TODO: likeable
+
 }

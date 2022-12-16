@@ -9,6 +9,17 @@ class BillingInfo extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        "full_name",
+        "email",
+        "country",
+        "city",
+        "street",
+        "companyName",
+        "zipCode",
+        "phone_number"
+    ];
+
     public function client() {
         return $this->hasOne(Client::class);
     }
@@ -16,5 +27,7 @@ class BillingInfo extends Model
     public function billing() {
         return $this->hasMany(Billing::class);
     }
+
+
 
 }

@@ -33,9 +33,14 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
-            $table->dateTime('plan_expired_at')->nullable();
+            $table->dateTime('plan_expired_at')
+                ->nullable();
 
-            $table->unsignedBigInteger('left_image_count')->default(0);
+            $table->unsignedBigInteger('left_image_count')
+                ->default(0);
+
+            $table->string('valid_period_type', 30)
+                ->nullable();
 
             $table->timestamps();
         });

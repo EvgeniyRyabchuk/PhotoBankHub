@@ -22,9 +22,11 @@ class _Utills {
     }
 
 
+    public static function last4Number($number) {
+        return mb_substr($number, strlen($number) - 4, strlen($number) - 1);
+    }
 
-    public static function isDecimal($val)
-    {
+    public static function isDecimal($val) {
         return is_numeric( $val ) && floor( $val ) != $val;
     }
 }

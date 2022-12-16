@@ -9,6 +9,15 @@ class CreditCard extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'number',
+        'expire_month',
+        'expire_yea',
+        'cvc',
+        'issue',
+        "client_id"
+    ];
+
     public function client() {
         return $this->belongsTo(Client::class);
     }

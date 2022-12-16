@@ -16,6 +16,7 @@ use App\Http\Controllers\User\CreatorController;
 use App\Http\Controllers\Bill\BillingController;
 use App\Http\Controllers\Bill\BillingInfoController;
 use App\Http\Controllers\Bill\CreditCardController;
+use App\Http\Controllers\PlanController;
 
 
 /*
@@ -191,4 +192,34 @@ Route::controller(CollectionController::class)
                 Route::put('/{collectionId}', 'update');
                 Route::delete('/{collectionId}', 'delete');
             });
-    });
+});
+
+
+Route::controller(BillingController::class)
+    ->prefix('billings')
+    ->middleware('isClient')
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/subscribe', 'subscribe');
+        Route::delete('/unsubscribe', 'unsubscribe');
+
+});
+
+Route::controller(PlanController::class)
+    ->prefix('plans')
+    ->group(function () {
+        Route::get('/', 'index');
+
+});
+
+
+Route::controller(BillingInfoController::class)
+    ->prefix('billing-infos')
+    ->middleware('isClient')
+    ->group(function () {
+        Route::get('/', 'show');
+        Route::post('/', 'store');
+        Route::put('/{billingInfoId}', 'update');
+
+
+});

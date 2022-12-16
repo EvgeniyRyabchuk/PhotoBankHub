@@ -9,6 +9,16 @@ class Billing extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        "plan_id",
+        "bill_status_id" ,
+        "billing_info_id" ,
+        "client_id" ,
+        "last_card_number",
+        "valid_period_type",
+        "issuer",
+    ];
+
     public function billStatus() {
         return $this->belongsTo(BillStatus::class);
     }

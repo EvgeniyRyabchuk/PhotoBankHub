@@ -64,6 +64,7 @@ class BillingSeeder extends Seeder
                 Carbon::now()->addYear();
 
             $client->left_image_count += $plan->image_count;
+            $client->valid_period_type = $isMonthlyPlan ? 'monthly' : 'annual';
         }
 
         $client->save();
