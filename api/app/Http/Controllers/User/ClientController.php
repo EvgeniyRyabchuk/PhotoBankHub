@@ -44,7 +44,6 @@ class ClientController extends Controller
     }
 
     protected function attahcOrDettachImageFromFavorite($request, $isAttach) {
-       //TODO: chech if image already exist in favorite
         $client = Auth::user()->client;
         $favoriteId = $request->favoriteId;
         $imageId = $request->imageId;
@@ -55,7 +54,24 @@ class ClientController extends Controller
             'id' => $favoriteId,
         ])->first();
         if(!$favorite) {
-            return response()->json(['message' => "access deny: not your favorite"], 403);
+            return [
+                'error_message' => 'access deny: not your favorite',
+                'error_code' => 403,
+                'payload' => null
+            ];
+        }
+        if($isAttach) {
+            $imageInFavorite = DB::table('favorite_image')->where([
+               'image_id' => $imageId,
+               'favorite_id' => $favoriteId
+            ])->first();
+            if($imageInFavorite) {
+                return [
+                    'error_message' => 'image already exist in this favorite collection',
+                    'error_code' => 409,
+                    'payload' => null
+                ];
+            }
         }
 
         if($isAttach)
@@ -65,17 +81,32 @@ class ClientController extends Controller
 
         $favorite->save();
         $favorite->load('images');
-        return $favorite;
+
+        return [
+            'payload' => $favorite
+        ];
     }
 
     public function addImageToFavorite(Request $request, $clientId, $favoriteId) {
-        $newFavorite = $this->attahcOrDettachImageFromFavorite($request, true);
-        return response()->json($newFavorite);
+        $result = $this->attahcOrDettachImageFromFavorite($request, true);
+        $data = $result['payload'];
+        if(!$data) {
+            return response()->json([
+                'message' => $result['error_message']], $result['error_code'
+            ]);
+        }
+        return response()->json($data);
     }
 
     public function deleteImageFromFavorite(Request $request, $clientId, $favoriteId, $imageId) {
-        $newFavorite = $this->attahcOrDettachImageFromFavorite($request, false);
-        return response()->json($newFavorite);
+        $result = $this->attahcOrDettachImageFromFavorite($request, false);
+        $data = $result['payload'];
+        if(!$data) {
+            return response()->json([
+                'message' => $result['error_message']], $result['error_code'
+            ]);
+        }
+        return response()->json($data);
     }
 
 

@@ -12,6 +12,7 @@
         "laravel/passport": "^11.3",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "opcodesio/log-viewer": "^1.7",
         "simplesoftwareio/simple-qrcode": "~4"
     },
     "require-dev": {

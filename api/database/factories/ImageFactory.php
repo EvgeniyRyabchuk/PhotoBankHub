@@ -115,7 +115,8 @@ class ImageFactory extends Factory
 
         $randCreatorCollection = $randCreator->collections->random();
 
-        $bgPath = '/static/2.jpg';
+//        $bgPath = '/static/2.jpg';
+        $bgPath = '/static/3.jpg';
         $imgData = [
             'name' => $name,
             'creator' => $randCreator

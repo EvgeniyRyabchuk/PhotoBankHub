@@ -13,6 +13,7 @@ use App\Models\Plan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 
 class BillingController extends Controller
@@ -97,15 +98,11 @@ class BillingController extends Controller
             "valid_period_type" => $valid_period_type,
         ]);
 
-
         if(!$creditCardId) {
             $creditCard->save();
         }
-
         $client->save();
-
         return response()->json($client);
-
     }
 
     public function unsubscribe(Request $request) {
@@ -127,14 +124,13 @@ class BillingController extends Controller
     }
 
     // everytime subscription checker
-
     public static function subscriptionCheck() {
-
         $allClients = Client::all();
         $paidStatus = BillStatus::where('name', 'Paid')->first();
         $newStatus = BillStatus::where('name', 'New')->first();
         $failedGatewayStatus = BillStatus::where('name', 'FailedGateway')->first();
 
+        $logDataList = [];
 
         foreach ($allClients as $client) {
             // check if client have a subscription plan
@@ -164,16 +160,22 @@ class BillingController extends Controller
 
                     // success payment process
                     // =============================
+                    // change bill with status NEW on Paid
+                    $newBillExist->bill_status_id = $paidStatus->id;
+                    $newBillExist->billing_info_id = $client->billingInfo->id;
+                    $newBillExist->last_card_number = _Utills::last4Number($creditCard->number);
+                    $newBillExist->issuer = $creditCard->issuer;
+                    $newBillExist->save();
 
-                    $paidBill = Billing::create([
+                    // and create new bill with status NEW for future
+                    Billing::create([
                         "plan_id" => $client->plan->id,
-                        "bill_status_id" => $paidStatus->id,
                         "billing_info_id" => $client->billingInfo->id,
+                        "bill_status_id" => $newStatus->id,
                         "client_id" => $client->id,
-                        "last_card_number" => _Utills::last4Number($creditCard->number),
                         "valid_period_type" => $client->valid_period_type,
-                        "issuer" => $creditCard->issuer,
                     ]);
+
                     $current_image_count = $client->left_image_count;
                     if($client->valid_period_type === 'monthly') {
                         $plan_expired_at = Carbon::now()->addMonth();
@@ -182,30 +184,49 @@ class BillingController extends Controller
                         $plan_expired_at = Carbon::now()->addYear();
                         $current_image_count += $client->plan->image_count * 12;
                     }
+
                     $client->plan_expired_at = $plan_expired_at;
                     $client->left_image_count = $current_image_count;
                     $client->save();
 
-                    // =============================
+                    $logDataList[] = [
+                       "target_client_id" => $client->id,
+                       "left_image_count" => $client->left_image_count,
+                        "plan_expired_at" => $client->plan_expired_at,
+                        "valid_period_type" => $client->valid_period_type,
+                    ];
 
+
+                    // =============================
 
                     // fail payment
                     // =============================
-
-//                        Billing::create([
-//                            "plan_id" => $plan->id,
-//                            "bill_status_id" => $failedGatewayStatus->id,
-//                            "billing_info_id" => $billingInfo->id,
-//                            "client_id" => $client->id,
-//                            "last_card_number" => _Utills::last4Number($creditCard->number),
-//                            "valid_period_type" => $valid_period_type,
-//                            "issuer" => $request->issuer,
-//                        ]);
+//                    $billFail = new Billing();
+//                    $billFail->plan_id = $client->plan->id;
+//                    $billFail->bill_status_id = $failedGatewayStatus->id;
+//                    $billFail->billing_info_id = $client->billingInfo->id;
+//                    $billFail->client_id = $client->id;
+//                    $billFail->last_card_number = _Utills::last4Number($creditCard->number);
+//                    $billFail->valid_period_type = $client->valid_period_type;
+//                    $billFail->issuer = $creditCard->issuer;
 
                     // =============================
-
                 }
             }
         }
+
+        Log::channel('bill-checker-log')->info(' ');
+        foreach ($logDataList as $data) {
+            Log::channel('bill-checker-log')->info('====== BILL CHECK LOG START ======');
+
+            Log::channel('bill-checker-log')->info('target_client_id = '  . $data['target_client_id']);
+            Log::channel('bill-checker-log')->info('left_image_count = '  . $data['left_image_count']);
+            Log::channel('bill-checker-log')->info('plan_expired_at = '  . $data['plan_expired_at']);
+            Log::channel('bill-checker-log')->info('valid_period_type = '  . $data['valid_period_type']);
+
+            Log::channel('bill-checker-log')->info('====== BILL CHECK LOG END ======');
+        }
+        Log::channel('bill-checker-log')->info(' ');
+
     }
 }

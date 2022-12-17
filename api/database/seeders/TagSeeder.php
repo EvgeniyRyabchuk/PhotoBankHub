@@ -19,7 +19,7 @@ class TagSeeder extends Seeder
         $images = Image::all();
 
         foreach ($images as $image) {
-            $count = rand(1, Tag::count());
+            $count = rand(1, 5);
             $tags = Tag::inRandomOrder()->take($count)->get();
             foreach ($tags as $tag) {
                 $image->tags()->attach($tag);

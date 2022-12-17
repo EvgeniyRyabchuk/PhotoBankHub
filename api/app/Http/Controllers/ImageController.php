@@ -21,10 +21,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
-
-//use Image;
 
 
 class ImageController extends Controller
@@ -33,7 +31,7 @@ class ImageController extends Controller
     public function index(Request $request) {
         // search by photo model
         $limit = $request->limit ?? 10;
-        $order = $request->order;
+        $orderTarget = $request->order;
         $orderDirection = $request->orderDirection ?? 'desc';
 
         $search = $request->search ?? null;
@@ -81,7 +79,6 @@ class ImageController extends Controller
             $query->where('users.full_name', "LIKE", "%$creatorFullName%");
         }
 
-        //TODO: test
         if($isEditorChoice) {
             $query->where('isEditorsChoice', $isEditorChoice);
         }
@@ -109,7 +106,7 @@ class ImageController extends Controller
         $query->withCount('likes');
         $query->withCount('downloads');
         // order = views_count, likes_count or downloads_count. orderDirection = asc or desc
-        $query->orderBy($order, $orderDirection);
+        $query->orderBy($orderTarget, $orderDirection);
 
         $images = $query->paginate($limit);
 
@@ -150,6 +147,14 @@ class ImageController extends Controller
         $people_count = $request->people_count ?? 0;
         $tags = json_decode($request->tags ?? '[]');
 
+        $nestedCategory = Category::where('parent_id', $category->id)->first();
+        if($nestedCategory) {
+            return [
+                'error_message' => 'this category have child categories',
+                'error_code' => 404,
+                'payload' => null
+            ];
+        }
 
         // get image by id and check if image belong to creator
         if($mode === 'update') {
@@ -249,7 +254,6 @@ class ImageController extends Controller
 
     // add image
     public function store(Request $request) {
-        //TODO: attach categories t image  without children
         $result = $this->storeOrUpdate('create', $request);
         if(!is_null($result["error_message"])) {
             return response()->json(
@@ -393,6 +397,72 @@ class ImageController extends Controller
     }
 
 
-    //TODO: likeable
+    public function likeable(Request $request, $imageId) {
+        $counter = [];
+        $image = Image::findOrFail($imageId);
+
+        // same image (by tags)
+        $tagIds = $image->tags->pluck('id');
+
+        $sameImageByTagsQuery = DB::table('image_tag')
+            ->join('tags', 'image_tag.tag_id', 'tags.id')
+            ->join('images', 'image_tag.image_id', 'images.id')
+            ->select('images.*')
+            ->whereIn('tags.id', $tagIds)
+            ->orderBy('images.created_at', 'desc');
+
+        $sameImageByTags = $sameImageByTagsQuery->take(20)->get();
+        $counter[] = ['sameImageByTags' => $sameImageByTagsQuery->count()];
+
+        // same collection
+        $sameImageByCollectionQuery =
+            Image::where('collection_id', $image->collection_id)
+            ->orderBy('created_at', 'desc');
+
+        $sameImageByCollection = $sameImageByCollectionQuery->take(20)->get();
+        $counter[] = ['sameImageByCollection' => $sameImageByCollectionQuery->count()];
+
+        // same creator
+
+        $sameImageByCreatorQuery =
+            Image::where('creator_id', $image->creator_id)
+                ->orderBy('created_at', 'desc');
+
+        $sameImageByCreator = $sameImageByCreatorQuery->take(20)->get();
+        $counter[] = ['sameImageByCreator' => $sameImageByCreatorQuery->count()];
+
+
+        // same category
+
+        $sameImageByCategoryQuery =
+            Image::where('category_id', $image->category_id)
+                ->orderBy('created_at', 'desc');
+
+        $sameImageByCategory = $sameImageByCategoryQuery->take(20)->get();
+        $counter[] = ['sameImageByCategory' => $sameImageByCategoryQuery->count()];
+
+        // same model (if exist)
+        $sameImageByModel = [];
+
+        if($image->photoModel) {
+            $sameImageByModelQuery =
+                Image::leftJoin('photo_models', 'images.photo_model_id', 'photo_models.id')
+                    ->where('photo_models.id', $image->photo_model_id)
+                    ->orderBy('images.created_at', 'desc');
+
+            $sameImageByModel = $sameImageByModelQuery->take(20)->get();
+            $counter[] = ['sameImageByModel' => $sameImageByModelQuery->count()];
+        }
+
+        return response()->json(compact(
+  'sameImageByTags',
+'sameImageByCollection',
+            'sameImageByCreator',
+            'sameImageByCategory',
+            'sameImageByModel',
+            'counter'
+        ));
+    }
+
 
 }

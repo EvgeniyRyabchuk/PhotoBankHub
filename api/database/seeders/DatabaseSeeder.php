@@ -49,7 +49,6 @@ class DatabaseSeeder extends Seeder
         $adminRole = Role::where('name', 'admin')->first();
 
         $this->call([
-            TagSeeder::class,
             FavoriteSeeder::class,
             LicenseSeeder::class,
             PlanFeatureSeeder::class,
@@ -84,17 +83,20 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CategorySeeder::class);
 
-        $this->call(ImageSeeder::class, false, ['count' => 1]);
+        $this->call(ImageSeeder::class, false, ['count' => 20]);
 
         $this->call(SizeSeeder::class);
 
-//        $this->call(ImageVariantSeeder::class);
+        $this->call(ImageVariantSeeder::class);
 
         Like::factory(100)->create();
 
         View::factory(300)->create();
 
         Tag::factory(50)->create();
+
+        $this->call(TagSeeder::class);
+
 
         Favorite::factory(50)->create();
 

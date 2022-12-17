@@ -51,6 +51,11 @@ return [
     */
 
     'channels' => [
+        'bill-checker-log' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/bill_checker.log'),
+            'level' => 'info',
+        ],
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],

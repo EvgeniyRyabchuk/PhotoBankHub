@@ -44,6 +44,7 @@ Route::controller(ImageController::class)
     ->group(function () {
         Route::get('/', 'index');
         Route::get('/{imageId}', 'show');
+        Route::get('/{imageId}/likeable', 'likeable');
 
         Route::middleware('auth:api')
             ->group(function () {
