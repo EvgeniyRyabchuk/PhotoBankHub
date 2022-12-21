@@ -229,3 +229,10 @@ In php.ini
 `extension=imagick`
 `post_max_size = 100M`
 `upload_max_filesize = 100M` 
+
+---
+
+### Git 
+
+Create keys 
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"

@@ -303,6 +303,7 @@ class ImageController extends Controller
         $image = Image::findOrFail($imageId);
         $imageVariant = ImageVariant::findOrFail($imageVariantId);
 
+
         if($image->isFree !== true) {
             // checking access
             if ($user->role->name === 'client') {

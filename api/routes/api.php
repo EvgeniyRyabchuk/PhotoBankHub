@@ -72,7 +72,8 @@ Route::controller(ImageController::class)
 
 
 // Auth routes
-Route::controller(AuthController::class)->group(function () {
+Route::controller(AuthController::class)
+    ->group(function () {
     Route::post('/register', 'register');
     Route::middleware('auth:api')->group(function () {
         Route::get('/profile','profile');
