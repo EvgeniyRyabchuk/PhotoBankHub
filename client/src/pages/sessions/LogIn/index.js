@@ -1,8 +1,7 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {useAction} from "../../../hooks/useAction";
 import {useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {Button} from "@mui/material";
+import {Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup} from "@mui/material";
 
 const LogIn = () => {
 
@@ -12,17 +11,24 @@ const LogIn = () => {
 
     const [email, setEmail] = useState('nicholasrobinson@gmail.com');
     const [password, setPassword] = useState('password');
+    const [rememberMe, setRememberMe] = useState(true);
 
     const submit = async (e) => {
         e.preventDefault();
-        await login(email, password);
-        navigate(`/profile`);
+        const data =  await login(email, password, rememberMe);
+        console.log(data)
+        setTimeout(() =>
+            navigate(`/profile`),
+0);
     }
+
 
     const logInAsNewClientJeka = () => {
         setEmail('jeka.rubchuk@gmail.com');
         setPassword('123456789');
     }
+
+
     return (
         <div>
             <h1>Log In</h1>
@@ -44,6 +50,24 @@ const LogIn = () => {
                 />
                 <br/>
                 <br/>
+
+                <Box sx={{ display: 'flex', justifyContent: 'center'}}>
+                    <FormGroup>
+                        <FormControlLabel
+
+                            control={
+                                <Checkbox
+                                    checked={rememberMe}
+                                    onChange={(e, value) =>
+                                        setRememberMe(value)
+                                    }
+                                />}
+                            label="Remember Me"
+                        />
+                    </FormGroup>
+                </Box>
+
+
                 <button>Submit</button>
             </form>
 

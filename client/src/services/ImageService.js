@@ -7,8 +7,8 @@ import {
 
 
 export default class ImageService {
-    static async download(imageId, $variantId) {
-        const promise = $api.get(`/images/${imageId}/variants/${$variantId}/download`, {
+    static async download(imageId, variantId) {
+        const promise = $api.get(`/images/${imageId}/variants/${variantId}/download`, {
             responseType: 'blob',
         });
 

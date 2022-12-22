@@ -42,14 +42,16 @@ class ResetPasswordController extends Controller
 
     public function resetPassword(Request $request, $id, $token)
     {
+        //TODO: recall all access tokens
         $user = User::findOrFail($id);
 
-        $token = DB::table('password_resets')
+        $query = DB::table('password_resets')
             ->where(['token' => $token, 'email' => $user->email]);
 
-        abort_if(!$token, 403, 'token not exist');
+        $tokenDb = $query->first();
+        abort_if(!$tokenDb, 403, 'token not exist');
 
-        $token->delete();
+        $query->delete();
 
         $newPasswordHash = Hash::make($request->input('password'));
 

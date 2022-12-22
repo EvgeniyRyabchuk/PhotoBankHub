@@ -32,26 +32,44 @@ $api.interceptors.response.use((config) => {
         originalRequest._isRetry = true;
         try {
             const refreshToken = localStorage.getItem('refresh_token');
-            const response = await fetch(`${API_URL}/auth/refresh`, {
+
+            const body = JSON.stringify({
+                "grant_type": "refresh_token",
+                "refresh_token": refreshToken,
+                "client_id": 2,
+                "client_secret": OAUTH_CLIENT_SECRET,
+                "scope": ""
+            });
+
+            const response = await fetch(`${API_URL}/oauth/token`, {
                     credentials: "include",
                     method: 'POST',
-                    body: {
-                        grant_type: "refresh_token",
-                        refresh_token: refreshToken,
-                        client_id: 2,
-                        client_secret: OAUTH_CLIENT_SECRET,
-                        scope: ""
-                    }
+                    body: body,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                 }
             );
+
+            if(!response.ok) {
+                throw new Error(response.message);
+            }
+
             const {access_token, refresh_token} = await response.json();
             localStorage.setItem('access_token', access_token); 
             localStorage.setItem('refresh_token', refresh_token);
             return $api.request(originalRequest);
+
         } catch (e) {
             if (error.response.status == 401) {
                 //TODO: logout
+
                 console.log('НЕ АВТОРИЗОВАН')
+                console.log(error.message)
+
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+
                 throw new Error('Not auth');
             }
             throw e;

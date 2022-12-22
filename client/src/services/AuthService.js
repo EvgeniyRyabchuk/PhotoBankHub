@@ -61,15 +61,13 @@ export default class AuthService {
 
 
 
-
-
     static async getRoles() {
         return $api.get('/roles');
     }
 
     static async sendEmailVerification() {
         try {
-            const response = await $api.post>('/email/verification-notification');
+            const response = await $api.post('/email/verification-notification');
             showAxiosSuccessAlert(PrimarySuccessAlert.MAIL_SENT_SUCCESS);
             return response;
         }
@@ -82,7 +80,6 @@ export default class AuthService {
     static async emailVerify(token) {
         return $api.post('/email/verify', { token });
     }
-
 
 
     static async sendPasswordReset(email) {

@@ -8,7 +8,8 @@ const Header = () => {
 
     const { isAuth } = useSelector(store => store.user);
     const { logout } = useAction();
-    const navigator = useNavigate();
+    const navigate = useNavigate();
+
 
     return (
         <div className='header'>
@@ -18,6 +19,11 @@ const Header = () => {
                 <li>
                     <NavLink to='/'>
                         Home
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to='/plans'>
+                        Plans
                     </NavLink>
                 </li>
 
@@ -44,11 +50,13 @@ const Header = () => {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to='/logout' onClick={async (e) => {
-                                e.preventDefault();
-                                await logout();
-                                navigator(`/login`);
-                            }}>
+                            <NavLink
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    navigate("/login");
+                                    logout();
+                                 }}
+                            >
                                 Logout
                             </NavLink>
                         </li>

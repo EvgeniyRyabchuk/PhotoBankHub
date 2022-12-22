@@ -1,6 +1,6 @@
 import {Route, Routes} from "react-router-dom";
 import userRole from "../auth/roles";
-import LayoutSuspence from "../components/Layouts/Layout";
+import LayoutSuspense from "../components/Layouts/Layout";
 import AuthGuard from "../auth/AuthGuard";
 import routes from "./routes";
 
@@ -25,25 +25,22 @@ Template
 
 
 
-
-
-
 const Routing = () => {
 
     const routesWithAuthGuard = routes.map((route) =>  {
-            if(route.authenticated) route.element =
-                <AuthGuard accessRoles={route.accessRoles}>{route.element}</AuthGuard>
+            if(route.authenticated)
+                route.element = (<AuthGuard accessRoles={route.accessRoles}>
+                    {route.element}
+                </AuthGuard>)
             return route;
         }
     )
-
-    console.log(routesWithAuthGuard)
 
     return (
         <>
             <Routes>
                 <Route
-                    element={<LayoutSuspence />}
+                    element={<LayoutSuspense />}
                     children={[
                         routesWithAuthGuard.map(route =>
                             <Route

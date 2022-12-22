@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from "../Header";
-import {Outlet, useLocation, useNavigate} from "react-router-dom";
+import {Outlet, useNavigate} from "react-router-dom";
 import Footer from "../Footer";
 
 

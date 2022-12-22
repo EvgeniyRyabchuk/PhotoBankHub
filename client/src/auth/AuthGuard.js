@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {store} from "../store";
@@ -6,29 +6,32 @@ import {store} from "../store";
 const AuthGuard = ({accessRoles, children}) => {
 
     const {isAuth, user} = useSelector(store => store.user);
-
     const navigation = useNavigate();
 
+    const check = () => {
+        if(!isAuth && !localStorage.getItem('access_token')) {
+            console.log('not auth', isAuth, user);
+            console.log('roles', accessRoles);
+            navigation('/login');
+        }
 
-    if(!isAuth) {
-        //TODO: redirect to login
-        // navigation('/login');
-        console.log('not auth', isAuth, user);
-        console.log('roles', accessRoles);
-        return;
+        if(isAuth && accessRoles && accessRoles.length > 0) {
+            const existAccessRole = accessRoles.find(ar => ar === user.role.name);
+            console.log(existAccessRole);
+
+            if(!existAccessRole) {
+                navigation('/login');
+            }
+        }
     }
 
-    if(accessRoles) {
-
-    }
-
-    console.log('not auth');
-    console.log('roles', accessRoles);
-
+    useEffect(() => {
+        check();
+    }, [isAuth])
 
     return (
         <Fragment>
-            {children}
+            {isAuth && children}
         </Fragment>
     );
 };
