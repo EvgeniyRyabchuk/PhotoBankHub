@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from "../Header";
+import Header from "../Headers";
 import {Outlet, useNavigate} from "react-router-dom";
 import Footer from "../Footer";
 
@@ -7,17 +7,11 @@ import Footer from "../Footer";
 const ClientLayout = () => {
     return (
         <div>
-            Client Layout
+            <Header/>
 
-            <div style={{ padding: '50px'}}>
+            <Outlet />
 
-                <Header/>
-
-                <Outlet />
-
-                <Footer />
-            </div>
-
+            <Footer />
         </div>
     );
 };

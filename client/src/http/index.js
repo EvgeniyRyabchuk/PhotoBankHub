@@ -62,8 +62,6 @@ $api.interceptors.response.use((config) => {
 
         } catch (e) {
             if (error.response.status == 401) {
-                //TODO: logout
-
                 console.log('НЕ АВТОРИЗОВАН')
                 console.log(error.message)
 

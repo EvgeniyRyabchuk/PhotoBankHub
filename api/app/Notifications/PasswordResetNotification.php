@@ -46,9 +46,14 @@ class PasswordResetNotification extends Notification implements ShouldQueue
         $id = $notifiable->id;
         $token = $this->token;
 
+
+        $frontUrl = env("FRONT_APP_URL");
+
+
         return (new MailMessage)
                     ->line("Notifiable id = $id. Token = $token")
-                    ->action('Notification Action', url('/'))
+                    ->action('Notification Action',
+                        "$frontUrl/reset-password/$id/$token")
                     ->line('Thank you for using our application!');
     }
 

@@ -236,3 +236,8 @@ In php.ini
 
 Create keys 
 ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+
+### Create policy 
+
+```php artisan make:policy PostPolicy```

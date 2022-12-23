@@ -42,8 +42,9 @@ class ResetPasswordController extends Controller
 
     public function resetPassword(Request $request, $id, $token)
     {
-        //TODO: recall all access tokens
         $user = User::findOrFail($id);
+
+        $userTokens = $user->tokens;
 
         $query = DB::table('password_resets')
             ->where(['token' => $token, 'email' => $user->email]);
@@ -52,6 +53,13 @@ class ResetPasswordController extends Controller
         abort_if(!$tokenDb, 403, 'token not exist');
 
         $query->delete();
+
+        // revoke all user tokens
+        foreach($userTokens as $token) {
+            $token->revoke();
+            $refreshTokenRepository = app('Laravel\Passport\RefreshTokenRepository');
+            $refreshTokenRepository->revokeRefreshTokensByAccessTokenId($token->id);
+        }
 
         $newPasswordHash = Hash::make($request->input('password'));
 

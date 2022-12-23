@@ -209,8 +209,13 @@ Route::controller(BillingController::class)
 
 Route::controller(PlanController::class)
     ->prefix('plans')
+    ->middleware('auth:api')
     ->group(function () {
+
         Route::get('/', 'index');
+//        ->can('create','plan');
+//        ->middleware('can:create,App\Models\Plan');
+//        ->can('create', \App\Models\Plan::class);
 
 });
 

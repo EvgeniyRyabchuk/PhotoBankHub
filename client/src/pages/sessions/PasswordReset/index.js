@@ -15,7 +15,7 @@ const PasswordReset = () => {
     console.log(token);
     const change = async () => {
         const data = await AuthService.passwordReset(id, token, newPassword);
-        await logout();
+        // await logout();
         navigate('/login');
     }
 

@@ -76,7 +76,7 @@ class AuthController extends Controller
     }
 
 
-    protected function revokeAccessAndRefreshTokens($tokenId) {
+    public static function revokeAccessAndRefreshTokens($tokenId) {
         $tokenRepository = app('Laravel\Passport\TokenRepository');
         $refreshTokenRepository = app('Laravel\Passport\RefreshTokenRepository');
 

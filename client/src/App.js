@@ -7,6 +7,7 @@ import Routing from "./routing/routing";
 import 'react-toastify/dist/ReactToastify.css';
 import React, {useEffect} from "react";
 import {useAction} from "./hooks/useAction";
+import GlobalStyles from "./assets/shared/styles/GlobalStyles";
 
 
 function App() {
@@ -19,19 +20,13 @@ function App() {
     }, []);
 
 
-  return (
-    <div className="App">
-        <ToastContainer position='bottom-left' autoClose={1500} />
-
-            <button onClick={() => {
-                ImageService.download(1,5)
-            }}>
-                Download
-            </button>
-
-            <Routing />
-    </div>
-  );
+    return (
+      <div className="App">
+          <GlobalStyles />
+          <ToastContainer position='bottom-left' autoClose={1500} />
+          <Routing />
+      </div>
+    );
 }
 
 export default App;
