@@ -12,8 +12,9 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {NavLink} from "react-router-dom";
+import CategoryService from "../../services/CategoryService";
 
 
 const Navbar = () => {
@@ -27,6 +28,47 @@ const Navbar = () => {
         setAnchorEl(null);
     };
 
+    const [categories, setCategories] = useState([]);
+
+    const formatting = (category, categories) => {
+        const children = categories.filter(c => c.parent_id === category.id);
+
+        const result = {
+            id: category.id,
+            title: category.name,
+            url: `/categories/${category.id}`,
+        }
+
+        if(children && children.length > 0) {
+            const formattedChildren = [];
+            for (let c of children)
+                formattedChildren.push(formatting(c, categories));
+
+            result.submenu = formattedChildren;
+        }
+
+        return result;
+    }
+
+    const fetchCategories = async () => {
+        const response = await CategoryService.getCategories();
+        const cList = response.data;
+        const parrentless = cList.filter(c => c.parent_id === null);
+
+        const result = [];
+
+        for(let category of parrentless) {
+            result.push(formatting(category, cList));
+        }
+
+        console.log(result);
+
+        setCategories([...result]);
+    }
+
+    useEffect(() => {
+        fetchCategories();
+    }, [])
 
   return (
     <nav>
@@ -41,6 +83,19 @@ const Navbar = () => {
             />
           );
         })}
+          {
+              categories.map((category) => {
+              const depthLevel = 0;
+              return (
+                  <MenuItems
+                      items={category}
+                      key={category.id}
+                      depthLevel={depthLevel}
+                  />
+              );
+            })
+          }
+
       </ul>
 
     <Box sx={{ }}>
