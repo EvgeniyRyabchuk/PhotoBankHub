@@ -2,11 +2,11 @@ import React from 'react';
 
 import tw from "twin.macro";
 import { css } from "styled-components/macro"; //eslint-disable-line
-import { SectionHeading, Subheading as SubheadingBase } from "../../assets/shared/Headings";
-import { Container as ContainerBase, ContentWithPaddingXl } from "../../assets/shared/Layouts";
-import { SectionDescription } from "../../assets/typography/Typography";
+import { SectionHeading, Subheading as SubheadingBase } from "../../assets/shared/components/Headings";
+import { Container as ContainerBase, ContentWithPaddingXl } from "../../assets/shared/components/Layouts";
+import { SectionDescription } from "../../assets/typography";
 
-const Container = tw(ContainerBase)`my-8 lg:my-10 bg-transparent text-gray-100 -mx-8 px-8 rounded-3xl`;
+const Container = tw(ContainerBase)` bg-transparent text-gray-100 rounded-3xl`;
 const HeadingContainer = tw.div``;
 const Heading = tw(SectionHeading)`sm:text-3xl md:text-4xl lg:text-5xl`;
 const Subheading = tw(SubheadingBase)`text-gray-100 text-center`;

@@ -23,7 +23,7 @@ class UserFactory extends Factory
 
         return [
             'full_name' => fake()->name(),
-            'avatar' => fake()->imageUrl,
+            'avatar' => 'static/avatars/default_avatar.png',
             'about' => fake()->sentence(10),
             'website' => fake()->url(),
             'role_id' => $role->id,

@@ -32,7 +32,7 @@ class StaticUserSeeder extends Seeder
         $clientUser->email = 'nicholasrobinson@gmail.com';
         $clientUser->password = Hash::make('password');
         $clientUser->website = fake()->url();
-        $clientUser->avatar = Storage::disk('private')->path('/static/avatars/default_avatar.png');
+        $clientUser->avatar = '/static/avatars/default_avatar.png';
         $clientUser->about = fake()->sentence(30);
         $clientUser->role()->associate($roles['clientRole']);
 
@@ -84,7 +84,7 @@ class StaticUserSeeder extends Seeder
         $creatorUser->email = 'harryblack@gmail.com';
         $creatorUser->password = Hash::make('password');
         $creatorUser->website = fake()->url();
-        $creatorUser->avatar = Storage::disk('private')->path('/static/avatars/default_avatar.png');
+        $creatorUser->avatar = '/static/avatars/default_avatar.png';
         $creatorUser->about = fake()->sentence(30);
         $creatorUser->role()->associate($roles['creatorRole']);
 
@@ -108,7 +108,7 @@ class StaticUserSeeder extends Seeder
         $admin->email = 'aaronpage@gmail.com';
         $admin->password = Hash::make('password');
         $admin->website = fake()->url();
-        $admin->avatar = Storage::disk('private')->path('/static/avatars/default_avatar.png');
+        $admin->avatar = '/static/avatars/default_avatar.png';
         $admin->about = fake()->sentence(30);
         $admin->role()->associate($roles['adminRole']);
         $admin->save();

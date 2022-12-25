@@ -1,11 +1,11 @@
 import axios from "axios";
 
 
-export const API_URL = process.env.REACT_APP_API_URL;
-export const API_URL_DEBUG = process.env.REACT_APP_API_URL_DEBUG;
-export const API_URL_PROD = process.env.REACT_APP_API_URL_PROD;
+export const API_URL = `${process.env.REACT_APP_API_URL}/api`;
+export const API_URL_DEBUG = `${process.env.REACT_APP_API_URL_DEBUG}/api`;
+export const API_URL_PROD = `${process.env.REACT_APP_API_URL_PROD}/api`;
 
-export const API_URL_WITH_PUBLIC_STORAGE = `${API_URL}/storage`;
+export const API_URL_WITH_PUBLIC_STORAGE = `${process.env.REACT_APP_API_URL}/storage`;
 
 export const OAUTH_CLIENT_SECRET = process.env.REACT_APP_OAUTH_CLIENT_SECRET;
 

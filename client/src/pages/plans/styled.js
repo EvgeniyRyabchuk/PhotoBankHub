@@ -1,9 +1,9 @@
 import tw from "twin.macro";
-import {SectionHeading, Subheading as SubheadingBase} from "../../assets/shared/Headings";
-import {SectionDescription} from "../../assets/typography/Typography";
+import {SectionHeading, Subheading as SubheadingBase} from "../../assets/shared/components/Headings";
+import {SectionDescription} from "../../assets/typography";
 import styled from "styled-components";
 import {css} from "styled-components/macro";
-import {PrimaryButton as PrimaryButtonBase} from "../../assets/shared/Buttons";
+import {PrimaryButton as PrimaryButtonBase} from "../../assets/shared/components/Buttons";
 import {ReactComponent as SvgDecoratorBlob1} from "../../assets/images/svg-decorator-blob-6.svg";
 import {ReactComponent as SvgDecoratorBlob2} from "../../assets/images/svg-decorator-blob-7.svg";
 

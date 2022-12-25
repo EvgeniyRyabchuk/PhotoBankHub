@@ -13,14 +13,21 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import {useEffect, useState} from "react";
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import CategoryService from "../../services/CategoryService";
+import {useSelector} from "react-redux";
+import {getAvatar} from "../../utills/axios";
+import {AttachMoney, Download, Favorite, ThumbUp, Visibility} from "@mui/icons-material";
 
 
 const Navbar = () => {
 
+    const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+
+    const { user, isAuth } = useSelector(state => state.user);
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -105,6 +112,15 @@ const Navbar = () => {
                 <Typography sx={{ minWidth: 100 }}>Plans</Typography>
             </NavLink>
 
+            <NavLink to='/login'>
+                <Typography sx={{ minWidth: 100 }}>Login</Typography>
+            </NavLink>
+
+            <NavLink to='/register'>
+                <Typography sx={{ minWidth: 100 }}>Register</Typography>
+            </NavLink>
+
+
             <Tooltip title="Account settings">
                 <IconButton
                     onClick={handleClick}
@@ -114,7 +130,7 @@ const Navbar = () => {
                     aria-haspopup="true"
                     aria-expanded={open ? 'true' : undefined}
                 >
-                    <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                    <Avatar src={getAvatar(user)} sx={{ width: 32, height: 32 }}></Avatar>
                 </IconButton>
             </Tooltip>
         </Box>
@@ -153,19 +169,38 @@ const Navbar = () => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-            <MenuItem>
-                <Avatar /> Profile
+            <MenuItem onClick={() => navigate(`/profile`)}>
+                <Avatar src={getAvatar(user)} /> Profile
             </MenuItem>
             <MenuItem>
-                <Avatar /> My account
+                <AttachMoney sx={{ mr: 1}}/> Bills & Payment
             </MenuItem>
+            <MenuItem>
+                <Favorite sx={{ mr: 1}}/> Favorites
+            </MenuItem>
+            <MenuItem>
+                <ThumbUp sx={{ mr: 1}}/> Likes
+            </MenuItem>
+            <MenuItem>
+                <Visibility sx={{ mr: 1}}/> Views
+            </MenuItem>
+            <MenuItem>
+                <Download sx={{ mr: 1}}/> Downloads
+            </MenuItem>
+
             <Divider />
-            <MenuItem>
-                <ListItemIcon>
-                    <PersonAddIcon fontSize="small" />
-                </ListItemIcon>
-                Add another account
-            </MenuItem>
+
+            <Box>
+                <p>
+                    Left image: 10
+                </p>
+                <p>
+                    Your plan: standard
+                </p>
+            </Box>
+
+            <Divider />
+
             <MenuItem>
                 <ListItemIcon>
                     <SettingsIcon fontSize="small" />

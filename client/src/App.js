@@ -1,7 +1,4 @@
-import './App.css';
-import ImageService from "./services/ImageService";
-import {Provider, useSelector} from "react-redux";
-import {store} from "./store";
+import {useSelector} from "react-redux";
 import {ToastContainer} from "react-toastify";
 import Routing from "./routing/routing";
 import 'react-toastify/dist/ReactToastify.css';
