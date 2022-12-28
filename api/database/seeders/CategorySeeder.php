@@ -18,7 +18,7 @@ class CategorySeeder extends Seeder
         Category::insert([
             [
                 'name' => 'Photos',
-                'preview' => fake()->filePath(),
+                'preview' => '/static/gallery_preview.jpeg',
                 'isChildExist' => true,
             ],
 //            [
@@ -28,7 +28,7 @@ class CategorySeeder extends Seeder
 //            ],
             [
                 'name' => 'Illustrations',
-                'preview' => fake()->filePath(),
+                'preview' => '/static/gallery_preview.jpeg',
                 'isChildExist' => true,
             ],
         ]);
@@ -40,58 +40,58 @@ class CategorySeeder extends Seeder
         Category::insert([
             [
                 'name' => 'Abstraction',
-                'preview' => fake()->filePath(),
+                'preview' => '/static/gallery_preview.jpeg',
                 'parent_id' => $photosCategory->id
             ],
              [
                  'name' => 'abstraction',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
                  'name' => 'technology',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
 
              ],
              [
                  'name' => 'business',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
                  'name' => 'cars',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
                  'name' => 'food',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
                  'name' => 'family',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
                  'name' => 'travels',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
                  'name' => 'nature',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
                  'name' => 'people',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
                  'name' => 'animals',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
         ]);
@@ -99,68 +99,68 @@ class CategorySeeder extends Seeder
         Category::insert([
              [
                  'name' => 'abstraction',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
                  'name' => 'Graphic arts. Web design',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
                  'name' => 'Items',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
                  'name' => 'technology',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
                  'name' => 'cars',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
                  'name' => 'food',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
                  'name' => 'a family',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
                  'name' => 'travels',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
                  'name' => 'nature',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
                  'name' => 'people',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
                  'name' => 'Editorial',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
                  'name' => 'Art/Architecture',
-                 'preview' => fake()->filePath(),
+                 'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
                  'name' => 'Industry',
-                 'preview' => fake()->filePath(),
-                 'parent_id' => $illustrationsCategory->id
+                 'preview' => '/static/gallery_preview.jpeg',
+                 'parent_id' => $illustrationsCategory->id 
              ],
         ]);
 

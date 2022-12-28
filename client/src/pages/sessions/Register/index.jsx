@@ -1,31 +1,29 @@
 import React, {useState} from 'react';
 import {useAction} from "../../../hooks/useAction";
 import {NavLink, useNavigate} from "react-router-dom";
-import { LoadingButton } from "@mui/lab";
+import {LoadingButton} from "@mui/lab";
 import {
     Box,
     Button,
     Card,
     Checkbox,
     Divider,
+    FormControl,
     FormControlLabel,
     FormHelperText,
+    FormLabel, Radio, RadioGroup,
 } from "@mui/material";
 
-import {
-    SocialIconButton,
-    TextFieldWrapper,
-} from "../../../components/UI/SocialButtons";
-import { useFormik } from "formik";
+import {SocialIconButton, TextFieldWrapper,} from "../../../components/UI/SocialButtons";
+import {useFormik} from "formik";
 import * as Yup from "yup";
 import FacebookIcon from "../../../assets/icons/FacebookIcon";
 import GoogleIcon from "../../../assets/icons/GoogleIcon";
 import {toast} from "react-toastify";
-import {FlexBox} from "../../../assets/shared/styles";
+import {FlexBox, JustifyBox, JustifyContent} from "../../../assets/shared/styles";
 import {H1, H3, Small} from "../../../assets/typography";
 import LightTextField from "../../../components/UI/LightTextField";
-import {Link} from "../../../components/Footer/styled";
-
+import SocialAuth from "../SocialAuth";
 
 
 
@@ -39,6 +37,7 @@ const Register = () => {
         name: "",
         email: "",
         password: "",
+        roleId: 1,
         terms: true,
         submit: null,
     };
@@ -52,35 +51,37 @@ const Register = () => {
         password: Yup.string()
             .min(6, "Password should be of minimum 6 characters length")
             .required("Password is required"),
+        roleId: Yup.number().required("Role required")
     });
 
-    const { errors, values, touched, handleBlur, handleChange, handleSubmit } =
+    const submit = async (values) => {
+        setLoading(true);
+        try {
+            const newUser = {
+                email: values.email,
+                password: values.password,
+                name: values.name,
+                roleId: values.roleId,
+            }
+            await register(newUser);
+            setLoading(false);
+            toast.success("You registered successfully");
+            navigate(`/login`);
+        } catch (error) {
+            setError(error?.message);
+            setLoading(false);
+        }
+    }
+
+    const { errors, values, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
         useFormik({
             initialValues,
             validationSchema,
-            onSubmit: async (values) => {
-                setLoading(true);
-                try {
-                    await register(values.email, values.password, values.name);
-                    setLoading(false);
-                    toast.success("You registered successfully");
-                    navigate("/dashboard");
-                } catch (error) {
-                    setError(error?.message);
-                    setLoading(false);
-                }
-            },
+            onSubmit: submit
         });
 
     return (
-        <FlexBox
-            sx={{
-                alignItems: "center",
-                flexDirection: "column",
-                justifyContent: "center",
-                height: { sm: "100%" },
-            }}
-        >
+        <JustifyBox sx={{mt: 5, height: { sm: "100%" } }}>
             <Card sx={{ padding: 4, maxWidth: 600, boxShadow: 1 }}>
                 <FlexBox
                     alignItems="center"
@@ -97,20 +98,7 @@ const Register = () => {
                 </FlexBox>
 
                 <FlexBox justifyContent="space-between" flexWrap="wrap" my="1rem">
-                    <SocialIconButton
-                        sx={{ boxShadow: 1 }}
-                        // onClick={loginWithGoogle}
-                        startIcon={<GoogleIcon sx={{ mr: "0.5rem" }} />}
-                    >
-                        Sign up with Google
-                    </SocialIconButton>
-                    <SocialIconButton
-                        sx={{ boxShadow: 1 }}
-                        // onClick={loginWithFacebook}
-                        startIcon={<FacebookIcon sx={{ mr: "0.5rem" }} />}
-                    >
-                        Sign up with Facebook
-                    </SocialIconButton>
+                  <SocialAuth extraData={{roleId: values.roleId}} />
 
                     <Divider sx={{ my: 3, width: "100%", alignItems: "flex-start" }}>
                         <H3 color="text.disabled" px={1}>
@@ -163,6 +151,30 @@ const Register = () => {
                             />
                         </TextFieldWrapper>
 
+                        <br/>
+
+                         <FormControl>
+                             <FormLabel id="demo-row-radio-buttons-group-label">
+                                 Register As
+                             </FormLabel>
+                             <RadioGroup
+                                 name="roleId"
+                                 label="Role"
+                                 value={values.roleId}
+                                 onChange={(e, value) => {
+                                     setFieldValue('roleId', value);
+                                 }}
+                                 row
+                                 aria-labelledby="demo-row-radio-buttons-group-label"
+                                 defaultValue={initialValues.roleId}
+                             >
+                                 <FormControlLabel value="1" control={<Radio />} label="Client" />
+                                 <FormControlLabel value="2" control={<Radio />} label="Creator" />
+                             </RadioGroup>
+                         </FormControl>
+
+                        <br/>
+
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -214,7 +226,7 @@ const Register = () => {
                     </Small>
                 </FlexBox>
             </Card>
-        </FlexBox>
+        </JustifyBox>
     );
 };
 

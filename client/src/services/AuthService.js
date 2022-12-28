@@ -8,6 +8,7 @@ import {
     showAxiosErrorAlert,
     showAxiosSuccessAlert
 } from "../utills/alert";
+import jwt_decode from "jwt-decode";
 
 
 export default class AuthService {
@@ -32,6 +33,17 @@ export default class AuthService {
             }
         )
         return promise;
+    }
+
+    static async loginWithGoogle(googleResponse) {
+        // const decoded = jwt_decode(credential);
+        // console.log(decoded);
+        const { credential } = googleResponse;
+        console.log(googleResponse);
+
+        return $api.post(`google/callback`, {
+            ...googleResponse
+        });
     }
 
     static async register({name, email, password, roleId, remember_me = false}) {

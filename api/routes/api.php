@@ -1,22 +1,20 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ImageController;
-use App\Http\Controllers\User\AuthController;
-use App\Http\Controllers\User\ResetPasswordController;
-use App\Http\Controllers\User\VerifyEmailController;
-use App\Http\Controllers\User\UserController;
-use App\Http\Controllers\PhotoModelController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\CollectionController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\User\ClientController;
-use App\Http\Controllers\User\CreatorController;
 use App\Http\Controllers\Bill\BillingController;
 use App\Http\Controllers\Bill\BillingInfoController;
 use App\Http\Controllers\Bill\CreditCardController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\PhotoModelController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\ClientController;
+use App\Http\Controllers\User\CreatorController;
+use App\Http\Controllers\User\ResetPasswordController;
+use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\VerifyEmailController;
+use Illuminate\Support\Facades\Route;
 
 
 /*
@@ -80,6 +78,8 @@ Route::controller(AuthController::class)
         Route::get('/profile-detail','profileDetail');
         Route::delete('/logout', 'logout');
     });
+    Route::post('google/callback', 'loginWithGoogleApi');
+
 });
 
 Route::controller(VerifyEmailController::class)
@@ -94,6 +94,7 @@ Route::controller(ResetPasswordController::class)->group(function () {
     Route::post('password-reset/{id}/{token}', 'resetPassword')
         ->name('password.reset');
 });
+
 
 
 
@@ -209,7 +210,7 @@ Route::controller(BillingController::class)
 
 Route::controller(PlanController::class)
     ->prefix('plans')
-    ->middleware('auth:api')
+//    ->middleware('auth:api')
     ->group(function () {
 
         Route::get('/', 'index');

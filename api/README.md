@@ -241,3 +241,12 @@ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 ### Create policy 
 
 ```php artisan make:policy PostPolicy```
+
+
+### Google Auth 
+
+(Google Auth Guide Link)[https://medium.com/employbl/add-login-with-google-to-your-laravel-app-d2205f01b895]
+
+
+
+

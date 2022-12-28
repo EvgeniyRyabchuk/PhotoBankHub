@@ -6,6 +6,7 @@ use App\Models\OauthClient;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class OAuthClientSeeder extends Seeder
 {
@@ -44,6 +45,8 @@ class OAuthClientSeeder extends Seeder
             'created_at' => Carbon::now()
         ];
 
+        DB::table('oauth_personal_access_clients')
+            ->insert(['client_id' => 1]);
 
         OauthClient::insert([
             $client1,

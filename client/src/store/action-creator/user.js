@@ -1,7 +1,8 @@
 import {UserActionTypes} from "../reducers/userReducer";
 import AuthService from "../../services/AuthService";
 
-export const login = (email, password, rememberMe) => {
+
+export const login = (email, password, rememberMe, provider = null) => {
     return async (dispatch) => {
         try {
             dispatch({type: UserActionTypes.LOGIN})
@@ -18,7 +19,39 @@ export const login = (email, password, rememberMe) => {
         }
         catch(err) {
             dispatch({type: UserActionTypes.LOGIN_ERROR,
-                payload: 'Произошла ошибка при загрузки пользователя - ' + err.message}); 
+                payload: 'Произошла ошибка при загрузки пользователя - ' + err.message});
+            throw err;
+        }
+    }
+}
+
+export const loginWithSocial = (provider, providerData) => {
+    return async (dispatch) => {
+        try {
+            if(!provider) {
+                throw new Error('no provider in args');
+            }
+
+            dispatch({type: UserActionTypes.LOGIN})
+            let logInResponse = null;
+
+            switch (provider) {
+                case 'google':
+                    logInResponse = await AuthService.loginWithGoogle(providerData);
+            }
+
+            localStorage.setItem('access_token', logInResponse.data.access_token)
+
+            // if(rememberMe)
+            //     localStorage.setItem('refresh_token', logInResponse.data.refresh_token)
+
+            const profileResponse = await AuthService.profile();
+
+            dispatch({type: UserActionTypes.LOGIN_SUCCESS, payload: profileResponse.data});
+        }
+        catch(err) {
+            dispatch({type: UserActionTypes.LOGIN_ERROR,
+                payload: 'Произошла ошибка при загрузки пользователя - ' + err.message});
         }
     }
 }

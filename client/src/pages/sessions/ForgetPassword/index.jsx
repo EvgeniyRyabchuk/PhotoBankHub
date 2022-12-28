@@ -4,22 +4,25 @@ import { LoadingButton } from "@mui/lab";
 import { Box, Button, Card, FormHelperText } from "@mui/material";
 import { useFormik } from "formik";
 import { FC, useState } from "react";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import * as Yup from "yup";
 import {toast} from "react-toastify";
 import {FlexBox} from "../../../assets/shared/styles";
 import {H1, Small} from "../../../assets/typography";
 import LightTextField from "../../../components/UI/LightTextField";
+import AuthService from "../../../services/AuthService";
 
 
 const ForgetPassword = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const initialValues = {
-        email: "demo@example.com",
+        email: "nicholasrobinson@gmail.com",
         submit: null,
     };
+
     // form field value validation schema
     const validationSchema = Yup.object().shape({
         email: Yup.string()
@@ -32,18 +35,9 @@ const ForgetPassword = () => {
         useFormik({
             initialValues,
             validationSchema,
-            onSubmit: (values) => {
-                setLoading(true);
-
-                setTimeout(() => {
-                    setLoading(false);
-                    toast.success("Reset link has been sent!");
-                }, 1000);
-
-                if (error) {
-                    setError("Error!");
-                    setLoading(false);
-                }
+            onSubmit: async (values) => {
+                const data = await AuthService.sendPasswordReset(values.email);
+                navigate('/login');
             },
         });
 
@@ -65,7 +59,7 @@ const ForgetPassword = () => {
                         <img src="/static/logo/logo.svg" width="100%" alt="Uko Logo" />
                     </Box>
                     <H1 fontSize={24} fontWeight={700}>
-                        Reset your password
+                        Please enter you email to reset your password
                     </H1>
                 </FlexBox>
 

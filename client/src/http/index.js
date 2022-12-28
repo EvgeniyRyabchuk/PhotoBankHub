@@ -9,6 +9,8 @@ export const API_URL_WITH_PUBLIC_STORAGE = `${process.env.REACT_APP_API_URL}/sto
 
 export const OAUTH_CLIENT_SECRET = process.env.REACT_APP_OAUTH_CLIENT_SECRET;
 
+export const GOOGLE_OAUTH_CLIENT_ID = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID;
+
 
 const $api = axios.create({
     withCredentials: true,

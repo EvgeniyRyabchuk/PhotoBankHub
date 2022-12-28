@@ -11,7 +11,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     // border: "2px solid",
     borderColor:
       theme.palette.mode === "light"
-        ? theme.palette.secondary[300]
+        ? theme.palette.secondary[300] 
         : theme.palette.divider,
   },
   "& .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline": {

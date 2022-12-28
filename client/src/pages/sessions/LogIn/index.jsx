@@ -1,40 +1,31 @@
 import React, {useState} from 'react';
 import {useAction} from "../../../hooks/useAction";
 import {NavLink, useNavigate} from "react-router-dom";
-import { LoadingButton } from "@mui/lab";
-import {
-    Box,
-    Button,
-    Card, Checkbox,
-    Divider,
-    FormControlLabel, FormGroup,
-    FormHelperText,
-    Switch,
-} from "@mui/material";
-import {
-    SocialIconButton,
-    TextFieldWrapper,
-} from "../../../components/UI/SocialButtons";
-import {FlexBox} from "../../../assets/shared/styles/index";
+import {LoadingButton} from "@mui/lab";
+import {Box, Button, Card, Divider, FormControlLabel, FormHelperText, Switch,} from "@mui/material";
+import {SocialIconButton, TextFieldWrapper,} from "../../../components/UI/SocialButtons";
+import {FlexBox, JustifyBox} from "../../../assets/shared/styles/index";
 import LightTextField from "../../../components/UI/LightTextField";
-import { useFormik } from "formik";
+import {useFormik} from "formik";
 import FacebookIcon from "../../../assets/icons/FacebookIcon";
 import GoogleIcon from "../../../assets/icons/GoogleIcon";
 import * as Yup from "yup";
 import {toast} from "react-toastify";
 import {H1, H3, Paragraph, Small} from "../../../assets/typography";
-import {Link} from "../../../components/Footer/styled";
-
+import {GoogleLogin, useGoogleLogin} from '@react-oauth/google';
+import jwt_decode from "jwt-decode";
+import AuthService from "../../../services/AuthService";
+import SocialAuth from "../SocialAuth";
 
 const Login = () => {
     const { login } = useAction();
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     const initialValues = {
-        email: "demo@example.com",
-        password: "v&)3?2]:",
+        email: "nicholasrobinson@gmail.com",
+        password: "password",
         submit: null,
         remember: true,
     };
@@ -49,35 +40,33 @@ const Login = () => {
             .required("Password is required"),
     });
 
+    const submit = async (values) => {
+        setLoading(true);
+        try {
+            console.log(123);
+            const response = await login(values.email, values.password, values.remember);
+
+            setLoading(false);
+            toast.success("You Logged In Successfully test");
+            navigate("/profile");
+        }
+        catch (error) {
+            setError(error.message);
+            setLoading(false);
+        }
+    }
+
     const { errors, values, touched, handleBlur, handleChange, handleSubmit } =
         useFormik({
             initialValues,
             validationSchema,
-            onSubmit: (values) => {
-                setLoading(true);
-                login(values.email, values.password)
-                    .then(() => {
-                        setLoading(false);
-                        toast.success("You Logged In Successfully test");
-                        navigate("/dashboard");
-                    })
-                    .catch((error) => {
-                        setError(error.message);
-                        setLoading(false);
-                    });
-            },
-        });
+            onSubmit: submit
+    });
+
+
 
     return (
-        <FlexBox
-            sx={{
-                marginTop: '70px',
-                alignItems: "center",
-                flexDirection: "column",
-                justifyContent: "center",
-                height: { sm: "100%" },
-            }}
-        >
+        <JustifyBox sx={{mt: 5, height: { sm: "100%" } }}>
             <Card sx={{ padding: 4, maxWidth: 600, boxShadow: 1 }}>
                 <FlexBox
                     alignItems="center"
@@ -94,20 +83,7 @@ const Login = () => {
                 </FlexBox>
 
                 <FlexBox justifyContent="space-between" flexWrap="wrap" my="1rem">
-                    <SocialIconButton
-                        sx={{ boxShadow: 1 }}
-                        // onClick={loginWithGoogle}
-                        startIcon={<GoogleIcon sx={{ mr: 1 }} />}
-                    >
-                        Sign in with Google
-                    </SocialIconButton>
-                    <SocialIconButton
-                        sx={{ boxShadow: 1 }}
-                        // onClick={loginWithFacebook}
-                        startIcon={<FacebookIcon sx={{ mr: 1 }} />}
-                    >
-                        Sign in with Facebook
-                    </SocialIconButton>
+                    <SocialAuth />
 
                     <Divider sx={{ my: 3, width: "100%", alignItems: "flex-start" }}>
                         <H3 color="text.disabled" px={1}>
@@ -202,7 +178,7 @@ const Login = () => {
                     </Small>
                 </FlexBox>
             </Card>
-        </FlexBox>
+        </JustifyBox>
     );
 };
 

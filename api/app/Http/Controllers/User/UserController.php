@@ -7,7 +7,6 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Models\Phone;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 

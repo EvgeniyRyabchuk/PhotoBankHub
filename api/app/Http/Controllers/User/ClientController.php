@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Collection;
-use App\Models\CreditCard;
 use App\Models\Favorite;
 use App\Models\Image;
 use Illuminate\Database\Eloquent\Model;

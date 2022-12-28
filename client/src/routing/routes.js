@@ -10,6 +10,8 @@ const ProfilePage = Loadable(lazy(() => import('../pages/profile')));
 const PasswordResetPage = Loadable(lazy(() => import('../pages/sessions/PasswordReset')));
 const ForgetPasswordPage = Loadable(lazy(() => import('../pages/sessions/ForgetPassword/index')));
 
+const CategoriesPage = Loadable(lazy(() => import('../pages/categories/index')));
+
 
 const routes = [
     { path: '/', element: <HomePage />, exact: true },
@@ -20,6 +22,10 @@ const routes = [
 
     { path: '/reset-password/:id/:token', element: <PasswordResetPage />, exact: true },
     { path: '/forget-password', element: <ForgetPasswordPage />, exact: true },
+
+
+
+    { path: '/categories/:id', element: <CategoriesPage />, exact: true },
 
     { path: '*', element: <_404NotFound/>, exact: true }
 ];

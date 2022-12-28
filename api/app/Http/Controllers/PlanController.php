@@ -17,10 +17,10 @@ class PlanController extends Controller
 
     public function index(Request $request) {
 //        dd(123);
-        $user = Auth::guard('api')->user();
-        $plan = Plan::find(1);
+//        $user = Auth::guard('api')->user();
+//        $plan = Plan::find(1);
 
-        $this->authorize('view', [$plan]);
+//        $this->authorize('view', [$plan]);
 //        dd($exist);
 //        if (!Gate::forUser($user)->allows('user_select', $plan)) {
 //            abort(403);

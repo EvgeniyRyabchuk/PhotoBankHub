@@ -22,7 +22,9 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar',
-        'role_id'
+        'role_id',
+        'google_id',
+        'avatar_original'
     ];
 
     /**
@@ -54,7 +56,9 @@ class User extends Authenticatable
 
 
 
-
+//    public function oauthAccessToken() {
+//        return $this->hasMany('')
+//    }
 
 
     public function client() {

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('full_name', 300);
             $table->string('email', 320)->unique();
             $table->string('avatar', 4096);
-            $table->string('password', 128);
+            $table->string('password', 128)->nullable();
 
 
             $table->string('about', 3000)->nullable();
@@ -41,6 +41,8 @@ return new class extends Migration
 
             $table->timestamp('email_verified_at')->nullable();
 
+            $table->string('google_id', 255)->nullable();
+            $table->string('avatar_original')->nullable();
 
             $table->rememberToken();
             $table->timestamps();
