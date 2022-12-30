@@ -22,7 +22,7 @@ class ImageHandler {
     public $srcHeight;
     public $name = 'default_name';
 
-    private static $previewDivide = 10;
+    private static $previewDivide = 5;
 
     public function __construct($imageFile, $imageModel, $customName = null)
     {
@@ -75,10 +75,12 @@ class ImageHandler {
     }
 
 
+    //TODO: solve
     public static function getImageRation($data) {
         $interventionImg = Image::make($data);
         $width = $interventionImg->width();
         $height = $interventionImg->height();
+
         $divisor = gmp_intval( gmp_gcd( $width, $height ) );
         $str =  $width / $divisor . ':' . $height / $divisor;
 

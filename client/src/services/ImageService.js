@@ -7,6 +7,16 @@ import {
 
 
 export default class ImageService {
+
+
+    static async getAll(searchParams = '') {
+        return await $api(`/images${searchParams}`);
+    }
+
+    static async show(imageId) {
+        return await $api(`/images${imageId}`);
+    }
+
     static async download(imageId, variantId) {
         const promise = $api.get(`/images/${imageId}/variants/${variantId}/download`, {
             responseType: 'blob',

@@ -24,7 +24,7 @@ class TagFactory extends Factory
 //        dd($class);
 
         return [
-            'name' => fake()->sentence(3),
+            'name' => fake()->sentence(1),
         ];
     }
 }

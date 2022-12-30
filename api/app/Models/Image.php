@@ -17,6 +17,10 @@ class Image extends Model
         return $this->belongsTo(PhotoModel::class);
     }
 
+    public function imageVariants() {
+        return $this->hasMany(ImageVariant::class);
+    }
+
     public function tags() {
         return $this->belongsToMany(Tag::class);
     }

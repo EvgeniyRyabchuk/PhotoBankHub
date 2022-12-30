@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\_Sl\_Utills;
 use App\_Sl\ImageHandler;
-use App\Http\Requests\UserUpdateRequest;
 use App\Models\Category;
 use App\Models\Collection;
-use App\Models\Creator;
 use App\Models\Download;
 use App\Models\Image;
 use App\Models\ImageOrientation;
@@ -18,7 +15,6 @@ use App\Models\Size;
 use App\Models\Tag;
 use App\Models\View;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -30,8 +26,8 @@ class ImageController extends Controller
     // fetching gallery
     public function index(Request $request) {
         // search by photo model
-        $limit = $request->limit ?? 10;
-        $orderTarget = $request->order;
+        $limit = $request->limit ?? 15;
+        $orderTarget = $request->order ?? 'created_at';
         $orderDirection = $request->orderDirection ?? 'desc';
 
         $search = $request->search ?? null;
@@ -50,8 +46,10 @@ class ImageController extends Controller
         $gender = $request->gender;
         $ethnicity = $request->ethnicity;
 
+        $originalSize = Size::where('name', 'ORIGINAL')->first();
 
-        $query = Image::query()->with('creator.user', 'photoModel');
+        $query = Image::query()->with('creator.user', 'photoModel', 'imageVariants.size', 'tags');
+
         $query->select('images.*');
 
 
@@ -107,6 +105,12 @@ class ImageController extends Controller
         $query->withCount('downloads');
         // order = views_count, likes_count or downloads_count. orderDirection = asc or desc
         $query->orderBy($orderTarget, $orderDirection);
+
+
+
+//        $query->join('image_variants', 'images.id', 'image_variants.image_id');
+//        $query->join('sizes', 'image_variants.size_id', 'sizes.id');
+//        $query->where('sizes.id', $originalSize->id);
 
         $images = $query->paginate($limit);
 
@@ -177,6 +181,7 @@ class ImageController extends Controller
         if($mode === 'create') {
             $imageFile = $request->file('image');
             $ratio = ImageHandler::getImageRation($imageFile);
+
             $imageRatioDb = ImageOrientation::firstOrCreate([
                 'ratio_side_1' => $ratio[0],
                 'ratio_side_2' => $ratio[1],
@@ -397,7 +402,6 @@ class ImageController extends Controller
         return response()->json(compact('currentViewCount'));
     }
 
-
     public function likeable(Request $request, $imageId) {
         $counter = [];
         $image = Image::findOrFail($imageId);
@@ -464,6 +468,5 @@ class ImageController extends Controller
             'counter'
         ));
     }
-
 
 }

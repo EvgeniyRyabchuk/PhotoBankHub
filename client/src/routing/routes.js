@@ -12,6 +12,9 @@ const ForgetPasswordPage = Loadable(lazy(() => import('../pages/sessions/ForgetP
 
 const CategoriesPage = Loadable(lazy(() => import('../pages/categories/index')));
 
+const ImageGalleryPage = Loadable(lazy(() => import('../pages/images/gallery/index')));
+const ShowImagePage = Loadable(lazy(() => import('../pages/images/show/index')));
+
 
 const routes = [
     { path: '/', element: <HomePage />, exact: true },
@@ -24,8 +27,12 @@ const routes = [
     { path: '/forget-password', element: <ForgetPasswordPage />, exact: true },
 
 
-
     { path: '/categories/:id', element: <CategoriesPage />, exact: true },
+
+    { path: '/images', element: <ImageGalleryPage />, exact: true },
+    { path: '/images/:id', element: <ShowImagePage />, exact: true },
+
+
 
     { path: '*', element: <_404NotFound/>, exact: true }
 ];

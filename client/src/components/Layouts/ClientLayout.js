@@ -12,7 +12,6 @@ const ClientLayout = () => {
     const { fetchCategories } = useAction();
 
     useEffect(() => {
-        console.log(123)
         fetchCategories();
     }, [])
 

@@ -160,7 +160,7 @@ class CategorySeeder extends Seeder
              [
                  'name' => 'Industry',
                  'preview' => '/static/gallery_preview.jpeg',
-                 'parent_id' => $illustrationsCategory->id 
+                 'parent_id' => $illustrationsCategory->id
              ],
         ]);
 
