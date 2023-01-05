@@ -1,22 +1,26 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import { Container, ContentWithPaddingXl } from "../../assets/shared/components/Layouts";
+import React, {useMemo} from 'react';
+import {Container, ContentWithPaddingXl} from "../../assets/shared/components/Layouts";
 import {
     AuthorImage,
-    AuthorInfo, AuthorName, AuthorProfile, AuthorTextInfo, DarkBg, DecoratorBlob1, DecoratorBlob2,
+    AuthorInfo,
+    AuthorName,
+    AuthorProfile,
+    AuthorTextInfo,
+    DarkBg,
+    DecoratorBlob1,
+    DecoratorBlob2,
     Description,
     Heading,
     HeadingContainer,
     Post,
-    PostContainer, PostDescription,
+    PostContainer,
+    PostDescription,
     PostImage,
     Posts,
-    PostText, PostTitle,
+    PostText,
+    PostTitle,
     Subheading
 } from "./styled";
-import {posts} from "./mock";
-import CategoryService from "../../services/CategoryService";
-import {useFetching} from "../../hooks/useFetching";
-import {PageLoaderElement} from "../Loadable";
 import {getPreview} from "../../utills/axios";
 import {NavLink, useNavigate} from "react-router-dom";
 import {Box} from "@mui/material";
@@ -45,7 +49,7 @@ const CategorySelector = ({
 
     const select = (subCategory) => {
         const subCategoryChildren = categories.filter(c => c.parent_id === subCategory.id);
-        const url = subCategoryChildren.length > 0 ? `/categories/${subCategory.id}` : `/images?categoryId=1`;
+        const url = subCategoryChildren.length > 0 ? `/categories/${subCategory.id}` : `/images?categoryId=${subCategory.id}`;
         navigate(url);
     }
 

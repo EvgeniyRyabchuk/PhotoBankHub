@@ -32,3 +32,11 @@ export const searchPramsToString = (searchParams) => {
     }
     return string.length === 0 ? string : `?${string}`;
 }
+
+export const searchParamsToArray = (searchParams) => {
+    const array = [];
+    for(let entry of searchParams.entries()) {
+        array.push([entry[0], entry[1]]);
+    }
+    return array;
+}

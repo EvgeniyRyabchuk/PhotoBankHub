@@ -54,7 +54,10 @@ const Navbar = () => {
                 formattedChildren.push(formatting(c, categories));
 
             result.submenu = formattedChildren;
+        } else {
+            result.url = `/images?categoryId=${result.id}`
         }
+
         return result;
     }
 

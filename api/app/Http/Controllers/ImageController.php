@@ -48,10 +48,23 @@ class ImageController extends Controller
 
         $originalSize = Size::where('name', 'ORIGINAL')->first();
 
+        $createdAtRange = $request->created_at_range ? explode(',', $request->created_at_range) : null;
+
+
+//        return response()->json($createdAtRange);
+
         $query = Image::query()->with('creator.user', 'photoModel', 'imageVariants.size', 'tags');
 
         $query->select('images.*');
 
+        if($createdAtRange) {
+
+            $createdAtRange = [
+                Carbon::parse($createdAtRange[0]),
+                Carbon::parse($createdAtRange[1]),
+            ];
+            $query->whereBetween('images.created_at', $createdAtRange);
+        }
 
         if($search) {
             $query->where(function ($q) use($search) {
@@ -90,6 +103,7 @@ class ImageController extends Controller
         $query->leftJoin('photo_models',
             'images.photo_model_id',
             'photo_models.id');
+
         if(count($ageRange) === 2) {
             $query->whereBetween('photo_models.age', $ageRange);
         }
@@ -469,4 +483,8 @@ class ImageController extends Controller
         ));
     }
 
+    public function getMinMax(Request $request) {
+        $createdAt = [ Image::min('created_at'), Image::max('created_at') ];
+        return response()->json(compact('createdAt'));
+    }
 }

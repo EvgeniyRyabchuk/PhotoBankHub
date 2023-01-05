@@ -49,5 +49,10 @@ export default class ImageService {
     }
 
 
+    static async getMinMaxValues() {
+        return $api.get(`/images/min-max`);
+    }
+
+
 
 }

@@ -139,7 +139,8 @@ class ImageFactory extends Factory
             'original' =>  $resultImgData['relativeResultImgPath'],
             'originalExt' =>  $resultImgData['resExt'],
 
-            'people_count' => rand(0, 5)
+            'people_count' => rand(0, 5),
+            'created_at' => $this->faker->dateTimeBetween('-5 month', '-1 day')
         ];
     }
 }

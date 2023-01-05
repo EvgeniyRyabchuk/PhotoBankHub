@@ -8,7 +8,6 @@ import CategorySelector from "../../components/CategorySelector";
 import {JustifyContent} from "../../assets/shared/styles";
 
 const CustomDivider = ({index, length}) => {
-    console.log(index, length - 1)
     return(
         index < length - 1 &&
         <JustifyContent>

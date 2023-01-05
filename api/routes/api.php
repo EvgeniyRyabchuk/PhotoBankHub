@@ -14,6 +14,7 @@ use App\Http\Controllers\User\CreatorController;
 use App\Http\Controllers\User\ResetPasswordController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\VerifyEmailController;
+use App\Http\Controllers\IndexController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -35,14 +36,22 @@ use Illuminate\Support\Facades\Route;
 
 //Route::redirect('')
 
+Route::controller(IndexController::class)
+    ->group(function () {
+        Route::get('/levels', 'getLevels');
+
+});
 
 
 Route::controller(ImageController::class)
     ->prefix('images')
     ->group(function () {
         Route::get('/', 'index');
+        Route::get('/min-max', 'getMinMax');
         Route::get('/{imageId}', 'show');
         Route::get('/{imageId}/likeable', 'likeable');
+
+
 
         Route::middleware('auth:api')
             ->group(function () {
