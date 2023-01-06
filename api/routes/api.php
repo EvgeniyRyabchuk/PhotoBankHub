@@ -14,7 +14,6 @@ use App\Http\Controllers\User\CreatorController;
 use App\Http\Controllers\User\ResetPasswordController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\VerifyEmailController;
-use App\Http\Controllers\IndexController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -36,11 +35,7 @@ use Illuminate\Support\Facades\Route;
 
 //Route::redirect('')
 
-Route::controller(IndexController::class)
-    ->group(function () {
-        Route::get('/levels', 'getLevels');
 
-});
 
 
 Route::controller(ImageController::class)
@@ -48,6 +43,11 @@ Route::controller(ImageController::class)
     ->group(function () {
         Route::get('/', 'index');
         Route::get('/min-max', 'getMinMax');
+        Route::get('levels', 'getLevels');
+        Route::get('sizes', 'getSizes');
+        Route::get('orientations', 'getOrientations');
+
+
         Route::get('/{imageId}', 'show');
         Route::get('/{imageId}/likeable', 'likeable');
 
@@ -124,6 +124,11 @@ Route::prefix('photo-models')
     ->controller(PhotoModelController::class)
     ->group(function () {
         Route::get('/', 'index');
+
+        Route::get('ethnicities', 'getAllEthnicity');
+        Route::get('genders', 'getAllGender');
+
+
         Route::middleware('adminOrCreatorAuth:api')
             ->group(function () {
             Route::post('/', 'store');
@@ -131,8 +136,7 @@ Route::prefix('photo-models')
             Route::delete('/{photoModelId}', 'delete');
         });
 
-        Route::get('ethnicities', 'getAllEthnicity');
-        Route::get('genders', 'getAllGender');
+
 
 });
 

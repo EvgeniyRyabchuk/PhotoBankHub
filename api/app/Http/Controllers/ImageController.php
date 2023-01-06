@@ -118,7 +118,19 @@ class ImageController extends Controller
         $query->withCount('likes');
         $query->withCount('downloads');
         // order = views_count, likes_count or downloads_count. orderDirection = asc or desc
-        $query->orderBy($orderTarget, $orderDirection);
+
+        switch ($orderTarget) {
+            case 'created_at':
+                $query->orderBy('created_at', $orderDirection);
+            break;
+            case 'views':
+                $query->orderBy('views_count', $orderDirection);
+            break;
+            case 'download':
+                $query->orderBy('downloads_count', $orderDirection);
+                break;
+        }
+
 
 
 
@@ -483,8 +495,30 @@ class ImageController extends Controller
         ));
     }
 
+
+
+
+
     public function getMinMax(Request $request) {
         $createdAt = [ Image::min('created_at'), Image::max('created_at') ];
-        return response()->json(compact('createdAt'));
+        $photoModelAgeRange = [ PhotoModel::min('age'), PhotoModel::max('age')];
+
+        return response()->json(compact('createdAt', 'photoModelAgeRange'));
+    }
+
+    public function getLevels() {
+        $levels = config('const_data.levels');
+        return response()->json($levels);
+    }
+
+    public function getSizes() {
+        $sizes = config('const_data.sizeTitles');
+        return response()->json($sizes);
+    }
+
+    public function getOrientations() {
+        $orientations = ImageOrientation::all();
+        return response()->json($orientations);
+
     }
 }

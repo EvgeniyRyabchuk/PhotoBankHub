@@ -54,5 +54,17 @@ export default class ImageService {
     }
 
 
+    static async getLevels() {
+        return await $api(`/images/levels`);
+    }
+
+
+    static async getSizes() {
+        return await $api(`/images/sizes`);
+    }
+
+    static async getOrientations() {
+        return await $api(`/images/orientations`);
+    }
 
 }

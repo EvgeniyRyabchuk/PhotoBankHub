@@ -17,14 +17,14 @@ const defOrderSortOrderData = [
 
     {
         id: 3,
-        value: 'status',
+        value: 'views',
         order: 'asc',
         name: 'Просмотрам',
         selected: false
     },
     {
         id: 4,
-        value: 'status',
+        value: 'views',
         order: 'desc',
         name: 'Просмотрам',
         selected: false
@@ -32,14 +32,14 @@ const defOrderSortOrderData = [
 
     {
         id: 5,
-        value: 'deadline',
+        value: 'downloads',
         order: 'asc',
         name: 'Скачиваниям',
         selected: false
     },
     {
         id: 6,
-        value: 'deadline',
+        value: 'downloads',
         order: 'desc',
         name: 'Скачиваниям',
         selected: false

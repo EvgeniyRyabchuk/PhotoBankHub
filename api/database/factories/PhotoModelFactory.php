@@ -17,8 +17,8 @@ class PhotoModelFactory extends Factory
      */
     public function definition()
     {
-        $genders = ['male', 'female'];
-        $ethnicity = ['Asian', 'African American', 'Hispanic', 'Multi-Racial', 'European/White', 'Other'];
+        $genders = config('const_data.genders');
+        $ethnicity = config('const_data.ethnicity');
         $randCreator = Creator::inRandomOrder()->first();
 
         return [

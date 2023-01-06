@@ -4,7 +4,16 @@ import './style.scss';
 import FsLightbox from "fslightbox-react";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import useDebounce from "../../../hooks/useDebounce";
-import {defLimit, defPage, searchParamSeparator} from "../../../utills/const";
+import {
+    defIsEditorChoice,
+    defIsModelExist,
+    defLimit,
+    defOrder,
+    defPage,
+    defSizeIndex,
+    defSort,
+    searchParamSeparator
+} from "../../../utills/const";
 import ImageService from "../../../services/ImageService";
 import {getPageCount} from "../../../utills/pages";
 import {useFetching} from "../../../hooks/useFetching";
@@ -23,6 +32,9 @@ import {FilterAlt, Sort} from "@mui/icons-material";
 
 
 const ImageGalleryPage = () => {
+
+    const [isInitialized, setIsInitialized] = useState(false);
+
     const [images, setImages] = useState([]);
     const navigate = useNavigate();
     const lastElementRef = useRef();
@@ -36,16 +48,11 @@ const ImageGalleryPage = () => {
     const [totalPage, setTotalPage] = useState(0);
     const [limit, setLimit] = useState(searchParams.get('limit') ?? defLimit);
 
-    const [sort, setSort] = useState( searchParams.get('sort') ?? 'created_at');
-    const [order, setOrder] = useState(searchParams.get('orderDirection') ?? 'desc');
+    const [sort, setSort] = useState( searchParams.get('sort') ?? defSort);
+    const [order, setOrder] = useState(searchParams.get('orderDirection') ?? defOrder);
 
-    const [filterOptionData, setFilterOptionData] = useState({
-        asd: '123',
-        levels: searchParams.get('levels') && searchParams.get('levels').split(searchParamSeparator),
-        createdAtRange: searchParams.get('created_at_range') && searchParams.get('created_at_range').split(searchParamSeparator),
-    });
+    const [filterOptionData, setFilterOptionData] = useState();
 
-    console.log(filterOptionData);
 
     const [isShowMoreMode, setIsShowMoreMode] = useState(false);
 
@@ -96,49 +103,61 @@ const ImageGalleryPage = () => {
     });
 
     useEffect(() => {
+        setIsInitialized(true);
+    }, [])
+    useEffect(() => {
         if(!isShowMoreMode)
             window.scrollTo(0, 0);
         fetchImages();
     }, [searchParams]);
 
 
-    const changeSearchParams = () => {
+    const getOnlyChangedFilterParams = (data) => {
         const formattedFilter = {};
-        if(filterOptionData) {
-            if(filterOptionData.levels)
-                formattedFilter.levels = filterOptionData.levels.join(searchParamSeparator);
-            if(filterOptionData.createdAtRange)
-                formattedFilter.created_at_range = filterOptionData.createdAtRange.join(searchParamSeparator);
+        for (let i in data) {
+            const value = data[i];
+            if(value === null || value === '' || value === undefined) {
+                continue;
+            } else if (Array.isArray(value) && value.length === 0) {
+                continue;
+            }
+            formattedFilter[i] = value;
         }
 
+        if(page !== defPage)
+            formattedFilter.page = page;
+        if(limit !== defLimit)
+            formattedFilter.limit = limit;
+        if(order !== defOrder)
+            formattedFilter.order = order;
+        if(sort !== defSort)
+            formattedFilter.sort = sort;
+
+        return formattedFilter;
+    }
+
+    const changeSearchParams = () => {
+        const formattedFilter = getOnlyChangedFilterParams(filterOptionData);
         setSearchParams({
-            'page': page,
-            'limit': limit,
-            'order': sort,
-            'orderDirection': order,
-            // 'search': debouncedSearch,
             ...formattedFilter,
         });
     }
 
-
     useEffect(() => {
-        changeSearchParams();
+        if(isInitialized)
+            changeSearchParams();
     }, [page, limit, sort, order, debouncedSearch, filterOptionData]);
 
     const onSortOrderHandleChange = (event) => {
         const value = event.target.value;
-        // const option = defOrderSortOrderData.find((e: SortOrderOptionType) => e.id == value);
-        // if (option) {
-        //     setSort(option.value);
-        //     setOrder(option.order);
-        //     setPage(defPage);
-        //     setLimit(defLimit);
-        // }
+        const option = defOrderSortOrderData.find((e) => e.id == value);
+        if (option) {
+            setSort(option.value);
+            setOrder(option.order);
+            setPage(defPage);
+            setLimit(defLimit);
+        }
     }
-
-
-
 
 
     const hasSelected = images.some((image) => image.isSelected);
@@ -261,6 +280,7 @@ const ImageGalleryPage = () => {
                     isOpen={isFilterOpen}
                     onFilterChange={handlerFilterChange}
                     defaultState={filterOptionData}
+                    onClose={() => setIsFilterOpen(false)}
                 />
             </Box>
 

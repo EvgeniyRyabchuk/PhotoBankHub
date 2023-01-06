@@ -104,19 +104,21 @@ class PhotoModelController extends Controller
 
     public function getAllEthnicity() {
         // The pluck method retrieves all of the values for a given key
-        $ethnicities =  PhotoModel::query()
-            ->select('ethnicity')
-            ->distinct()
-            ->pluck('ethnicity');
+//        $ethnicities =  PhotoModel::query()
+//            ->select('ethnicity')
+//            ->distinct()
+//            ->pluck('ethnicity');
+        $ethnicity = config('const_data.ethnicity');
 
-        return response()->json($ethnicities);
+        return response()->json($ethnicity);
     }
 
     public function getAllGender() {
-        $genders = PhotoModel::query()
-            ->select('gender')
-            ->distinct()
-            ->pluck('gender');
+//        $genders = PhotoModel::query()
+//            ->select('gender')
+//            ->distinct()
+//            ->pluck('gender');
+        $genders = config('const_data.genders');
 
         return response()->json($genders);
     }

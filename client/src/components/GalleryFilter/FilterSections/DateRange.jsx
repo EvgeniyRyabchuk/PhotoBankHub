@@ -4,19 +4,23 @@ import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import Stack from "@mui/material/Stack";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
-import {TextField} from "@mui/material";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
+    TextField
+} from "@mui/material";
+import {ExpandMore} from "@mui/icons-material";
+import FilterSectionLayout from "./FilterSectionLayout";
 
 const DateRange = ({ title, name, range, onFromChange, onToChange }) => {
 
-
     return (
-        <>
-            <Typography id="non-linear-slider" gutterBottom>
-                {title}
-            </Typography>
-
+        <FilterSectionLayout title={title}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-
                 <Stack spacing={3}>
                     <DesktopDatePicker
                         label="From created at"
@@ -34,7 +38,7 @@ const DateRange = ({ title, name, range, onFromChange, onToChange }) => {
                     />
                 </Stack>
             </LocalizationProvider>
-        </>
+        </FilterSectionLayout>
     );
 };
 
