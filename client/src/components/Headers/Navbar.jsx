@@ -55,7 +55,7 @@ const Navbar = () => {
 
             result.submenu = formattedChildren;
         } else {
-            result.url = `/images?categoryId=${result.id}`
+            result.url = `/images?categoriesIds=${result.id}`
         }
 
         return result;

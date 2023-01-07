@@ -4,6 +4,10 @@ export const navigations = [
         title: 'Home',
         url: '/',
     },
+    {
+        title: 'All',
+        url: '/images'
+    }
     // {
     //     title: 'Services',
     //     url: '/services',

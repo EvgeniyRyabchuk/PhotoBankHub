@@ -24,7 +24,7 @@ import FilterSectionLayout from "./FilterSections/FilterSectionLayout";
 import useDebounce from "../../hooks/useDebounce";
 import {Close} from "@mui/icons-material";
 import PhotoModelService from "../../services/PhotoModelService";
-import {defIsEditorChoice, defIsModelExist, defSizeIndex, searchParamSeparator} from "../../utills/const";
+import {defIsEditorChoice, defIsModelExist, defLevel, defSizeIndex, searchParamSeparator} from "../../utills/const";
 import zIndex from "@mui/material/styles/zIndex";
 
 //TODO:
@@ -44,8 +44,12 @@ const GalleryFilter = ({
     const [searchParams, setSearchParams] = useSearchParams();
     const [defaultValues, setDefaultValues] = useState(null);
 
-    const [checkBoxLevels, setCheckBoxLevels] = useState([]);
+    // const [checkBoxLevels, setCheckBoxLevels] = useState([]);
+    const [levelsList, setLevelsList] = useState([]);
+    const [level, setLevel] = useState(defLevel);
+
     const [checkBoxOrientations, setCheckBoxOrientations] = useState([]);
+
     const [sizeIndex, setSizeIndex] = useState(defSizeIndex);
     const [sizeList, setSizeList] = useState([]);
 
@@ -175,7 +179,7 @@ const GalleryFilter = ({
     }
     const fetchLevels = async () => {
         const { data } = await ImageService.getLevels();
-        return createCheckBoxList(data, 'levels');
+        return data;
     }
     const fetchGenders = async () => {
         const response = await PhotoModelService.getGenders();
@@ -201,14 +205,14 @@ const GalleryFilter = ({
 
     const [ fetchInitData, isLoading, error ] = useFetching(async () => {
         await fetchImageMinMax();
-        let checkBoxLevels = await fetchLevels();
+        const levelsList = await fetchLevels();
         let checkBoxGenders = await fetchGenders();
         let checkBoxEthnicities = await fetchEthnicities();
         await fetchSizes();
         let checkBoxOrientations = await fetchOrientations();
 
         const isEditorChoice = searchParams.get('isEditorChoice') ?? defIsEditorChoice;
-        const levels = searchParams.get('levels') ? searchParams.get('levels').split(searchParamSeparator) : null;
+        const level = searchParams.get('level') ?? defLevel;
         const sizeIndex = searchParams.get('sizeIndex') ?? defSizeIndex;
         const orientationsIds = searchParams.get('orientationsIds') ?
             searchParams.get('orientationsIds').split(searchParamSeparator) : [];
@@ -222,7 +226,10 @@ const GalleryFilter = ({
         const tags = searchParams.get('tags') ? searchParams.get('tags').split(searchParamSeparator) : [];
 
         setIsEditorChoice(isEditorChoice == 'true' ? true : false);
-        setCheckBoxLevels(changeCheckBoxList(levels, checkBoxLevels));
+
+        setLevel(level);
+        setLevelsList(levelsList);
+
         setSizeIndex(sizeIndex);
         setCheckBoxOrientations(changeCheckBoxList(orientationsIds, checkBoxOrientations, false));
 
@@ -247,7 +254,7 @@ const GalleryFilter = ({
             let createdAtRangeParam = null;
             let photoModelAgeRangeParam = null;
 
-            if(fromCreatedAt != defaultValues.createdAtRange[0] &&
+            if(fromCreatedAt != defaultValues.createdAtRange[0] ||
                 toCreatedAt != defaultValues.createdAtRange[1]) {
                 createdAtRangeParam = [
                     moment(fromCreatedAt).format('DD-MM-yyyy'),
@@ -261,8 +268,7 @@ const GalleryFilter = ({
 
             const data = {
                 isModelExist: isModelExist === defIsModelExist ? null : isModelExist,
-                levels: checkBoxLevels.filter(e => e.checked)
-                    .map(e => e.name).join(searchParamSeparator),
+                level: level === defLevel ? null : level,
                 orientationsIds: checkBoxOrientations.filter(e => e.checked)
                     .map(e => e.id).join(searchParamSeparator),
                 sizeIndex: sizeIndex === defSizeIndex ? null : sizeIndex,
@@ -276,13 +282,12 @@ const GalleryFilter = ({
                 genders: checkBoxGenders.filter(e => e.checked).map(e => e.name).join(searchParamSeparator),
                 ethnicities: checkBoxEthnicities.filter(e => e.checked).map(e => e.name).join(searchParamSeparator),
             };
-
             onFilterChange(data, isReset);
             if(isReset) setIsReset(false);
         }
     }, [
         isEditorChoice,
-        checkBoxLevels,
+        level,
         checkBoxOrientations,
         sizeIndex,
         fromCreatedAt,
@@ -303,9 +308,9 @@ const GalleryFilter = ({
 
     const resetToDefault = () => {
         setIsEditorChoice(false);
-        setCheckBoxLevels(checkBoxLevels.map((e) => { e.checked = false; return e; }));
+        setLevel(defLevel);
         setCheckBoxOrientations(checkBoxOrientations.map((e) => { e.checked = false; return e; }))
-        setSizeIndex(0);
+        setSizeIndex(defSizeIndex);
         setFromCreatedAt(defaultValues.createdAtRange[0]);
         setToCreatedAt(defaultValues.createdAtRange[1]);
 
@@ -352,29 +357,60 @@ const GalleryFilter = ({
                     <CircularProgress /> :
                     <FilterContentGrid container spacing={3}>
                         <Grid item md={4} xs={12}>
-                            <CheckBoxPicker
-                                title='Access Levels'
-                                checkBoxList={checkBoxLevels}
-                                setCheckBoxList={setCheckBoxLevels}
-                            />
-                            <FilterSectionLayout title='Sizes'>
+                            {/*<CheckBoxPicker*/}
+                            {/*    title='Access Levels'*/}
+                            {/*    checkBoxList={checkBoxLevels}*/}
+                            {/*    setCheckBoxList={setCheckBoxLevels}*/}
+                            {/*/>*/}
+                            <FilterSectionLayout title='Levels'>
                                 <FormControl>
                                     <FormLabel id="demo-row-radio-buttons-group-label">
-                                        Project is exist
+                                        1 - any,<br/> 2 - only free,<br/> 3 - only paid
                                     </FormLabel>
                                     <RadioGroup
                                         row
                                         aria-labelledby="demo-row-radio-buttons-group-label"
                                         name="row-radio-buttons-group"
+                                        value={level}
+                                        onChange={(e) =>
+                                            setLevel(e.target.value)}
+                                    >
+                                        {
+                                            levelsList.map((value) =>
+                                                <FormControlLabel
+                                                    key={value}
+                                                    value={value}
+                                                    // checked={level === value}
+                                                    control={<Radio />}
+                                                    label={value}
+
+                                                />
+                                            )
+                                        }
+                                    </RadioGroup>
+                                </FormControl>
+                            </FilterSectionLayout>
+
+                            <FilterSectionLayout title='Sizes'>
+                                <FormControl>
+                                    <FormLabel id="demo-row-radio-buttons-group-label">
+
+                                    </FormLabel>
+                                    <RadioGroup
+                                        row
+                                        aria-labelledby="demo-row-radio-buttons-group-label"
+                                        name="row-radio-buttons-group"
+                                        value={sizeIndex}
+                                        onChange={(e) =>
+                                            setSizeIndex(e.target.value)}
                                     >
                                         {
                                             sizeList.map((value, index) =>
                                                 <FormControlLabel
+                                                    key={index}
                                                     value={index}
                                                     control={<Radio />}
                                                     label={value}
-                                                    checked={sizeIndex === index}
-                                                    onChange={() => setSizeIndex(index)}
                                                 />
                                             )
                                         }
@@ -506,6 +542,7 @@ const GalleryFilter = ({
                                     renderTags={(value, getTagProps) =>
                                         value.map((option, index) => (
                                             <Chip variant="outlined"
+                                                  key={index}
                                                   label={option}
                                                   {...getTagProps({ index })}
                                             />

@@ -49,7 +49,7 @@ const CategorySelector = ({
 
     const select = (subCategory) => {
         const subCategoryChildren = categories.filter(c => c.parent_id === subCategory.id);
-        const url = subCategoryChildren.length > 0 ? `/categories/${subCategory.id}` : `/images?categoryId=${subCategory.id}`;
+        const url = subCategoryChildren.length > 0 ? `/categories/${subCategory.id}` : `/images?categoriesIds=${subCategory.id}`;
         navigate(url);
     }
 

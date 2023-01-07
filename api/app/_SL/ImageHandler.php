@@ -50,7 +50,7 @@ class ImageHandler {
         $filename = $this->name."_".time()."_original.".$this->imageFile->extension();
         $relativePath = "/images/$imageId/";
         Storage::disk('private')->putFileAs($relativePath, $this->imageFile, $filename);
-        return $relativePath;
+        return ['location' => $relativePath, 'filename' => $filename];
     }
 
     public function savePreview() : string {
@@ -92,7 +92,7 @@ class ImageHandler {
         return [$r1, $r2, $str];
     }
 
-    public function saveResized($originalPath) : void {
+    public function saveResized($originalPath, $originalFileName) : void {
         $imageId = $this->imageModel->id;
         $sizes = Size::all();
 
@@ -102,7 +102,7 @@ class ImageHandler {
             if($size->name === 'ORIGINAL') {
                 $ext = $this->imageFile->extension();
                 $path = $originalPath;
-                $size_in_byte = File::size(storage_path("app/private/$path"));
+                $size_in_byte = File::size(storage_path("app/private/$path/$originalFileName"));
             } else {
                 $ext = 'jpeg';
                 $width = intval($this->srcWidth / $size->division_factor);

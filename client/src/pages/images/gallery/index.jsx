@@ -6,7 +6,7 @@ import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import useDebounce from "../../../hooks/useDebounce";
 import {
     defIsEditorChoice,
-    defIsModelExist,
+    defIsModelExist, defLevel,
     defLimit,
     defOrder,
     defPage,
@@ -96,6 +96,7 @@ const ImageGalleryPage = () => {
 
         const newImagesWithLayout = getImagesWithOverlay(data.data);
 
+        console.log(newImagesWithLayout);
         if(isShowMoreMode)
             setImages([...images, ...newImagesWithLayout]);
         else
@@ -213,6 +214,7 @@ const ImageGalleryPage = () => {
         console.log('on filter change', data);
     }, []);
 
+    console.log(images);
     return (
         <div>
             <h1>Gallery</h1>

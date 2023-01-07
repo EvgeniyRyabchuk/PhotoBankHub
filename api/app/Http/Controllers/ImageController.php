@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use function Symfony\Component\String\s;
 
 
 class ImageController extends Controller
@@ -30,64 +31,125 @@ class ImageController extends Controller
         $orderTarget = $request->order ?? 'created_at';
         $orderDirection = $request->orderDirection ?? 'desc';
 
-        $search = $request->search ?? null;
-        $creatorFullName = $request->creator_full_name ?? null;
-        $photoModelId = $request->photo_model_id;
+        $level = $request->level ?? 1;
 
-        $categories = json_decode($request->input('categories') ?? '[]');
-        $imageOrientations = json_decode($request->input('image_orientations') ?? '[]');
+        $searchByName = $request->name ?? null;
+        $creatorName = $request->creatorName ?? null;
+        $tags = $request->tags ? explode(',', $request->tags) : null;
+
+        $photoModelId = $request->photo_model_id;
+        $categories = $request->categoriesIds ? explode(',', $request->categoriesIds) : null;
+        $imageOrientationsIds = $request->orientationsIds ? explode(',', $request->orientationsIds) : null;
 
         $isEditorChoice = $request->isEditorsChoice;
         $isFree = $request->isFree;
         $peopleCount = $request->people_count;
 
-        $ageRange = json_decode($request->ageRange ?? '[]');
+        $photoModelName = $request->photoModelName;
+        $ageRange = $request->photoModelAgeRange ? explode(',', $request->photoModelAgeRange) : null;
+        $genders =  $request->genders ? explode(',', $request->genders) : null;
+        $ethnicities = $request->ethnicities ? explode(',', $request->ethnicities) : null;
 
-        $gender = $request->gender;
-        $ethnicity = $request->ethnicity;
+        $createdAtRange = $request->createdAtRange ? explode(',', $request->createdAtRange) : null;
+        $sizeIndex = $request->sizeIndex ?? null;
 
         $originalSize = Size::where('name', 'ORIGINAL')->first();
 
-        $createdAtRange = $request->created_at_range ? explode(',', $request->created_at_range) : null;
-
-
-//        return response()->json($createdAtRange);
 
         $query = Image::query()->with('creator.user', 'photoModel', 'imageVariants.size', 'tags');
 
         $query->select('images.*');
 
         if($createdAtRange) {
-
             $createdAtRange = [
                 Carbon::parse($createdAtRange[0]),
                 Carbon::parse($createdAtRange[1]),
             ];
+
             $query->whereBetween('images.created_at', $createdAtRange);
         }
 
-        if($search) {
-            $query->where(function ($q) use($search) {
-                $q->where('name', 'LIKE', "%$search%");
-                $q->orWhereHas('tags', function ($qq) use ($search) {
-                    $qq->where('tags.name', 'LIKE', "%$search%");
-                });
+        if($searchByName) {
+            $query->where(function ($q) use($searchByName) {
+                $q->where('name', 'LIKE', "%$searchByName%");
+//                $q->orWhereHas('tags', function ($qq) use ($searchByName) {
+//                    $qq->where('tags.name', 'LIKE', "%$search%");
+//                });
             });
         }
+        if($tags) {
+            $tagsDb = Tag::whereIn('name', $tags)->get();
+            $query->join('image_tag', 'image_tag.image_id', 'images.id');
+            $query->whereIn('image_tag.tag_id', $tagsDb->pluck('id'));
+        }
+
+        if($level) {
+            switch ($level) {
+                case 1: break;
+                case 2:
+                    $query->where('isFree', true);
+                    break;
+                case 3:
+                    $query->where('isFree', false);
+            }
+        }
+
+        if($sizeIndex) {
+            $sizes = config('const_data.sizeTitles');
+            $size = $sizes[$sizeIndex];
+            $mbFactor = 1000000;
+            $query->join('image_variants', 'images.id', 'image_variants.image_id');
+            $query->where('image_variants.size_id', $originalSize->id);
+
+            switch ($size) {
+                case '<5 MB':
+                    $maxSizeInByte = 5 * $mbFactor;
+                    $query->where('image_variants.size_in_byte', '<=', $maxSizeInByte);
+                    break;
+                case '> 5 MP < 15 MB':
+                    $minSizeInByte = 5 * $mbFactor;
+                    $maxSizeInByte = 15 * $mbFactor;
+                    $query->where('image_variants.size_in_byte', '>=', $minSizeInByte);
+                    $query->where('image_variants.size_in_byte', '<=', $maxSizeInByte);
+                    break;
+                case '> 15 MP < 20 MB':
+                    $minSizeInByte = 15 * $mbFactor;
+                    $maxSizeInByte = 20 * $mbFactor;
+                    $query->where('image_variants.size_in_byte', '>=', $minSizeInByte);
+                    $query->where('image_variants.size_in_byte', '<=', $maxSizeInByte);
+                    break;
+                case '20+ MB':
+                    $minSizeInByte = 20 * $mbFactor;
+                    $query->where('image_variants.size_in_byte', '>=', $minSizeInByte);
+                    break;
+                default: break;
+            }
+        }
+
 
         if($categories)
             $query->whereIn('category_id', $categories);
-        if($imageOrientations)
-            $query->whereIn('image_orientation_id', $imageOrientations);
+        if($imageOrientationsIds)
+            $query->whereIn('image_orientation_id', $imageOrientationsIds);
         if($photoModelId) {
             $query->whereNotNull('photo_model_id');
             $query->where('photo_model_id', $photoModelId);
         }
 
-        if($creatorFullName) {
+        if($photoModelName || $ageRange || $genders || $ethnicities) {
+            $query->leftJoin('photo_models',
+                'images.photo_model_id',
+                'photo_models.id');
+        }
+
+        if($photoModelName) {
+            $query->where('photo_models.full_name', "LIKE", "%$photoModelName%");
+        }
+
+        if($creatorName) {
             $query->join('creators', 'creator_id', 'creators.id');
             $query->join('users', 'creators.user_id', 'users.id');
-            $query->where('users.full_name', "LIKE", "%$creatorFullName%");
+            $query->where('users.full_name', "LIKE", "%$creatorName%");
         }
 
         if($isEditorChoice) {
@@ -100,18 +162,16 @@ class ImageController extends Controller
             $query->where('people_count', $peopleCount);
         }
 
-        $query->leftJoin('photo_models',
-            'images.photo_model_id',
-            'photo_models.id');
 
-        if(count($ageRange) === 2) {
+
+        if($ageRange && count($ageRange) === 2) {
             $query->whereBetween('photo_models.age', $ageRange);
         }
-        if($gender) {
-            $query->where('photo_models.gender', $gender);
+        if($genders) {
+            $query->whereIn('photo_models.gender', $genders);
         }
-        if($ethnicity) {
-            $query->where('photo_models.ethnicity', $ethnicity);
+        if($ethnicities) {
+            $query->whereIn('photo_models.ethnicity', $ethnicities);
         }
 
         $query->withCount('views');
@@ -266,10 +326,10 @@ class ImageController extends Controller
             // save image in storage folder
             $processedImage = new ImageHandler($imageFile, $image, $name);
             $previewPath = $processedImage->savePreview();
-            $originalPath = $processedImage->saveOriginal();
-            $processedImage->saveResized($originalPath);
+            $originalFile = $processedImage->saveOriginal();
+            $processedImage->saveResized($originalFile['location'], $originalFile['filename']);
 
-            $image->original = $originalPath;
+            $image->original = $originalFile['location'];
             $image->originalExt = $imageFile->extension();
             $image->preview = $previewPath;
         }

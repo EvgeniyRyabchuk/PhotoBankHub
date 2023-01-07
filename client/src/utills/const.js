@@ -7,9 +7,11 @@ const defOrder = 'desc'
 
 const searchParamSeparator = ',';
 
+const defLevel = 1;
 const defSizeIndex = 0;
 const defIsEditorChoice = false;
 const defIsModelExist = false;
+
 
 export {
     defPage,
@@ -18,6 +20,7 @@ export {
     defOrder,
     searchParamSeparator,
     defSizeIndex,
+    defLevel,
     defIsEditorChoice,
     defIsModelExist
 }

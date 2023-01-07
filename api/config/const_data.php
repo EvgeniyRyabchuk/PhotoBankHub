@@ -19,10 +19,10 @@ return [
     ],
     'sizeTitles' => [
         'any',
-        '<5 MP',
-        '8 MP',
-        '15 MP',
-        '20+ MP'
+        '<5 MB',
+        '> 5 MP < 15 MB',
+        '> 15 MP < 20 MB',
+        '20+ MB'
     ],
 
     'search_param_separator' => ','
