@@ -15,6 +15,8 @@ const CategoriesPage = Loadable(lazy(() => import('../pages/categories/index')))
 const ImageGalleryPage = Loadable(lazy(() => import('../pages/images/gallery/index')));
 const ShowImagePage = Loadable(lazy(() => import('../pages/images/show/index')));
 
+const DownloadsPage = Loadable(lazy(() => import('../pages/downloads/index')));
+
 
 const routes = [
     { path: '/', element: <HomePage />, exact: true },
@@ -32,6 +34,8 @@ const routes = [
     { path: '/images', element: <ImageGalleryPage />, exact: true },
     { path: '/images/:id', element: <ShowImagePage />, exact: true },
 
+
+    { path: '/downloads', element: <DownloadsPage />, exact: true },
 
 
     { path: '*', element: <_404NotFound/>, exact: true }

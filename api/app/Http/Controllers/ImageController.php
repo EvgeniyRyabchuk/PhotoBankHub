@@ -33,6 +33,7 @@ class ImageController extends Controller
 
         $level = $request->level ?? 1;
 
+        $search = $request->search ?? null;
         $searchByName = $request->name ?? null;
         $creatorName = $request->creatorName ?? null;
         $tags = $request->tags ? explode(',', $request->tags) : null;
@@ -41,7 +42,7 @@ class ImageController extends Controller
         $categories = $request->categoriesIds ? explode(',', $request->categoriesIds) : null;
         $imageOrientationsIds = $request->orientationsIds ? explode(',', $request->orientationsIds) : null;
 
-        $isEditorChoice = $request->isEditorsChoice;
+        $isEditorsChoice = $request->isEditorChoice ?? null;
         $isFree = $request->isFree;
         $peopleCount = $request->people_count;
 
@@ -69,14 +70,23 @@ class ImageController extends Controller
             $query->whereBetween('images.created_at', $createdAtRange);
         }
 
+        // search by image name or tags
+        if($search) {
+            $query->where(function ($q) use($search) {
+                $q->where('name', 'LIKE', "%$search%");
+                $q->orWhereHas('tags', function ($qq) use ($search) {
+                    $qq->where('tags.name', 'LIKE', "%$search%");
+                });
+            });
+        }
+
+        // search only by name
         if($searchByName) {
             $query->where(function ($q) use($searchByName) {
                 $q->where('name', 'LIKE', "%$searchByName%");
-//                $q->orWhereHas('tags', function ($qq) use ($searchByName) {
-//                    $qq->where('tags.name', 'LIKE', "%$search%");
-//                });
             });
         }
+        // search only by tags
         if($tags) {
             $tagsDb = Tag::whereIn('name', $tags)->get();
             $query->join('image_tag', 'image_tag.image_id', 'images.id');
@@ -152,8 +162,8 @@ class ImageController extends Controller
             $query->where('users.full_name', "LIKE", "%$creatorName%");
         }
 
-        if($isEditorChoice) {
-            $query->where('isEditorsChoice', $isEditorChoice);
+        if($isEditorsChoice) {
+            $query->where('isEditorsChoice', $isEditorsChoice);
         }
         if($isFree) {
             $query->where('isFree', $isFree);
@@ -212,6 +222,7 @@ class ImageController extends Controller
                 'collection',
                 'imageOrientation',
                 'category',
+                'imageVariants.size'
         )->where('id', $imageId);
 
         $query->withCount('likes');
@@ -507,7 +518,8 @@ class ImageController extends Controller
 
         // same collection
         $sameImageByCollectionQuery =
-            Image::where('collection_id', $image->collection_id)
+            Image::with('imageVariants.size')
+                ->where('collection_id', $image->collection_id)
             ->orderBy('created_at', 'desc');
 
         $sameImageByCollection = $sameImageByCollectionQuery->take(20)->get();
@@ -516,7 +528,8 @@ class ImageController extends Controller
         // same creator
 
         $sameImageByCreatorQuery =
-            Image::where('creator_id', $image->creator_id)
+            Image::with('imageVariants.size')
+                ->where('creator_id', $image->creator_id)
                 ->orderBy('created_at', 'desc');
 
         $sameImageByCreator = $sameImageByCreatorQuery->take(20)->get();
@@ -526,7 +539,8 @@ class ImageController extends Controller
         // same category
 
         $sameImageByCategoryQuery =
-            Image::where('category_id', $image->category_id)
+            Image::with('imageVariants.size')
+                ->where('category_id', $image->category_id)
                 ->orderBy('created_at', 'desc');
 
         $sameImageByCategory = $sameImageByCategoryQuery->take(20)->get();
@@ -537,13 +551,22 @@ class ImageController extends Controller
 
         if($image->photoModel) {
             $sameImageByModelQuery =
-                Image::leftJoin('photo_models', 'images.photo_model_id', 'photo_models.id')
+                Image::with('imageVariants.size')->leftJoin('photo_models', 'images.photo_model_id', 'photo_models.id')
                     ->where('photo_models.id', $image->photo_model_id)
                     ->orderBy('images.created_at', 'desc');
 
             $sameImageByModel = $sameImageByModelQuery->take(20)->get();
             $counter[] = ['sameImageByModel' => $sameImageByModelQuery->count()];
         }
+
+        $sameImageByTags->map(function ($image) {
+            $image->image_variants = ImageVariant::with('size')
+                ->where('image_id', $image->id)
+                ->get();
+            return $image;
+        });
+
+
 
         return response()->json(compact(
   'sameImageByTags',

@@ -14,7 +14,7 @@ export default class ImageService {
     }
 
     static async show(imageId) {
-        return await $api(`/images${imageId}`);
+        return await $api(`/images/${imageId}`);
     }
 
     static async download(imageId, variantId) {
@@ -67,4 +67,7 @@ export default class ImageService {
         return await $api(`/images/orientations`);
     }
 
+    static async likeable(id) {
+        return await $api(`/images/${id}/likeable`)
+    }
 }

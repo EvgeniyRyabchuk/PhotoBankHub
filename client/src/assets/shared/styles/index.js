@@ -17,6 +17,10 @@ const AlignItem = styled(Box)(() => ({
     alignItems: 'center',
 }))
 
+const JustifySpaceBetween = styled(Box)(() => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+}))
 
 
 const JustifyBox = styled(JustifyContent)(() => ({
@@ -39,6 +43,7 @@ export {
     AlignItem,
     JustifyBox,
     JustifyWrap,
-    ErrorSpan
+    JustifySpaceBetween,
+    ErrorSpan,
 }
 

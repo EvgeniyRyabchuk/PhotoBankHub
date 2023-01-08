@@ -25,6 +25,7 @@ import {JustifyBox, JustifyContent} from "../../../assets/shared/styles";
 import GalleryFilter from "../../../components/GalleryFilter";
 import defOrderSortOrderData, {getSortOrderOptionValue} from "./sortOptions";
 import {FilterAlt, Sort} from "@mui/icons-material";
+import {getImagesWithOverlay} from "../shared";
 
 
 //TODO: hide default value in search params
@@ -56,38 +57,6 @@ const ImageGalleryPage = () => {
 
     const [isShowMoreMode, setIsShowMoreMode] = useState(false);
 
-    const formattedImages = (images) => {
-        const newImages = [];
-        for(let image of images) {
-            const originalSize = image.image_variants.find(v => v.size.name === 'ORIGINAL');
-            const imageForamtted = {
-                src: getPreview(image.preview),
-                width: originalSize.width,
-                height: originalSize.height,
-                tags: image.tags.map(t => ({value: t.name, title: t.name}) ),
-                caption: `${image.name} (${image.creator.user.full_name})`,
-            };
-            newImages.push(imageForamtted);
-        };
-        return newImages;
-    }
-
-    const getImagesWithOverlay = (images) => {
-        const forattedImageList = formattedImages(images);
-        return forattedImageList.map((image) => ({
-            ...image,
-            customOverlay: (
-                <div className="custom-overlay__caption">
-                    <div>{image.caption}</div>
-                    {image.tags &&
-                        image.tags.map((t, index) => (
-                            <div key={index} className="custom-overlay__tag">
-                                {t.title}
-                            </div>
-                        ))}
-                </div>
-            )}));
-    };
 
     const [fetchImages, isLoading, error ] = useFetching(async () => {
         const { data } = await ImageService.getAll(location.search);
@@ -96,7 +65,6 @@ const ImageGalleryPage = () => {
 
         const newImagesWithLayout = getImagesWithOverlay(data.data);
 
-        console.log(newImagesWithLayout);
         if(isShowMoreMode)
             setImages([...images, ...newImagesWithLayout]);
         else
@@ -183,10 +151,12 @@ const ImageGalleryPage = () => {
     });
 
     const handleClick = (index, item) => {
-        setLightboxController({
-            toggler: !lightboxController.toggler,
-            slide: index + 1
-        })
+        // setLightboxController({
+        //     toggler: !lightboxController.toggler,
+        //     slide: index + 1
+        // })
+
+        navigate(`/images/${item.id}`);
     }
 
     const onPageChange = (e, value) => {
@@ -286,6 +256,8 @@ const ImageGalleryPage = () => {
                 />
             </Box>
 
+
+
             <Box>
                 <Gallery
                     images={images}
@@ -345,12 +317,12 @@ const ImageGalleryPage = () => {
             </Box>
 
 
-            <FsLightbox
-                toggler={lightboxController.toggler}
-                sources={images.map(i => i.src)}
-                slide={lightboxController.slide}
-                types={[...new Array(images.length).fill('image')]}
-            />
+            {/*<FsLightbox*/}
+            {/*    toggler={lightboxController.toggler}*/}
+            {/*    sources={images.map(i => i.src)}*/}
+            {/*    slide={lightboxController.slide}*/}
+            {/*    types={[...new Array(images.length).fill('image')]}*/}
+            {/*/>*/}
 
         </div>
     );

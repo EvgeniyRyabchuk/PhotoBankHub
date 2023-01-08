@@ -190,7 +190,7 @@ const Navbar = () => {
                     <MenuItem>
                         <Visibility sx={{ mr: 1}}/> Views
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem onClick={() => navigate('/downloads')}>
                         <Download sx={{ mr: 1}}/> Downloads
                     </MenuItem>
 

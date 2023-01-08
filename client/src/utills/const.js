@@ -13,6 +13,10 @@ const defIsEditorChoice = false;
 const defIsModelExist = false;
 
 
+const mainPrimaryColorHex = '#17B7B2';
+const mainSecondaryColorHex = '#28282C';
+const mainWhiteColorHex = '#FDF4F6';
+
 export {
     defPage,
     defLimit,
@@ -22,5 +26,10 @@ export {
     defSizeIndex,
     defLevel,
     defIsEditorChoice,
-    defIsModelExist
+    defIsModelExist,
+
+    mainPrimaryColorHex,
+    mainSecondaryColorHex,
+    mainWhiteColorHex
+
 }

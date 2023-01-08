@@ -22,7 +22,7 @@ import {
   useTable,
 } from "react-table";
 
-import ScrollBar from "simplebar-react";
+// import ScrollBar from "simplebar-react";
 import {FlexBox} from "../../assets/shared/styles";
 import {H5} from "../../assets/typography";
 
@@ -99,7 +99,7 @@ const CustomTable = (props) => {
 
   return (
     <Box>
-      <ScrollBar>
+      <Box>
         <Table
           {...getTableProps()}
           sx={{
@@ -183,7 +183,7 @@ const CustomTable = (props) => {
             })}
           </TableBody>
         </Table>
-      </ScrollBar>
+      </Box>
 
       {!hidePagination && (
         <Stack alignItems="flex-end" marginY={1}>
