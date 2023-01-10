@@ -4,10 +4,10 @@ import {toast} from "react-toastify";
 import {
     PromiseAlert,
 } from "../utills/alert";
+import {downloadFile} from "../utills/axios";
 
 
 export default class ImageService {
-
 
     static async getAll(searchParams = '') {
         return await $api(`/images${searchParams}`);
@@ -17,6 +17,23 @@ export default class ImageService {
         return await $api(`/images/${imageId}`);
     }
 
+    static async downloadPreview(imageId) {
+        const promise = $api.get(`/images/${imageId}/download`, {
+            responseType: 'blob',
+        });
+
+        toast.promise(promise,
+            {
+                pending: PromiseAlert.FETCH_IMAGE,
+                success: PromiseAlert.FETCH_IMAGE_SUCCESS,
+                error: PromiseAlert.FETCH_IMAGE_ERROR
+            }
+        )
+
+        const data = (await promise).data;
+        downloadFile(data);
+    }
+
     static async download(imageId, variantId) {
         const promise = $api.get(`/images/${imageId}/variants/${variantId}/download`, {
             responseType: 'blob',
@@ -24,40 +41,33 @@ export default class ImageService {
 
         toast.promise(promise,
             {
-                pending: PromiseAlert.FETCH_LOGIN_PENDING,
-                success: PromiseAlert.FETCH_LOGIN_SUCCESS,
-                error: PromiseAlert.FETCH_LOGIN_ERROR
+                pending: PromiseAlert.FETCH_IMAGE,
+                success: PromiseAlert.FETCH_IMAGE_SUCCESS,
+                error: `${PromiseAlert.FETCH_IMAGE_ERROR}`
             }
         )
 
         const data = (await promise).data;
-        // console.log(data)
-        const href = URL.createObjectURL(data);
-
-        // create "a" HTML element with href to file & click
-        const link = document.createElement('a');
-        link.href = href;
-        link.setAttribute('download', '1.png'); //or any other extension
-        document.body.appendChild(link);
-        link.click();
-
-        // clean up "a" element & remove ObjectURL
-        document.body.removeChild(link);
-        URL.revokeObjectURL(href);
-
-        // return promise;
+        downloadFile(data);
     }
+
+    static async like(imageId) {
+        return $api.post(`/images/${imageId}/likes`);
+    }
+
+    static async view(imageId) {
+        return $api.post(`/images/${imageId}/views`);
+    }
+
 
 
     static async getMinMaxValues() {
         return $api.get(`/images/min-max`);
     }
 
-
     static async getLevels() {
         return await $api(`/images/levels`);
     }
-
 
     static async getSizes() {
         return await $api(`/images/sizes`);

@@ -5,13 +5,13 @@ const simpleFormattedImages = (images) => {
     const newImages = [];
     for(let image of images) {
         const originalSize = image.image_variants.find(v => v.size.name === 'ORIGINAL');
-        const imageForamtted = {
+        const imageFormatted = {
             id: image.id,
             width: originalSize.width,
             height: originalSize.height,
             src: getPreview(image.preview),
         };
-        newImages.push(imageForamtted);
+        newImages.push(imageFormatted);
     };
     return newImages;
 }
@@ -20,7 +20,7 @@ const formattedImages = (images) => {
     const newImages = [];
     for(let image of images) {
         const originalSize = image.image_variants.find(v => v.size.name === 'ORIGINAL');
-        const imageForamtted = {
+        const imageFormatted = {
             id: image.id,
             src: getPreview(image.preview),
             width: originalSize.width,
@@ -28,7 +28,7 @@ const formattedImages = (images) => {
             tags: image.tags.map(t => ({value: t.name, title: t.name}) ),
             caption: `${image.name} (${image.creator.user.full_name})`,
         };
-        newImages.push(imageForamtted);
+        newImages.push(imageFormatted);
     };
     return newImages;
 }

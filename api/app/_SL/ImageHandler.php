@@ -48,7 +48,7 @@ class ImageHandler {
     public function saveOriginal() {
         $imageId = $this->imageModel->id;
         $filename = $this->name."_".time()."_original.".$this->imageFile->extension();
-        $relativePath = "/images/$imageId/";
+        $relativePath = "/images/$imageId";
         Storage::disk('private')->putFileAs($relativePath, $this->imageFile, $filename);
         return ['location' => $relativePath, 'filename' => $filename];
     }
@@ -101,8 +101,8 @@ class ImageHandler {
 
             if($size->name === 'ORIGINAL') {
                 $ext = $this->imageFile->extension();
-                $path = $originalPath;
-                $size_in_byte = File::size(storage_path("app/private/$path/$originalFileName"));
+                $path = "$originalPath/$originalFileName";
+                $size_in_byte = File::size(storage_path("app/private/$path"));
             } else {
                 $ext = 'jpeg';
                 $width = intval($this->srcWidth / $size->division_factor);

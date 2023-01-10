@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use function GuzzleHttp\Promise\all;
 use function Symfony\Component\String\s;
 
 
@@ -410,7 +411,12 @@ class ImageController extends Controller
             // checking access
             if ($user->role->name === 'client') {
                 $client = $user->client;
-                if ($client->plan->access_level >= $imageVariant->size->min_access_level) {
+                if (!$client->plan_id) {
+                    return response()->json([
+                        'message' => 'no plan yet'
+                    ], 403);
+                }
+                if($client->plan->access_level >= $imageVariant->size->min_access_level) {
                     if (Carbon::parse($client->plan_expired_at)->gt(Carbon::now())) {
                         if ($client->left_image_count > 0) {
                             $alreadyHaveDownload = Download::where([
@@ -480,6 +486,15 @@ class ImageController extends Controller
     }
 
     public function addView(Request $request, $imageId) {
+
+        //TODO: test on server
+//        $ip1 = request()->ip();
+//        $ip2 = $request->ip();
+//        $ip3 = \Request::ip();
+//        $ip4 = \Request::getClientIp(true);
+//        dd($ip1, $ip2, $ip3, $ip4);
+
+
         $image = Image::findOrFail($imageId);
         $viewExist = View::where([
             'image_id' => $image->id,
@@ -500,6 +515,7 @@ class ImageController extends Controller
     }
 
     public function likeable(Request $request, $imageId) {
+        $response = [];
         $counter = [];
         $image = Image::findOrFail($imageId);
 
@@ -510,55 +526,13 @@ class ImageController extends Controller
             ->join('tags', 'image_tag.tag_id', 'tags.id')
             ->join('images', 'image_tag.image_id', 'images.id')
             ->select('images.*')
+            ->where('images.id', '!=', $image->id)
             ->whereIn('tags.id', $tagIds)
-            ->orderBy('images.created_at', 'desc');
+            ->orderBy('images.created_at', 'desc')
+            ->distinct();
 
+        $allTags = implode(',', $image->tags->pluck('name')->toArray());
         $sameImageByTags = $sameImageByTagsQuery->take(20)->get();
-        $counter[] = ['sameImageByTags' => $sameImageByTagsQuery->count()];
-
-        // same collection
-        $sameImageByCollectionQuery =
-            Image::with('imageVariants.size')
-                ->where('collection_id', $image->collection_id)
-            ->orderBy('created_at', 'desc');
-
-        $sameImageByCollection = $sameImageByCollectionQuery->take(20)->get();
-        $counter[] = ['sameImageByCollection' => $sameImageByCollectionQuery->count()];
-
-        // same creator
-
-        $sameImageByCreatorQuery =
-            Image::with('imageVariants.size')
-                ->where('creator_id', $image->creator_id)
-                ->orderBy('created_at', 'desc');
-
-        $sameImageByCreator = $sameImageByCreatorQuery->take(20)->get();
-        $counter[] = ['sameImageByCreator' => $sameImageByCreatorQuery->count()];
-
-
-        // same category
-
-        $sameImageByCategoryQuery =
-            Image::with('imageVariants.size')
-                ->where('category_id', $image->category_id)
-                ->orderBy('created_at', 'desc');
-
-        $sameImageByCategory = $sameImageByCategoryQuery->take(20)->get();
-        $counter[] = ['sameImageByCategory' => $sameImageByCategoryQuery->count()];
-
-        // same model (if exist)
-        $sameImageByModel = [];
-
-        if($image->photoModel) {
-            $sameImageByModelQuery =
-                Image::with('imageVariants.size')->leftJoin('photo_models', 'images.photo_model_id', 'photo_models.id')
-                    ->where('photo_models.id', $image->photo_model_id)
-                    ->orderBy('images.created_at', 'desc');
-
-            $sameImageByModel = $sameImageByModelQuery->take(20)->get();
-            $counter[] = ['sameImageByModel' => $sameImageByModelQuery->count()];
-        }
-
         $sameImageByTags->map(function ($image) {
             $image->image_variants = ImageVariant::with('size')
                 ->where('image_id', $image->id)
@@ -566,20 +540,95 @@ class ImageController extends Controller
             return $image;
         });
 
+        $response[] =  [
+            'title' => 'Same Image By Tags',
+            'images' => $sameImageByTags,
+            "count" => $sameImageByTagsQuery->count(),
+            'search' => "tags=$allTags"
+        ];
 
 
-        return response()->json(compact(
-  'sameImageByTags',
-'sameImageByCollection',
-            'sameImageByCreator',
-            'sameImageByCategory',
-            'sameImageByModel',
-            'counter'
-        ));
+        // same collection
+        $sameImageByCollectionQuery =
+            Image::with('imageVariants.size')
+                ->where('collection_id', $image->collection_id)
+                ->where('images.id', '!=', $image->id)
+                ->orderBy('created_at', 'desc')
+                ->select('images.*');
+
+        $sameImageByCollection = $sameImageByCollectionQuery->take(20)->get();
+
+        $response[] =  [
+            'title' => 'Same Image By Collection',
+            'images' => $sameImageByCollection,
+            "count" => $sameImageByCollectionQuery->count(),
+            'search' => "collectionId=$image->collection_id"
+        ];
+
+
+        // same creator
+
+        $sameImageByCreatorQuery =
+            Image::with('imageVariants.size')
+                ->where('creator_id', $image->creator_id)
+                ->where('images.id', '!=', $image->id)
+                ->orderBy('created_at', 'desc')
+                ->select('images.*');
+
+        $sameImageByCreator = $sameImageByCreatorQuery->take(20)->get();
+
+        $response[] = [
+            'title' => 'Same Image By Creator',
+            'images' => $sameImageByCreator,
+            "count" => $sameImageByCreatorQuery->count(),
+            'search' => "creatorId=$image->creator_id"
+        ];
+
+        // same category
+
+        $sameImageByCategoryQuery =
+            Image::with('imageVariants.size')
+                ->where('category_id', $image->category_id)
+                ->where('images.id', '!=', $image->id)
+                ->orderBy('created_at', 'desc')
+                ->select('images.*');
+
+        $sameImageByCategory = $sameImageByCategoryQuery->take(20)->get();
+
+        $response[] = [
+            'title' => 'Same Image By Category',
+            'images' => $sameImageByCategory,
+            "count" => $sameImageByCategoryQuery->count(),
+            'search' => "categoriesIds=$image->category_id"
+        ];
+
+        // same model (if exist)
+        $sameImageByModel = [];
+
+        if($image->photoModel) {
+            $sameImageByModelQuery =
+                Image::with('imageVariants.size')
+                    ->leftJoin('photo_models', 'images.photo_model_id', 'photo_models.id')
+                    ->where('photo_models.id', $image->photo_model_id)
+                    ->where('images.id', '!=', $image->id)
+                    ->orderBy('images.created_at', 'desc')
+                    ->select('images.*');
+
+            $sameImageByModel = $sameImageByModelQuery->take(20)->get();
+            $counter[] = $sameImageByModelQuery->count();
+
+            $photoModelName = $image->photoModel->full_name;
+
+            $response[] = [
+                'title' => 'Same Image By Model',
+                'images' => $sameImageByModel,
+                "count" => $sameImageByModelQuery->count(),
+                'search' => "photoModelName=$photoModelName"
+            ];
+        }
+
+        return response()->json($response);
     }
-
-
-
 
 
     public function getMinMax(Request $request) {
@@ -596,6 +645,7 @@ class ImageController extends Controller
 
     public function getSizes() {
         $sizes = config('const_data.sizeTitles');
+
         return response()->json($sizes);
     }
 

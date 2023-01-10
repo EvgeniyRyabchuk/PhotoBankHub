@@ -14,9 +14,15 @@ class ClientController extends Controller
 {
     public function getFavorites(Request $request) {
         $client = Auth::user()->client;
-        $favorites = Favorite::where('client_id', $client->id)
+        $favorites = Favorite::with('imageIds')->where('client_id', $client->id)
             ->orderBy('created_at', 'desc')
+            ->withCount('images')
             ->get();
+
+        $favorites = $favorites->map(function ($favorite) {
+            $favorite->imageIds = $favorite->imageIds->pluck('image_id');
+            return $favorite;
+        });
 
         return response()->json($favorites);
     }
@@ -47,7 +53,7 @@ class ClientController extends Controller
         $imageId = $request->imageId;
         $image = Image::findOrFail($imageId);
 
-        $favorite = Favorite::where([
+        $favorite = Favorite::withCount('images')->where([
             'client_id' => $client->id,
             'id' => $favoriteId,
         ])->first();
@@ -106,8 +112,6 @@ class ClientController extends Controller
         }
         return response()->json($data);
     }
-
-
 
     protected function storeOrUpdateFavorite($request, $mode, $client, $favorite = null): Model {
         $title = $request->title;

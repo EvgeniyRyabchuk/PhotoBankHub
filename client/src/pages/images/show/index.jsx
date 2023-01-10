@@ -7,38 +7,62 @@ import {
     Button,
     Chip,
     CircularProgress,
+    Divider,
     FormControl,
     FormControlLabel,
     FormLabel,
-    Grid, ImageList, ImageListItem, ImageListItemBar,
+    Grid,
     Radio,
     RadioGroup,
     Typography
 } from "@mui/material";
-import {getAvatar, getPreview} from "../../../utills/axios";
+import {downloadFile, getAvatar, getPreview} from "../../../utills/axios";
 import {useNavigate, useParams} from "react-router-dom";
 import FsLightbox from "fslightbox-react";
 import Stack from "@mui/material/Stack";
-import {Download, Favorite, Grid3x3, Star, Visibility} from "@mui/icons-material";
+import {
+    Collections,
+    Download,
+    Favorite,
+    Grid3x3,
+    KeyboardDoubleArrowRight,
+    Star,
+    Visibility
+} from "@mui/icons-material";
 import {DownloadButton, DownloadPreview, ImageContainerWrapper, ImageName, ImageVariant, ImageWrapper} from "./styled";
 import {formatBytes} from "../../../utills/size";
 import {Gallery} from "react-grid-gallery";
 import {simpleFormattedImages} from "../shared";
+import {JustifySpaceBetween} from "../../../assets/shared/styles";
+import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
+import {toast} from "react-toastify";
+import {useSelector} from "react-redux";
+import AddToFavorite from "../../../components/modals/AddToFavorite";
+import {ModalTransitionType} from "../../../utills/const";
 
 
 const ShowImagePage = () => {
 
+    const { user, isAuth } = useSelector(state => state.user);
     const { id } = useParams();
     const navigate = useNavigate();
     const [image, setImage] = useState(null);
     const [likeable, setLikeable] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState(null);
 
+    const [addToFavoriteOpen, setAddToFavoriteOpen] = useState(false);
 
     const [fetchingImage, isLoading, error] = useFetching(async () => {
         const { data: imageData } = await ImageService.show(id);
         const { data: likeableData } = await ImageService.likeable(id);
-        setImage(imageData);
+        const { data: viewsData } = await ImageService.view(id);
+
+        if(viewsData.currentViewCount) {
+            setImage({...imageData, views_count: viewsData.currentViewCount});
+        } else {
+            setImage(imageData);
+        }
+
         setLikeable(likeableData);
         const variant = imageData.image_variants.length > 0 ? imageData.image_variants[0] : null;
         setSelectedVariant(variant);
@@ -47,7 +71,7 @@ const ShowImagePage = () => {
 
     useEffect(() => {
         fetchingImage();
-    }, [])
+    }, [id])
 
 
     const [lightboxController, setLightboxController] = useState({
@@ -67,13 +91,78 @@ const ShowImagePage = () => {
         (${formatBytes(variant.size_in_byte, 0)} | ${variant.extension})`;
     }
 
-    const handleLikeableImageClick = (image) => {
-        navigate(`/images/${image.id}`)
+    const handleLikeableImageClick = (index, item) => {
+        navigate(`/images/${item.id}`);
     }
 
-    const handleLikeableImageSeactionClick = (index, item) => {
-        console.log('section click handler');
+    const handleLikeableImageSectionClick = (search) => {
+        navigate(`/images?${search}`);
     }
+
+    const renderLikeableSections = () => {
+        const content = likeable.map((item, index) => {
+            return (
+                <Box key={index} sx={{ my: 3, px: 5}}>
+                    <Divider sx={{ mb: 1}}/>
+                    <JustifySpaceBetween>
+                        <Typography variant='h6'>
+                            {item.title}
+                        </Typography>
+
+                        <Button variant="outlined"
+                                size="small"
+                                endIcon={<KeyboardDoubleArrowRight/>}
+                                onClick={() => handleLikeableImageSectionClick(item.search)}
+                        >
+                            Show More ({item.count})
+                        </Button>
+
+                    </JustifySpaceBetween>
+                    <Divider  sx={{ mt: 1}}/>
+                    <Gallery
+                        images={simpleFormattedImages(item.images)}
+                        onClick={handleLikeableImageClick}
+                        enableImageSelection={true}
+                    />
+
+                </Box>
+            )
+        })
+
+
+        return (
+            <Box sx={{ my: 5}}>
+                {content}
+            </Box>
+        )
+    }
+
+    const downloadPreview = () => {
+        ImageService.downloadPreview(image.id);
+    }
+
+    const download = () => {
+        if(!selectedVariant) {
+            toast.error('please select image variant for download')
+            return;
+        }
+        if(!isAuth) navigate(`/login`);
+        if(!user.client.plan_id) {
+            navigate(`/plans`);
+        }
+        ImageService.download(image.id, selectedVariant.id);
+    }
+
+    const addLike = async () => {
+        const { data } = await ImageService.like(id);
+        setImage({...image, likes_count: data.currentLikeCount});
+    }
+
+    const openFavoriteModal = () => {
+        if(!isAuth) navigate(`/login`);
+        setAddToFavoriteOpen(true)
+    }
+
 
     return (
         <div>
@@ -114,24 +203,45 @@ const ShowImagePage = () => {
 
                             </Box>
                         </Grid>
-
                         <Grid item xs={12} sm={12} md={4} lg={4} xl={5} sx={{ p: 2}}>
-                            <Stack direction="row" spacing={1} flexWrap={'wrap'}>
+                            <Stack direction="row"
+                                   spacing={2}
+                                   justifyContent='space-between'
+                                   flexWrap={'wrap'}
+                            >
                                 <Chip
-                                    sx={{ cursor: 'pointer' }}
+                                    sx={{ cursor: 'pointer', m: 1 }}
                                     onClick={() => {}}
                                     avatar={
-                                        <Avatar alt="Natacha"
-                                                src={getAvatar(image.creator.user)}
+                                        <Avatar
+                                            alt="Natacha"
+                                            src={getAvatar(image.creator.user)}
                                         />}
                                     label={`Creator: ${image.creator.user.full_name}`}
                                     variant="outlined"
                                 />
                                 <Chip
+                                    style={{ margin: '8px' }}
                                     label={`ID: ${image.id}`}
                                     icon={<Grid3x3/>}
                                 />
                             </Stack>
+                            {
+                                image.collection &&
+                                <Stack direction="row"
+                                       spacing={2}
+                                       justifyContent='center'
+                                       flexWrap={'wrap'}>
+                                    <Chip
+                                        sx={{ cursor: 'pointer', m: 1 }}
+                                        label={`Collection: ${image.collection.name}`}
+                                        icon={<Collections />}
+                                        onClick={() => {}}
+                                        variant="outlined"
+                                    />
+                                </Stack>
+                            }
+
                             <Stack direction="row"
                                    justifyContent='center'
                                    sx={{ my: 2 }}
@@ -149,7 +259,10 @@ const ShowImagePage = () => {
                                 <Chip icon={<Favorite />}
                                       label={`Likes: ${image.likes_count}`}
                                       color="success"
-                                      variant="outlined" />
+                                      variant="outlined"
+                                      onClick={addLike}
+                                      sx={{ ":hover": { color: 'red' } }}
+                                />
                             </Stack>
 
                             <Box sx={{
@@ -179,12 +292,10 @@ const ShowImagePage = () => {
                                                     key={variant.id}
                                                     onClick={() => setSelectedVariant(variant)}>
                                                     <FormControlLabel
-                                                        key={variant.id}
                                                         sx={{ px: 1}}
                                                         value={variant.id}
                                                         control={<Radio />}
                                                         label={getImageVariantLabel(variant)}
-
                                                     />
                                                 </ImageVariant>
                                             )
@@ -195,34 +306,37 @@ const ShowImagePage = () => {
 
                             <Grid container spacing={1}>
                                 <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
-                                    <DownloadPreview sx={{ width: '100%'}} variant="contained" startIcon={<Download />}>
+                                    <DownloadPreview
+                                        sx={{ width: '100%'}}
+                                        variant="contained"
+                                        startIcon={<Download />}
+                                        onClick={downloadPreview}
+                                    >
                                         Download Preview
                                     </DownloadPreview>
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
-                                    <Grid container spacing={1}>
-                                        <Grid item xs={3} sm={3} md={12} lg={3} xl={3}>
-                                            <Button fullWidth variant="outlined" endIcon={<Favorite />}>
-                                                {image.likes_count}
-                                            </Button>
-                                        </Grid>
-                                        <Grid item xs={9} sm={9} md={12} lg={9} xl={9}>
-                                            <Button fullWidth variant="outlined" endIcon={<Star />}>
-                                                Add To Favorite
-                                            </Button>
-                                        </Grid>
-                                    </Grid>
+                                    <Button fullWidth
+                                            variant="outlined"
+                                            endIcon={<Star />}
+                                            onClick={openFavoriteModal}
+                                    >
+                                        Add To Favorite
+                                    </Button>
                                 </Grid>
                             </Grid>
 
                             <Box sx={{ my: 2}}>
-                                <DownloadButton sx={{ width: '100%'}} variant="contained" startIcon={<Download />}>
-                                    Download
+                                <DownloadButton
+                                    sx={{ width: '100%'}}
+                                    variant="contained"
+                                    startIcon={<Download />}
+                                    onClick={download}>
+                                        Download
                                 </DownloadButton>
                             </Box>
                         </Grid>
                     </Grid>
-
                     <FsLightbox
                         toggler={lightboxController.toggler}
                         sources={[ getPreview(image.preview) ]}
@@ -232,54 +346,18 @@ const ShowImagePage = () => {
              </ImageContainerWrapper>
             }
 
-            {
-                likeable &&
-                <Box sx={{ my: 5}}>
-
-                    <Box sx={{ my: 3}}>
-                        <Typography variant='h4'>
-                            Same Image By Tags
-                        </Typography>
-
-                        {/*<ImageList variant="masonry" cols={3} gap={8}>*/}
-                        {/*    {likeable.sameImageByTags.map((item) => (*/}
-                        {/*        <ImageListItem key={item.id} >*/}
-                        {/*            <img*/}
-                        {/*                src={`${getPreview(item.preview)}`}*/}
-                        {/*                srcSet={`${getPreview(item.preview)}`}*/}
-                        {/*                alt={item.name}*/}
-                        {/*                loading="lazy"*/}
-                        {/*            />*/}
-                        {/*            <ImageListItemBar position="below" title={item.name} />*/}
-                        {/*        </ImageListItem>*/}
-                        {/*    ))}*/}
-                        {/*</ImageList>*/}
-
-                        {/*<Grid container spacing={2} my={2} px={2}>*/}
-                        {/*    {likeable.sameImageByTags.map((item) => (*/}
-                        {/*        <Grid item md={3} xs={4} key={item.id}>*/}
-                        {/*            <img*/}
-                        {/*                src={getPreview(item.preview)}*/}
-                        {/*                alt={item.name}*/}
-                        {/*                onClick={handleLikeableImageClick(item)}*/}
-                        {/*                width="100%"*/}
-                        {/*                height="100%"*/}
-                        {/*                style={{ cursor: "pointer" }}*/}
-                        {/*            />*/}
-                        {/*        </Grid>*/}
-                        {/*    ))}*/}
-                        {/*</Grid>*/}
-
-                        <Gallery
-                            images={simpleFormattedImages(likeable.sameImageByTags)}
-                            onClick={handleLikeableImageClick}
-
-                        />
-
-                    </Box>
-
-                </Box>
+            { likeable &&
+                renderLikeableSections()
             }
+
+            { image &&
+                <AddToFavorite
+                    isOpen={addToFavoriteOpen}
+                    onClose={() => setAddToFavoriteOpen(false)}
+                    image={image}
+                />
+            }
+
         </div>
     );
 };

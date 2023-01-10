@@ -51,7 +51,11 @@ const PromiseAlert = {
 
     FETCH_LOGIN_PENDING: "Log in",
     FETCH_LOGIN_SUCCESS: "Successfully logged in",
-    FETCH_LOGIN_ERROR: "Error log in"
+    FETCH_LOGIN_ERROR: "Error log in",
+
+    FETCH_IMAGE: "Image Downloads",
+    FETCH_IMAGE_SUCCESS: "Image Download success",
+    FETCH_IMAGE_ERROR: "Fail to Download Image"
 
 }
 

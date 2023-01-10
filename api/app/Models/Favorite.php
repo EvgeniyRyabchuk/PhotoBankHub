@@ -13,6 +13,15 @@ class Favorite extends Model
         return $this->belongsToMany(Image::class);
     }
 
+    public function imageIds() {
+        return $this->belongsToMany(
+            Image::class,
+            'favorite_image',
+    'favorite_id',
+    'image_id')
+            ->select('image_id');
+    }
+
     public function client() {
         return $this->belongsTo(Client::class);
     }

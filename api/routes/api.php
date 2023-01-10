@@ -36,8 +36,6 @@ use Illuminate\Support\Facades\Route;
 //Route::redirect('')
 
 
-
-
 Route::controller(ImageController::class)
     ->prefix('images')
     ->group(function () {
@@ -56,47 +54,47 @@ Route::controller(ImageController::class)
         Route::middleware('auth:api')
             ->group(function () {
 
-            Route::post('/', 'store')
-                ->middleware('isCreator');
+                Route::post('/', 'store')
+                    ->middleware('isCreator');
 
-            Route::put('/{imageId}', 'update')
-                ->middleware('isCreator');
+                Route::put('/{imageId}', 'update')
+                    ->middleware('isCreator');
 
-            Route::delete('/{imageId}', 'delete')
-                ->middleware('adminOrCreator');
+                Route::delete('/{imageId}', 'delete')
+                    ->middleware('adminOrCreator');
 
-            Route::get('/{imageId}/download','downloadPreview');
-            Route::get('/{imageId}/variants/{variantId}/download','download');
+                Route::get('/{imageId}/download','downloadPreview');
+                Route::get('/{imageId}/variants/{variantId}/download','download');
 
-            Route::post('/{imageId}/likes','addLike')
-                ->middleware('isClient');
+                Route::post('/{imageId}/likes','addLike')
+                    ->middleware('isClient');
 
-        });
+            });
 
         Route::post('/{imageId}/views','addView');
 
-});
+    });
 
 
 // Auth routes
 Route::controller(AuthController::class)
     ->group(function () {
-    Route::post('/register', 'register');
-    Route::middleware('auth:api')->group(function () {
-        Route::get('/profile','profile');
-        Route::get('/profile-detail','profileDetail');
-        Route::delete('/logout', 'logout');
-    });
-    Route::post('google/callback', 'loginWithGoogleApi');
+        Route::post('/register', 'register');
+        Route::middleware('auth:api')->group(function () {
+            Route::get('/profile','profile');
+            Route::get('/profile-detail','profileDetail');
+            Route::delete('/logout', 'logout');
+        });
+        Route::post('google/callback', 'loginWithGoogleApi');
 
-});
+    });
 
 Route::controller(VerifyEmailController::class)
     ->middleware('auth:api')
     ->group(function () {
-    Route::post('/email/verification-notification','sendVerifyEmailNotification');
-    Route::post('/email/verify', 'verifyEmail');
-});
+        Route::post('/email/verification-notification','sendVerifyEmailNotification');
+        Route::post('/email/verify', 'verifyEmail');
+    });
 
 Route::controller(ResetPasswordController::class)->group(function () {
     Route::post('send-password-reset-email', 'sendEmailForResetPassword');
@@ -117,7 +115,7 @@ Route::prefix('users')
             Route::put('/{userId}', 'update');
             Route::delete('/{userId}', 'delete');
         });
-});
+    });
 
 
 Route::prefix('photo-models')
@@ -131,14 +129,14 @@ Route::prefix('photo-models')
 
         Route::middleware('adminOrCreatorAuth:api')
             ->group(function () {
-            Route::post('/', 'store');
-            Route::put('/{photoModelId}', 'update');
-            Route::delete('/{photoModelId}', 'delete');
-        });
+                Route::post('/', 'store');
+                Route::put('/{photoModelId}', 'update');
+                Route::delete('/{photoModelId}', 'delete');
+            });
 
 
 
-});
+    });
 
 
 Route::prefix('credit-cards')
@@ -150,7 +148,7 @@ Route::prefix('credit-cards')
         Route::post('/', 'store');
         Route::put('/{creditCardId}', 'update');
         Route::delete('/{creditCardId}', 'delete');
-});
+    });
 
 Route::controller(CategoryController::class)
     ->prefix('categories')
@@ -160,11 +158,11 @@ Route::controller(CategoryController::class)
         Route::middleware('isAdmin')
             ->group(function () {
 
-            Route::post('/', 'store');
-            Route::put('/{categoryId}', 'update');
-            Route::delete('/{categoryId}', 'delete');
+                Route::post('/', 'store');
+                Route::put('/{categoryId}', 'update');
+                Route::delete('/{categoryId}', 'delete');
+            });
     });
-});
 
 
 Route::prefix('creators/{creatorId}')
@@ -173,7 +171,7 @@ Route::prefix('creators/{creatorId}')
     ->group(function () {
         Route::get('/collections', 'getCollections');
 
-});
+    });
 
 Route::prefix('clients/{clientId}')
     ->middleware('isClient')
@@ -190,11 +188,7 @@ Route::prefix('clients/{clientId}')
                 Route::get('/{favoriteId}/images', 'getImageByFavorite');
                 Route::post('/{favoriteId}/images/', 'addImageToFavorite');
                 Route::delete('/{favoriteId}/images/{imageId}', 'deleteImageFromFavorite');
-
-
-        });
-
-
+            });
     });
 
 
@@ -208,7 +202,7 @@ Route::controller(CollectionController::class)
                 Route::put('/{collectionId}', 'update');
                 Route::delete('/{collectionId}', 'delete');
             });
-});
+    });
 
 
 Route::controller(BillingController::class)
@@ -219,7 +213,7 @@ Route::controller(BillingController::class)
         Route::post('/subscribe', 'subscribe');
         Route::delete('/unsubscribe', 'unsubscribe');
 
-});
+    });
 
 Route::controller(PlanController::class)
     ->prefix('plans')
@@ -231,7 +225,7 @@ Route::controller(PlanController::class)
 //        ->middleware('can:create,App\Models\Plan');
 //        ->can('create', \App\Models\Plan::class);
 
-});
+    });
 
 
 Route::controller(BillingInfoController::class)

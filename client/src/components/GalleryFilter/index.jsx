@@ -192,7 +192,7 @@ const GalleryFilter = ({
     }
     const fetchSizes = async () => {
         const response = await ImageService.getSizes();
-        setSizeList(response.data);
+        setSizeList([...response.data]);
     }
     const fetchOrientations = async () => {
         const response = await ImageService.getOrientations();
@@ -401,18 +401,20 @@ const GalleryFilter = ({
                                         aria-labelledby="demo-row-radio-buttons-group-label"
                                         name="row-radio-buttons-group"
                                         value={sizeIndex}
-                                        onChange={(e) =>
+                                        onChange={(e) => {
                                             setSizeIndex(e.target.value)}
+                                        }
                                     >
                                         {
-                                            sizeList.map((value, index) =>
-                                                <FormControlLabel
-                                                    key={index}
-                                                    value={index}
-                                                    control={<Radio />}
-                                                    label={value}
-                                                />
-                                            )
+                                            sizeList.map((value, index) => {
+                                              return (
+                                                  <FormControlLabel
+                                                      key={index}
+                                                      value={index}
+                                                      control={<Radio />}
+                                                      label={value}
+                                                />)
+                                            })
                                         }
                                     </RadioGroup>
                                 </FormControl>

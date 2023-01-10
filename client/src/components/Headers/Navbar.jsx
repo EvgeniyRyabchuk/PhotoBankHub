@@ -111,13 +111,18 @@ const Navbar = () => {
                     <Typography sx={{ minWidth: 100 }}>Plans</Typography>
                 </NavLink>
 
-                <NavLink style={{ display: 'inline-block' }} to='/login'>
-                    <Typography sx={{ minWidth: 100 }}>Login</Typography>
-                </NavLink>
+                { !isAuth &&
+                    <>
+                        <NavLink style={{ display: 'inline-block' }} to='/login'>
+                            <Typography sx={{ minWidth: 100 }}>Login</Typography>
+                        </NavLink>
 
-                <NavLink style={{ display: 'inline-block' }} to='/register'>
-                    <Typography sx={{ minWidth: 100 }}>Register</Typography>
-                </NavLink>
+                        <NavLink style={{ display: 'inline-block' }} to='/register'>
+                            <Typography sx={{ minWidth: 100 }}>Register</Typography>
+                        </NavLink>
+                    </>
+                }
+
 
 
                 {
