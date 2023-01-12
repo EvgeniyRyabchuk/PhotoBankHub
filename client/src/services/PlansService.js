@@ -10,4 +10,8 @@ export default class PlanService {
         return await $api.get(`/plans`);
     }
 
+    static async show(id) {
+        return await $api.get(`/plans/${id}`);
+    }
+
 }

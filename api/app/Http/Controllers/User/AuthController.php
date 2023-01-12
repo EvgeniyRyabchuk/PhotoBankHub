@@ -52,7 +52,7 @@ class AuthController extends Controller
 
     public function profile(Request $request) {
         $user = Auth::user();
-        $user->load('role', 'phone', 'client', 'creator');
+        $user->load('role', 'phone', 'client.plan', 'creator');
         return response()->json($user);
     }
 

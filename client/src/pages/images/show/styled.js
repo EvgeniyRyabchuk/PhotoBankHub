@@ -1,11 +1,12 @@
 import {Box, Button, styled} from "@mui/material";
 import {JustifyContent} from "../../../assets/shared/styles";
-import {blue, cyan, purple, red} from "@mui/material/colors";
-import {mainColorHex, mainPrimaryColorHex, mainSecondaryColorHex} from "../../../utills/const";
+import {cyan, purple} from "@mui/material/colors";
+import {mainPrimaryColorHex, mainSecondaryColorHex} from "../../../utills/const";
 
 
 const ImageContainerWrapper = styled(Box)(({theme}) => ({
     margin: '20px auto',
+    marginBottom: '60px',
     display: 'flex',
     width: '1280px',
 

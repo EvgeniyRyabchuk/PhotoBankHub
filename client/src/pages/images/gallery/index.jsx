@@ -73,7 +73,8 @@ const ImageGalleryPage = () => {
 
     useEffect(() => {
         setIsInitialized(true);
-    }, [])
+    }, []);
+
     useEffect(() => {
         if(!isShowMoreMode)
             window.scrollTo(0, 0);
@@ -184,7 +185,7 @@ const ImageGalleryPage = () => {
         console.log('on filter change', data);
     }, []);
 
-    console.log(images);
+
     return (
         <div>
             <h1>Gallery</h1>

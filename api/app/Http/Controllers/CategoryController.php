@@ -15,6 +15,12 @@ class CategoryController extends Controller
         return response()->json($categories);
     }
 
+    public function siblings(Request $request, $categoryId) {
+        $category = Category::findOrFail($categoryId);
+        $siblings = Category::where('parent_id', $category->parent_id)->get();
+        return response()->json($siblings);
+    }
+
     protected function storeOrUpdate($request, $mode, $categoryId = null) : Model {
         $name = $request->name;
         $parentId = $request->parentId;

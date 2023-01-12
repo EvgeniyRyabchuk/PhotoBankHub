@@ -1,5 +1,3 @@
-import {UserActionTypes} from "../reducers/userReducer";
-import AuthService from "../../services/AuthService";
 import {GeneralActionTypes} from "../reducers/generalReducer";
 import CategoryService from "../../services/CategoryService";
 

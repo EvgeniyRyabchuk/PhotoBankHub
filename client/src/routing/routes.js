@@ -17,6 +17,8 @@ const ShowImagePage = Loadable(lazy(() => import('../pages/images/show/index')))
 
 const DownloadsPage = Loadable(lazy(() => import('../pages/downloads/index')));
 
+const CheckoutPage = Loadable(lazy(() => import('../pages/checkout/index')));
+
 
 const routes = [
     { path: '/', element: <HomePage />, exact: true },
@@ -36,6 +38,15 @@ const routes = [
 
 
     { path: '/downloads', element: <DownloadsPage />, exact: true },
+
+    {
+        path: '/checkout',
+        element: <CheckoutPage />,
+        exact: true,
+        authenticated: true,
+        accessRoles: ['client']
+    },
+
 
 
     { path: '*', element: <_404NotFound/>, exact: true }

@@ -155,6 +155,8 @@ Route::controller(CategoryController::class)
     ->group(function () {
 
         Route::get('/', 'index');
+        Route::get('/{categoryId}/siblings', 'siblings');
+
         Route::middleware('isAdmin')
             ->group(function () {
 
@@ -213,7 +215,7 @@ Route::controller(BillingController::class)
         Route::post('/subscribe', 'subscribe');
         Route::delete('/unsubscribe', 'unsubscribe');
 
-    });
+});
 
 Route::controller(PlanController::class)
     ->prefix('plans')
@@ -221,6 +223,7 @@ Route::controller(PlanController::class)
     ->group(function () {
 
         Route::get('/', 'index');
+        Route::get('/{planId}', 'show');
 //        ->can('create','plan');
 //        ->middleware('can:create,App\Models\Plan');
 //        ->can('create', \App\Models\Plan::class);

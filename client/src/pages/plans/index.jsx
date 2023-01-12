@@ -20,6 +20,9 @@ import {
 import {useFetching} from "../../hooks/useFetching";
 import PlanService from "../../services/PlansService";
 import {PageLoader, PageLoaderElement} from "../../components/Loadable";
+import {useNavigate} from "react-router-dom";
+import {CardActionTypes} from "../../store/reducers/cardReducer";
+import {useDispatch} from "react-redux";
 
 // const defaultPlans = [
 //     {
@@ -47,6 +50,8 @@ const Plans = ({
    primaryButtonText = "Buy Now",
 
 }) => {
+
+    const navigate = useNavigate();
 
     const planDurations = [
         {
@@ -130,7 +135,13 @@ const Plans = ({
                                         ))}
                                     </PlanFeatures>
                                     <PlanAction>
-                                        <BuyNowButton>{primaryButtonText}</BuyNowButton>
+                                        <BuyNowButton
+                                            onClick={() => {
+                                                navigate(`/checkout?planId=${plan.id}&periodIndex=${activeDurationIndex}`)
+                                            }}
+                                        >
+                                            {primaryButtonText}
+                                        </BuyNowButton>
                                     </PlanAction>
                                 </Plan>
                             ))}

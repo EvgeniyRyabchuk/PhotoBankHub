@@ -3,6 +3,7 @@ import userRole from "../auth/roles";
 import LayoutSuspense from "../components/Layouts/Layout";
 import AuthGuard from "../auth/AuthGuard";
 import routes from "./routes";
+import {useMemo} from "react";
 
 /*
 
@@ -27,14 +28,19 @@ Template
 
 const Routing = () => {
 
-    const routesWithAuthGuard = routes.map((route) =>  {
+    const routesWithAuthGuard = useMemo(() => {
+        return routes.map((route) =>  {
             if(route.authenticated)
-                route.element = (<AuthGuard accessRoles={route.accessRoles}>
-                    {route.element}
-                </AuthGuard>)
+                route.element = (
+                    <AuthGuard accessRoles={route.accessRoles}>
+                        {route.element}
+                    </AuthGuard>
+                )
             return route;
-        }
-    )
+        });
+    }, []);
+
+    console.log(routesWithAuthGuard);
 
     return (
         <>

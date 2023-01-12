@@ -1,0 +1,390 @@
+//@import url('https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css');
+
+
+small {
+    font-size: 80%;
+}
+
+:-moz-focusring {
+    outline: auto;
+}
+
+input::-webkit-input-placeholder {
+    opacity: 1;
+    color: #cbd5e0;
+}
+
+input::-moz-placeholder {
+    opacity: 1;
+    color: #cbd5e0;
+}
+
+input:-ms-input-placeholder {
+    opacity: 1;
+    color: #cbd5e0;
+}
+
+input::placeholder {
+    opacity: 1;
+    color: #cbd5e0;
+}
+
+button {
+    cursor: pointer;
+}
+
+:disabled {
+    cursor: default;
+}
+
+/*! CSS Used from: Embedded */
+*,
+::after,
+::before {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: #e5e7eb;
+}
+
+::after,
+::before {
+    --tw-content: '';
+}
+
+
+input {
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+
+:-moz-focusring {
+    outline: auto;
+}
+
+input::placeholder {
+    opacity: 1;
+    color: #9ca3af;
+}
+
+
+:disabled {
+    cursor: default;
+}
+
+input::placeholder {
+    color: #6b7280;
+    opacity: 1;
+}
+
+
+
+
+/*! CSS Used from: Embedded */
+/*! @import https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css */
+
+
+
+.row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.col-6 {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-6 {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+@media (prefers-reduced-motion:reduce) {
+    .form-control {
+        transition: none;
+    }
+}
+
+.form-control::-ms-expand {
+    background-color: transparent;
+    border: 0;
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+}
+
+.form-control::-webkit-input-placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.form-control::-moz-placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.form-control:-ms-input-placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.form-control::-ms-input-placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.form-control::placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.form-control:disabled {
+    background-color: #e9ecef;
+    opacity: 1;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+.btn-primary:focus {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+    box-shadow: 0 0 0 .2rem rgba(38, 143, 255, .5);
+}
+
+.btn-primary:disabled {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+.my-5 {
+    margin-top: 3rem !important;
+}
+
+.my-5 {
+    margin-bottom: 3rem !important;
+}
+
+@media print {
+
+    *,
+    ::after,
+    ::before {
+        text-shadow: none !important;
+        box-shadow: none !important;
+    }
+}
+
+/*! end @import */
+/*! CSS Used from: Embedded */
+.form-group {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.form-control {
+    width: 100%;
+}
+
+.btn {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 10px 0 rgba(90, 116, 148, 0.4);
+}
+
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url(https://i.ibb.co/bzWmQ01/down-arrow.png);
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+
+    background-position-x: 6rem;
+    background-position-y: center;
+}
+@media (max-width: 330px) {
+    select {
+        background-position-x: 4.5rem;
+    }
+}
+@media (max-width: 576px) {
+    .date-cvv-box {
+        flex-direction: column;
+    }
+
+    #cardYear {
+        margin-left: 0 !important;
+    }
+
+    .cvv-label {
+        margin-right: 0px;
+    }
+
+    .cvv-class {
+        align-items: flex-start !important;
+    }
+
+    #cvv {
+        width: 100% !important;
+    }
+
+    .card-month {
+        flex: 1;
+        margin-right: 10px;
+    }
+
+    .card-year {
+        flex: 1;
+        margin-left: 5px;
+    }
+
+    .card {
+        width: 90% !important;
+    }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.form-group {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.form-control {
+    width: 100%;
+}
+.credit-card {
+    z-index: 21;
+    top: 125px;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.payment-form {
+    margin: 150px 35px 20px 35px;
+}
+
+.cvv-class {
+    flex: 1;
+    align-items: flex-end;
+}
+
+.cvv-label {
+    margin-right: 166px;
+}
+
+#cvv {
+    width: 75%;
+}
+
+#cardYear {
+    margin-top: 30px;
+    margin-left: 15px;
+}
+
+.date-cvv-box {
+    display: flex;
+    justify-content: space-between;
+}
+
+.expiry-class {
+    display: flex;
+
+    flex: 1;
+}
+
+.card-month {
+    flex: 1;
+}
+
+.card-year {
+    flex: 1;
+}
+
+.card-label {
+    color: #1a3b5d;
+    font-family: Source Sans Pro;
+    font-size: 14px;
+}
+
+.card {
+    max-width: 570px;
+    margin: auto;
+
+    z-index: 1;
+    flex-wrap: wrap;
+    width: 100%;
+    border-radius: 10px !important;
+    box-shadow: 0 30px 60px 0 rgba(90, 116, 148, 0.4);
+
+    background-color: white;
+}
+

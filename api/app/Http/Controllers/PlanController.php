@@ -49,8 +49,9 @@ class PlanController extends Controller
     }
 
 
-    public function show() {
-
+    public function show(Request $request, $planId) {
+        $plan = Plan::findOrFail($planId);
+        return response()->json($plan);
     }
 
     public function update() {

@@ -34,6 +34,7 @@ class BillingController extends Controller
         $creditCardId = $request->creditCardId;
         $valid_period_type = $request->valid_period_type;
         $current_image_count = $client->left_image_count;
+        $billingInfoId = $request->billing_info_id ?? $client->billing_info_id;
 
         if($valid_period_type === 'monthly') {
             $plan_expired_at = Carbon::now()->addMonth();
@@ -58,7 +59,6 @@ class BillingController extends Controller
             // is Main
         }
 
-        $billingInfoId = $client->billing_info_id;
 
         if($billingInfoId) {
             $billingInfo = BillingInfo::findOrFail($billingInfoId);
@@ -107,7 +107,8 @@ class BillingController extends Controller
 
     public function unsubscribe(Request $request) {
         $client = Auth::user()->client;
-        $newStatus = BillStatus::where('name', 'New')->first();
+        $newStatus = BillStatus::where('name', 'New')
+            ->first();
 
         $client->plan()->dissociate();
         $client->valid_period_type = null;

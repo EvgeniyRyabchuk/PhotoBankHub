@@ -1,10 +1,11 @@
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {ToastContainer} from "react-toastify";
 import Routing from "./routing/routing";
 import 'react-toastify/dist/ReactToastify.css';
 import React, {useEffect} from "react";
 import {useAction} from "./hooks/useAction";
 import GlobalStyles from "./assets/shared/styles/GlobalStyles";
+import {CardActionTypes} from "./store/reducers/cardReducer";
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
 
     useEffect(() => {
         profile();
+
     }, []);
 
 

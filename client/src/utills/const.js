@@ -11,7 +11,7 @@ const defLevel = 1;
 const defSizeIndex = 0;
 const defIsEditorChoice = false;
 const defIsModelExist = false;
-
+const defPeopleCount = 0;
 
 const mainPrimaryColorHex = '#17B7B2';
 const mainSecondaryColorHex = '#28282C';
@@ -44,6 +44,7 @@ export {
     defLevel,
     defIsEditorChoice,
     defIsModelExist,
+    defPeopleCount,
 
     mainPrimaryColorHex,
     mainSecondaryColorHex,

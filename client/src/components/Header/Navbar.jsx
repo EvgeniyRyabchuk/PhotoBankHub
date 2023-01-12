@@ -200,15 +200,19 @@ const Navbar = () => {
                     </MenuItem>
 
                     <Divider />
+                    {
+                        isAuth && user.client &&
+                        <Box>
+                            <p>
+                                Left image: {user.client.left_image_count} 
+                            </p>
+                            <p>
+                                Your plan: standard
+                            </p>
+                        </Box>
+                    }
 
-                    <Box>
-                        <p>
-                            Left image: 10
-                        </p>
-                        <p>
-                            Your plan: standard
-                        </p>
-                    </Box>
+
 
                     <Divider />
 

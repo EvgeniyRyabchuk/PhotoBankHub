@@ -16,7 +16,7 @@ import {
     RadioGroup,
     Typography
 } from "@mui/material";
-import {downloadFile, getAvatar, getPreview} from "../../../utills/axios";
+import {getAvatar, getPreview} from "../../../utills/axios";
 import {useNavigate, useParams} from "react-router-dom";
 import FsLightbox from "fslightbox-react";
 import Stack from "@mui/material/Stack";
@@ -34,11 +34,9 @@ import {formatBytes} from "../../../utills/size";
 import {Gallery} from "react-grid-gallery";
 import {simpleFormattedImages} from "../shared";
 import {JustifySpaceBetween} from "../../../assets/shared/styles";
-import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 import AddToFavorite from "../../../components/modals/AddToFavorite";
-import {ModalTransitionType} from "../../../utills/const";
 
 
 const ShowImagePage = () => {
@@ -170,20 +168,31 @@ const ShowImagePage = () => {
             { !isLoading && image &&
              <ImageContainerWrapper>
                     <Grid container>
-                        <Grid item xs={12} sm={12} md={8} lg={8} xl={7} sx={{ p: 2}}>
-                            <ImageName text={image.name}>
-                                {image.name}
-                            </ImageName>
-
-                            <ImageWrapper>
-                                <img
-                                    style={{ maxWidth: '100%' }}
-                                    src={getPreview(image.preview)}
-                                    onClick={handleClick}
-                                />
-                            </ImageWrapper>
-
+                        <Grid item xs={12} sm={12} md={8} lg={8} xl={7}
+                              sx={{ px: 2,
+                                  minHeight: '500px',
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'center',
+                                  alignItems: 'center'
+                              }}
+                        >
                             <Box>
+                                <ImageName text={image.name}>
+                                    {image.name}
+                                </ImageName>
+
+                                <ImageWrapper>
+                                    <img
+                                        style={{ maxWidth: '100%' }}
+                                        src={getPreview(image.preview)}
+                                        onClick={handleClick}
+                                    />
+                                </ImageWrapper>
+                            </Box>
+
+
+                            <Box sx={{ }}>
                                 <Box sx={{ my: 1}}>
                                     Description
                                 </Box>
@@ -191,7 +200,9 @@ const ShowImagePage = () => {
                                     direction="row"
                                     spacing={1}
                                     lexWrap='wrap'
-                                    justifyContent='left'>
+                                    justifyContent='left'
+                                    flexWrap='wrap'
+                                >
                                         {image.tags.map(tag =>
                                             <Chip
                                                 label={tag.name}
@@ -199,16 +210,28 @@ const ShowImagePage = () => {
                                                 key={tag.id}
                                             />
                                         )}
+                                    <Chip
+                                        label={`ID: ${image.id}`}
+                                        icon={<Grid3x3/>}
+                                    />
+                                    <Chip
+                                        label={`Orientation: ${image.image_orientation.name}`}
+                                        variant="contained"
+                                    />
+                                    { image.isEditorsChoice === true &&
+                                        <Chip
+                                            color='secondary'
+                                            label={`Editor Choice`}
+                                            variant="contained"
+                                        />
+                                    }
                                 </Stack>
-
                             </Box>
                         </Grid>
-                        <Grid item xs={12} sm={12} md={4} lg={4} xl={5} sx={{ p: 2}}>
+                        <Grid item xs={12} sm={12} md={4} lg={4} xl={5} sx={{ px: 2}}>
                             <Stack direction="row"
-                                   spacing={2}
-                                   justifyContent='space-between'
-                                   flexWrap={'wrap'}
-                            >
+                                   justifyContent='center'
+                                   flexWrap={'wrap'}>
                                 <Chip
                                     sx={{ cursor: 'pointer', m: 1 }}
                                     onClick={() => {}}
@@ -220,11 +243,20 @@ const ShowImagePage = () => {
                                     label={`Creator: ${image.creator.user.full_name}`}
                                     variant="outlined"
                                 />
-                                <Chip
-                                    style={{ margin: '8px' }}
-                                    label={`ID: ${image.id}`}
-                                    icon={<Grid3x3/>}
-                                />
+                                {
+                                    image.photo_model &&
+                                    <Chip
+                                        sx={{ cursor: 'pointer', m: 1 }}
+                                        onClick={() => { navigate(`/images?photo_model_id=${image.photo_model.id}`)}}
+                                        avatar={
+                                            <Avatar
+                                                alt="Natacha"
+                                                src={getAvatar(image.photo_model)}
+                                            />}
+                                        label={`Model: ${image.photo_model.full_name}`}
+                                        variant="outlined"
+                                    />
+                                }
                             </Stack>
                             {
                                 image.collection &&
@@ -236,7 +268,7 @@ const ShowImagePage = () => {
                                         sx={{ cursor: 'pointer', m: 1 }}
                                         label={`Collection: ${image.collection.name}`}
                                         icon={<Collections />}
-                                        onClick={() => {}}
+                                        onClick={() => { navigate(`/images?collectionId=${image.collection.id}`)}}
                                         variant="outlined"
                                     />
                                 </Stack>
@@ -350,7 +382,7 @@ const ShowImagePage = () => {
                 renderLikeableSections()
             }
 
-            { image &&
+            { image && user && user.client &&
                 <AddToFavorite
                     isOpen={addToFavoriteOpen}
                     onClose={() => setAddToFavoriteOpen(false)}

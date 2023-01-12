@@ -26,6 +26,7 @@ const AuthGuard = ({accessRoles, children}) => {
     }
 
     useEffect(() => {
+        console.log('use effect with check role')
         check();
     }, [isAuth])
 

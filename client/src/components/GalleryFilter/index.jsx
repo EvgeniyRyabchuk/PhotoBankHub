@@ -17,15 +17,24 @@ import ImageService from "../../services/ImageService";
 import DateRange from "./FilterSections/DateRange";
 import CheckBoxPicker from "./FilterSections/CheckBoxPicker";
 import {useFetching} from "../../hooks/useFetching";
-import {useSearchParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import {Autocomplete} from "@mui/lab";
 import FilterSectionLayout from "./FilterSections/FilterSectionLayout";
 import useDebounce from "../../hooks/useDebounce";
 import {Close} from "@mui/icons-material";
 import PhotoModelService from "../../services/PhotoModelService";
-import {defIsEditorChoice, defIsModelExist, defLevel, defSizeIndex, searchParamSeparator} from "../../utills/const";
+import {
+    defIsEditorChoice,
+    defIsModelExist,
+    defLevel,
+    defPeopleCount,
+    defSizeIndex,
+    searchParamSeparator
+} from "../../utills/const";
 import zIndex from "@mui/material/styles/zIndex";
+import {useSelector} from "react-redux";
+import CategoryService from "../../services/CategoryService";
 
 //TODO:
 // categories, created_at, image_orientation, Resolution, search by image name (tags)
@@ -44,7 +53,9 @@ const GalleryFilter = ({
     const [searchParams, setSearchParams] = useSearchParams();
     const [defaultValues, setDefaultValues] = useState(null);
 
-    // const [checkBoxLevels, setCheckBoxLevels] = useState([]);
+    const { categories } = useSelector(state => state.general);
+    const [checkBoxCategories, setCheckBoxCategories] = useState([]);
+
     const [levelsList, setLevelsList] = useState([]);
     const [level, setLevel] = useState(defLevel);
 
@@ -67,6 +78,18 @@ const GalleryFilter = ({
     // image tags
     const [tags, setTags] = useState([]);
     const debouncedTags = useDebounce(tags, 500);
+
+    const [peopleCount, setPeopleCount] = useState(defPeopleCount);
+    const debouncedPeopleCount = useDebounce(peopleCount, 1000);
+
+    const [peopleCountRange, setPeopleCountRange] = useState(null);
+    const [peopleCountMarks, setPeopleCountMarks] = useState([
+        {
+            value: 0,
+            label: '0',
+        }
+    ]);
+
 
 
     // model name
@@ -153,9 +176,15 @@ const GalleryFilter = ({
             ],
             selectedLevels: [],
             photoModelAgeRange: data.photoModelAgeRange,
+            peopleCountRange: data.peopleCountRange
         };
 
         setDefaultValues(newDefaultValue)
+
+        setPeopleCount(newDefaultValue.peopleCountRange[0]);
+        setPeopleCountRange(newDefaultValue.peopleCountRange);
+        setPeopleCountMarks(data.peopleCountMarks.map(e => ({ value: e, label: e }) ));
+
 
         const searchCreatedAtRange = searchParams.get('created_at_range') &&
             searchParams.get('created_at_range').split(searchParamSeparator);
@@ -188,7 +217,7 @@ const GalleryFilter = ({
     }
     const fetchEthnicities = async () => {
         const response = await PhotoModelService.getEthnicities();
-        return  createCheckBoxList(response.data, 'ethnicities');
+        return createCheckBoxList(response.data, 'ethnicities');
     }
     const fetchSizes = async () => {
         const response = await ImageService.getSizes();
@@ -203,6 +232,25 @@ const GalleryFilter = ({
         return  createCheckBoxList(fotmatted, 'orientations', false);
     }
 
+
+    const fetchSiblingCategoriesCheckBoxList = async () => {
+        const searchCategoriesIds = searchParams.get('categoriesIds');
+        if(searchCategoriesIds) {
+            const categoriesIds = searchCategoriesIds.split(searchParamSeparator, searchCategoriesIds);
+            const firstCategoryId = categoriesIds[0];
+            const { data: siblings } = await CategoryService.getSiblings(firstCategoryId);
+            let checkBoxCategories = createCheckBoxList(siblings,'categoriesIds', false);
+            setCheckBoxCategories(checkBoxCategories);
+        }
+    }
+
+    const categoriesIds = searchParams.get('categoriesIds');
+    useEffect(() => {
+        if(isInitialized)
+            fetchSiblingCategoriesCheckBoxList();
+    }, [categoriesIds]);
+
+
     const [ fetchInitData, isLoading, error ] = useFetching(async () => {
         await fetchImageMinMax();
         const levelsList = await fetchLevels();
@@ -211,9 +259,12 @@ const GalleryFilter = ({
         await fetchSizes();
         let checkBoxOrientations = await fetchOrientations();
 
+        await fetchSiblingCategoriesCheckBoxList();
+
         const isEditorChoice = searchParams.get('isEditorChoice') ?? defIsEditorChoice;
         const level = searchParams.get('level') ?? defLevel;
         const sizeIndex = searchParams.get('sizeIndex') ?? defSizeIndex;
+        const peopleCount = searchParams.get('peopleCount') ?? defPeopleCount;
         const orientationsIds = searchParams.get('orientationsIds') ?
             searchParams.get('orientationsIds').split(searchParamSeparator) : [];
 
@@ -225,12 +276,14 @@ const GalleryFilter = ({
         const creatorName = searchParams.get('creatorName') ?? '';
         const tags = searchParams.get('tags') ? searchParams.get('tags').split(searchParamSeparator) : [];
 
+
         setIsEditorChoice(isEditorChoice == 'true' ? true : false);
 
         setLevel(level);
         setLevelsList(levelsList);
 
         setSizeIndex(sizeIndex);
+        setPeopleCount(peopleCount);
         setCheckBoxOrientations(changeCheckBoxList(orientationsIds, checkBoxOrientations, false));
 
         setPhotoModelName(photoModelName);
@@ -267,6 +320,7 @@ const GalleryFilter = ({
             }
 
             const data = {
+                categoriesIds: checkBoxCategories.filter(e => e.checked).map(e => e.id).join(searchParamSeparator),
                 isModelExist: isModelExist === defIsModelExist ? null : isModelExist,
                 level: level === defLevel ? null : level,
                 orientationsIds: checkBoxOrientations.filter(e => e.checked)
@@ -281,15 +335,19 @@ const GalleryFilter = ({
                 photoModelAgeRange: photoModelAgeRangeParam,
                 genders: checkBoxGenders.filter(e => e.checked).map(e => e.name).join(searchParamSeparator),
                 ethnicities: checkBoxEthnicities.filter(e => e.checked).map(e => e.name).join(searchParamSeparator),
+                peopleCount: debouncedPeopleCount === defPeopleCount ? null : debouncedPeopleCount,
+
             };
             onFilterChange(data, isReset);
             if(isReset) setIsReset(false);
         }
     }, [
+        checkBoxCategories,
         isEditorChoice,
         level,
         checkBoxOrientations,
         sizeIndex,
+        debouncedPeopleCount,
         fromCreatedAt,
         toCreatedAt,
 
@@ -311,6 +369,7 @@ const GalleryFilter = ({
         setLevel(defLevel);
         setCheckBoxOrientations(checkBoxOrientations.map((e) => { e.checked = false; return e; }))
         setSizeIndex(defSizeIndex);
+        setPeopleCount(defPeopleCount);
         setFromCreatedAt(defaultValues.createdAtRange[0]);
         setToCreatedAt(defaultValues.createdAtRange[1]);
 
@@ -420,12 +479,32 @@ const GalleryFilter = ({
                                 </FormControl>
                             </FilterSectionLayout>
 
-
                             <CheckBoxPicker
                                 title='Orientation'
                                 checkBoxList={checkBoxOrientations}
                                 setCheckBoxList={setCheckBoxOrientations}
                             />
+
+
+                            { peopleCountRange !== null &&
+                                <FilterSectionLayout title='People Count'>
+                                    <Slider
+                                        aria-label="People Count"
+                                        defaultValue={peopleCount}
+                                        // valueLabelFormat={valueLabelFormat}
+                                        // getAriaValueText={valuetext}
+                                        step={null}
+                                        valueLabelDisplay="on"
+                                        marks={peopleCountMarks}
+                                        min={peopleCountRange[0]}
+                                        max={peopleCountRange[1]}
+                                        onChange={(e, newValue) =>
+                                            setPeopleCount(newValue)
+                                        }
+                                    />
+                                </FilterSectionLayout>
+                            }
+
 
                             <DateRange
                                 name='created at'
@@ -459,7 +538,7 @@ const GalleryFilter = ({
                                 <Divider sx={{ my: 2}} />
 
                                 <Typography id="non-linear-slider" gutterBottom>
-                                    Age: ${photoModelAgeRange[0]} | ${photoModelAgeRange[1]}
+                                    Age: {photoModelAgeRange[0]} | {photoModelAgeRange[1]}
                                 </Typography>
 
                                 <Slider
@@ -487,6 +566,8 @@ const GalleryFilter = ({
                                     checkBoxList={checkBoxEthnicities}
                                     setCheckBoxList={setCheckBoxEthnicities}
                                 />
+
+
 
 
                             </FilterSectionLayout>
@@ -565,6 +646,12 @@ const GalleryFilter = ({
                                     }}
                                 />
                             </FilterSectionLayout>
+
+                            <CheckBoxPicker
+                                title='Categories'
+                                checkBoxList={checkBoxCategories}
+                                setCheckBoxList={setCheckBoxCategories}
+                            />
                         </Grid>
                     </FilterContentGrid>
             }

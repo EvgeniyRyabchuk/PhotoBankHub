@@ -19,6 +19,9 @@ class BillingInfoController extends Controller
     }
 
     protected function storeOrUpdate($request, $mode, $client, $billingInfoId = null) : Model {
+
+        $client = Auth::user()->client;
+
         $full_name = $request->full_name;
         $email = $request->email;
         $country = $request->country;
@@ -32,7 +35,6 @@ class BillingInfoController extends Controller
             $billingInfo = new BillingInfo();
         } else if($mode === 'update') {
             $billingInfo = BillingInfo::findOrFail($billingInfoId);
-
         }
 
         $billingInfo->full_name = $full_name;
@@ -44,6 +46,9 @@ class BillingInfoController extends Controller
         $billingInfo->zipCode = $zipCode;
         $billingInfo->phone_number = $phone_number;
         $billingInfo->save();
+
+        $client->billingInfo()->associate($billingInfo);
+        $client->save();
 
         return $billingInfo;
     }

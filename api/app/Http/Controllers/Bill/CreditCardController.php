@@ -13,7 +13,8 @@ class CreditCardController extends Controller
 {
     public function index(Request $request) {
         $client = Auth::user()->client;
-        $cards = CreditCard::where('client_id', $client->id)->get();
+        $cards = CreditCard::where('client_id', $client->id)
+            ->get();
         return response()->json($cards);
     }
 

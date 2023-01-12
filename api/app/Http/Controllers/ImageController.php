@@ -19,8 +19,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use function GuzzleHttp\Promise\all;
-use function Symfony\Component\String\s;
 
 
 class ImageController extends Controller
@@ -45,7 +43,7 @@ class ImageController extends Controller
 
         $isEditorsChoice = $request->isEditorChoice ?? null;
         $isFree = $request->isFree;
-        $peopleCount = $request->people_count;
+        $peopleCount = $request->peopleCount;
 
         $photoModelName = $request->photoModelName;
         $ageRange = $request->photoModelAgeRange ? explode(',', $request->photoModelAgeRange) : null;
@@ -54,6 +52,9 @@ class ImageController extends Controller
 
         $createdAtRange = $request->createdAtRange ? explode(',', $request->createdAtRange) : null;
         $sizeIndex = $request->sizeIndex ?? null;
+
+        $collectionId = $request->collectionId;
+        $creatorId = $request->creatorId;
 
         $originalSize = Size::where('name', 'ORIGINAL')->first();
 
@@ -137,6 +138,12 @@ class ImageController extends Controller
             }
         }
 
+        if($collectionId) {
+            $query->where('collection_id', $collectionId);
+        }
+        if($creatorId) {
+            $query->where('creator_id', $creatorId);
+        }
 
         if($categories)
             $query->whereIn('category_id', $categories);
@@ -635,7 +642,20 @@ class ImageController extends Controller
         $createdAt = [ Image::min('created_at'), Image::max('created_at') ];
         $photoModelAgeRange = [ PhotoModel::min('age'), PhotoModel::max('age')];
 
-        return response()->json(compact('createdAt', 'photoModelAgeRange'));
+        $peopleCountRange = [Image::min('people_count'), Image::max('people_count') ];
+        $peopleCountMarks = Image::distinct('people_count')
+            ->orderBy('people_count')
+            ->select('people_count')
+            ->get()
+            ->pluck('people_count');
+
+
+        return response()->json(compact(
+    'createdAt',
+  'photoModelAgeRange',
+              'peopleCountRange',
+              'peopleCountMarks'
+        ));
     }
 
     public function getLevels() {

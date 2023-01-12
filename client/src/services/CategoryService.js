@@ -11,6 +11,10 @@ export default class CategoryService {
         return await $api.get(`/categories`);
     }
 
+    static async getSiblings(categoryId) {
+        return await $api.get(`/categories/${categoryId}/siblings`);
+    }
+
 
 
 }

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import CounterPanel from "./CounterPanel";
 import {Actions, Container, Content, Divider, Heading, HeroContainer, OpacityOverlay} from "./styled";
 import FaqPanel from "./FaqPanel";
@@ -6,6 +6,7 @@ import {Box} from "@mui/material";
 import {useSelector} from "react-redux";
 import CategorySelector from "../../components/CategorySelector";
 import {JustifyContent} from "../../assets/shared/styles";
+import {useNavigate} from "react-router-dom";
 
 const CustomDivider = ({index, length}) => {
     return(
@@ -17,12 +18,19 @@ const CustomDivider = ({index, length}) => {
 
 const Home = () => {
 
+    const navigate = useNavigate();
 
     const { categories } = useSelector(state => state.general);
 
     const parentless = useMemo(() => {
         return categories.filter((c => c.parent_id === null));
     }, [categories])
+
+    const [search, setSearch] = useState('');
+
+    const onSearchHandler = () => {
+        navigate(`/images?search=${search}`);
+    }
 
     return (
         <Box sx={{ padding: '10px 0'}}>
@@ -40,8 +48,13 @@ const Home = () => {
                         {/*<PrimaryAction>Search Events Near Me</PrimaryAction>*/}
                         <Divider />
                         <Actions>
-                            <input type="text" placeholder="Input image name, tags, etc..." />
-                            <button>Search</button>
+                            <input
+                                type="text"
+                                placeholder="Input image name, tags, etc..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
+                            <button onClick={onSearchHandler}>Search</button>
                         </Actions>
                         <CounterPanel />
 
