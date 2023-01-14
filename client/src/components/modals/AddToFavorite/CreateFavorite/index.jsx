@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
-import {Box, Button, TextField} from "@mui/material";
+import {Box, Button, ButtonGroup, TextField} from "@mui/material";
 
-const CreateFavorite = ({ onChange }) => {
+const CreateFavorite = ({ onChange, ...props }) => {
 
     const [create, setCreate] = useState(false);
     const [value, setValue] = useState('');
 
     return (
         <Box
+            {...props}
             sx={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -18,7 +19,7 @@ const CreateFavorite = ({ onChange }) => {
                 create ?
                     <>
                         <TextField
-                            sx={{ flexGrow: 6, px: 1, minWidth: '300px' }}
+                            sx={{ flexGrow: 6, px: 1 }}
                             id="outlined-basic"
                             label="Enter Favorite Title"
                             variant="outlined"
@@ -27,17 +28,29 @@ const CreateFavorite = ({ onChange }) => {
                                 setValue(e.target.value)
                             }}
                         />
-                        <Button
-                            sx={{ flexGrow: 1, px: 1 }}
-                            variant='contained'
-                            color='primary'
-                            onClick={() => {
-                                if(value !== '')
-                                    onChange(value);
-                                setCreate(false);
-                            }}>
+                        <ButtonGroup sx={{ flexGrow: 1, px: 1 }} aria-label="outlined primary button group">
+                            <Button
+                                sx={{ width: '50%' }}
+                                variant='contained'
+                                color='primary'
+                                onClick={() => {
+                                    if(value !== '')
+                                        onChange(value);
+                                    setCreate(false);
+                                }}>
                                 Add
-                        </Button>
+                            </Button>
+                            <Button
+                                sx={{ width: '50%' }}
+                                variant='outlined'
+                                color='secondary'
+                                onClick={() => {
+                                    setCreate(false);
+                                }}>
+                                Cancel
+                            </Button>
+                        </ButtonGroup>
+
                     </>
                     :
                 <Button

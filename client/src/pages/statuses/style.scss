@@ -1,0 +1,197 @@
+/*! CSS Used from: https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/demo-1/_next/static/css/00907eb975caaf69.css */
+#__next {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 999;
+  background-color: white;
+
+  img {
+    height: 500px;
+    margin: 0 auto;
+  }
+
+  /*! CSS Used from: Embedded */
+  .css-d4atit > div {
+    left: 1.5rem !important;
+    right: 1.5rem !important;
+    bottom: 1.5rem !important;
+    z-index: 1199 !important;
+    top: 75px !important;
+  }
+
+  /*! CSS Used from: Embedded */
+  .css-33gw4 {
+    height: 100vh;
+  }
+
+  .css-33gw4 .content-center {
+    display: flex;
+    min-height: 100vh;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    padding: 1.25rem;
+  }
+
+  .css-10qwnza {
+    overflow: hidden;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .css-1w5hm2q {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  @media (max-width: 899.95px) {
+    .css-19vd9r8 {
+      width: 90vw;
+    }
+  }
+
+  .css-1svogxx {
+    margin: 0px 0px 0.375rem;
+    font-family: "Public Sans", sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-weight: 500;
+    font-size: 1.5625rem;
+    line-height: 1.235;
+    color: rgba(51, 48, 60, 0.87);
+  }
+
+  @media (min-width: 600px) {
+    .css-1svogxx {
+      font-size: 1.8219rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .css-1svogxx {
+      font-size: 2.0243rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-1svogxx {
+      font-size: 2.0243rem;
+    }
+  }
+
+  .css-1toajlr {
+    margin: 0px;
+    font-family: "Public Sans", sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: rgba(51, 48, 60, 0.6);
+  }
+
+  .css-jkwncm {
+    margin: 0px 0px 1.5rem;
+    font-family: "Public Sans", sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: rgba(51, 48, 60, 0.6);
+  }
+
+  .css-1qt4f5u {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0px;
+    border: 0px;
+    margin: 0px;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    appearance: none;
+    text-decoration: none;
+    font-family: "Public Sans", sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    color: rgb(255, 255, 255);
+    min-width: 64px;
+    border-radius: 6px;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    background-color: rgb(115, 103, 240);
+    font-weight: 500;
+    line-height: 1.7143;
+    letter-spacing: 0.43px;
+    box-shadow: rgba(51, 48, 60, 0.03) 0px 3px 5px 2px, rgba(51, 48, 60, 0.02) 0px 3px 5px 0px, rgba(51, 48, 60, 0.01) 0px 1px 4px 2px;
+    padding: 0.4375rem 1.25rem;
+  }
+
+  @media print {
+    .css-1qt4f5u {
+      -webkit-print-color-adjust: exact;
+    }
+  }
+
+  .css-1qt4f5u:hover {
+    text-decoration: none;
+    background-color: rgb(101, 91, 211);
+    box-shadow: rgba(51, 48, 60, 0.03) 0px 2px 7px 1px, rgba(51, 48, 60, 0.02) 0px 4px 7px 0px, rgba(51, 48, 60, 0.01) 0px 1px 4px 2px;
+  }
+
+  @media (hover: none) {
+    .css-1qt4f5u:hover {
+      background-color: rgb(115, 103, 240);
+    }
+  }
+
+  .css-1qt4f5u:active {
+    box-shadow: rgba(51, 48, 60, 0.03) 0px 5px 11px 3px, rgba(51, 48, 60, 0.02) 0px 8px 11px 1px, rgba(51, 48, 60, 0.01) 0px 3px 8px 4px;
+  }
+
+  @media (max-width: 1199.95px) {
+    .css-cud2wc {
+      height: 450px;
+      margin-top: 2.5rem;
+    }
+  }
+
+  @media (max-width: 899.95px) {
+    .css-cud2wc {
+      height: 400px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-cud2wc {
+      margin-top: 5rem;
+    }
+  }
+
+  .css-oijvh6 {
+    bottom: 0px;
+    z-index: -1;
+    height: 260px;
+    width: 100%;
+    position: absolute;
+  }
+
+  .css-w0pj6f {
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+    inset: 0px;
+    border-radius: inherit;
+  }
+
+}

@@ -64,7 +64,6 @@ const CategorySelector = ({
                 <Posts>
                     {children.map((subCategory) => (
                         <PostContainer featured={subCategory.featured} key={subCategory.id}>
-
                             <Post className="group" onClick={() => select(subCategory)}>
                                 <Box sx={{ position: 'relative'}}>
                                     <DarkBg>

@@ -3,27 +3,36 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Download;
 use App\Models\Favorite;
 use App\Models\Image;
+use App\Models\Like;
+use App\Models\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\VarDumper\Dumper\ContextProvider\CliContextProvider;
+use Termwind\Components\Li;
 
 class ClientController extends Controller
 {
     public function getFavorites(Request $request) {
         $client = Auth::user()->client;
-        $favorites = Favorite::with('imageIds')->where('client_id', $client->id)
-            ->orderBy('created_at', 'desc')
+        //TODO: limit eager load relationship
+        // https://github.com/staudenmeir/eloquent-eager-limit
+
+        $favorites = Favorite::where('client_id', $client->id)
+//            ->orderBy('created_at', 'desc')
             ->withCount('images')
             ->get();
 
         $favorites = $favorites->map(function ($favorite) {
+            $favorite->images = $favorite->images->take(1);
             $favorite->imageIds = $favorite->imageIds->pluck('image_id');
             return $favorite;
         });
-
+        
         return response()->json($favorites);
     }
 
@@ -31,20 +40,24 @@ class ClientController extends Controller
         $client = Auth::user()->client;
         $favorite = Favorite::where([
             'client_id' => $client->id,
-            'id' => $favoriteId
-        ])->first();
+            'favorites.id' => $favoriteId
+        ])
+        ->join('favorite_image', 'favorites.id', 'favorite_image.favorite_id')
+        ->orderBy('favorite_image.created_at', 'desc')
+        ->withCount('images')
+        ->first();
+
         if(!$favorite) {
             return response()->json(['message' => 'such favorite not exist for your'], 404);
         }
 
-        $images = DB::table('favorite_image')
-        ->where('favorite_id', $favorite->id)
-        ->select('images.*')
-        ->join('images', 'favorite_image.image_id', 'images.id')
-        ->orderBy('favorite_image.created_at', 'desc')
-        ->get();
+        $imageIds = $favorite->images->pluck('id');
+        $images = Image::with('creator.user', 'tags', 'imageVariants.size')
+            ->whereIn('images.id', $imageIds)
+            ->select('images.*')
+            ->paginate(15);
 
-        return response()->json($images);
+        return response()->json(compact('images', 'favorite'));
     }
 
     protected function attahcOrDettachImageFromFavorite($request, $isAttach) {
@@ -123,7 +136,7 @@ class ClientController extends Controller
         $favorite->title = $title;
         $favorite->client()->associate($client);
         $favorite->save();
-
+        $favorite->load('lastImage');
         return $favorite;
     }
 
@@ -161,6 +174,39 @@ class ClientController extends Controller
         return response()->json("OK");
     }
 
+    public function getDownloads(Request $request, $clientId) {
+        $search = $request->search;
+        $client = Auth::user()->client;
+        $query = Download::with('image.tags', 'imageVariant.size')
+            ->where('client_id', $client->id);
+        if($search) {
+            $query->join('images', 'downloads.image_id', 'images.id');
+            $query->where('images.name', 'LIKE', "%$search%");
+        }
+        $query->orderBy('created_at', 'desc');
+        $query->select('downloads.*');
+        $downloads = $query->paginate(15);
+        return response()->json($downloads);
+    }
+
+    protected static function getImagesByIds($ids, $limit) {
+        return Image::with('creator.user', 'tags', 'imageVariants.size')
+            ->whereIn('id', $ids)
+            ->orderBy('created_at', 'desc')
+            ->paginate($limit);
+    }
+
+    public function getViewedImages(Request $request, $clientId) {
+        $imageIds = Auth::user()->client->views->pluck('image_id');
+        $images = ClientController::getImagesByIds($imageIds, 15);
+        return response()->json($images);
+    }
+
+    public function getLikedImages(Request $request, $clientId) {
+        $imageIds = Auth::user()->client->likes->pluck('image_id');
+        $images = ClientController::getImagesByIds($imageIds, 15);
+        return response()->json($images);
+    }
 
 
 }

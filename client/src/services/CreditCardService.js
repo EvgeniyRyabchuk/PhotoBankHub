@@ -38,7 +38,7 @@ export default class CreditCardService {
         });
     }
 
-    static async deleteCard( creditCardId) {
+    static async deleteCard(creditCardId) {
         return await $api.delete(`/credit-cards/${creditCardId}`);
     }
 

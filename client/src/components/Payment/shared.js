@@ -6,7 +6,7 @@ function clearNumber(value = "") {
 
 export const getLast4Numbers =(card) => {
     const numbers = card.number.substring(card.number.length - 4);
-   return `**** ${numbers}`;
+    return `**** ${numbers}`;
 }
 
 export function formatCreditCardNumber(value) {

@@ -501,11 +501,12 @@ class ImageController extends Controller
 //        $ip4 = \Request::getClientIp(true);
 //        dd($ip1, $ip2, $ip3, $ip4);
 
+        $client = Auth::user()->client;
 
         $image = Image::findOrFail($imageId);
         $viewExist = View::where([
             'image_id' => $image->id,
-            'ip' => $request->ip()
+            'client_id' => $client->id
         ])->first();
 
         if($viewExist){
@@ -514,6 +515,7 @@ class ImageController extends Controller
 
         $view = new View();
         $view->image()->associate($image);
+        $view->client()->associate($client);
         $view->ip = $request->ip();
         $view->save();
 

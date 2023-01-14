@@ -21,7 +21,13 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
+            $table->foreignId('client_id')
+                ->constrained('clients')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->string('ip', 15);
+
 
             $table->timestamps();
         });

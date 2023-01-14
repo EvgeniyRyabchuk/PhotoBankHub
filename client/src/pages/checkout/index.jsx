@@ -15,10 +15,10 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography
+    Typography, useTheme
 } from "@mui/material";
 import CardManagement from "../../components/Payment/CardManagement";
-import {getLast4Numbers} from "../../components/Payment/card";
+import {getLast4Numbers} from "../../components/Payment/shared";
 import AddBillingInfo from "../../components/AddBillingInfo";
 import {Payment} from "@mui/icons-material";
 import {toast} from "react-toastify";
@@ -33,10 +33,11 @@ const CheckOutWrapper = styled(Box)(({ theme,  }) => ({
     [theme.breakpoints.down('lg')]: {
         width: '100%',
     }
-
 }))
 
 const CheckOut = () => {
+
+    const theme = useTheme();
 
     const navigate = useNavigate();
 
@@ -66,7 +67,7 @@ const CheckOut = () => {
         const imageCount = period === 'monthly' ? plan.image_count : plan.image_count * 12;
 
         setTableRow([
-            { title: 'Plan Mame', value: plan.name },
+            { title: 'Plan Name', value: plan.name },
             { title: 'Period', value: period },
             { title: 'Amount', value: `$${amount}`},
             { title: 'Image Count Per Period', value: imageCount },
@@ -86,7 +87,6 @@ const CheckOut = () => {
         const period = periods[searchParams.get('periodIndex')];
 
         try {
-
             const { data } = await BillingService.subscribe(
                 plan.id,
                 selectedCard.id,
@@ -95,8 +95,10 @@ const CheckOut = () => {
             );
 
             toast.success('Your subscription is active. Enjoy!');
+            navigate('/statuses/payment/success');
         } catch (error) {
             toast.error('Fail to get subscription')
+            navigate('/statuses/payment/fail');
         }
     }
 
@@ -115,6 +117,7 @@ const CheckOut = () => {
                             }}
                         />
                     </Grid>
+
                     <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
                         <TableContainer component={Paper} >
                             <Table aria-label="simple table">
@@ -141,7 +144,10 @@ const CheckOut = () => {
                                     {
                                         selectedCard &&
                                         <TableRow
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                            sx={{
+                                                '&:last-child td, &:last-child th': { border: 0 },
+                                                background: theme.palette.grey.A400
+                                            }}
                                         >
                                             <TableCell component="th" scope="row">
                                                 Payable card
@@ -156,11 +162,9 @@ const CheckOut = () => {
                             </Table>
                         </TableContainer>
                     </Grid>
-
-                    <AddBillingInfo onSave={(values) => { setBillingInfo(values) }} />
                 </Grid>
             }
-
+            <AddBillingInfo onSave={(values) => { setBillingInfo(values) }} />
             <Button
                 sx={{ height: '50px'}}
                 fullWidth

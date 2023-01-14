@@ -1,11 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import ModalWithTransition from "../ModalWithTransition";
 import {useSelector} from "react-redux";
 import {useAction} from "../../../hooks/useAction";
-import {Grid} from "@mui/material";
-import Creditcard from "../../Payment/Creditcard";
-import CardManagement from "../../Payment/CardManagement";
+import Creditcard from "../../Payment/CreditCardInput/Creditcard";
 import CreditCardService from "../../../services/CreditCardService";
 
 

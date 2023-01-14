@@ -1,14 +1,14 @@
 import React, {useEffect, useRef, useState} from "react";
 import "react-credit-cards-2/es/styles-compiled.css";
 import './global.scss'
-import {formatCreditCardNumber, formatCVC, formatExpirationDate, formatFormData} from "./card";
+import {formatCreditCardNumber, formatCVC, formatExpirationDate, formatFormData} from "../shared";
 import {Box, Button} from "@mui/material";
 import _ from "lodash";
 
 // @ts-ignore
 import Card from "react-credit-cards-2";
 import {useSelector} from "react-redux";
-import {getUniqId} from "../../utills/utils";
+import {getUniqId} from "../../../utills/utils";
 
 // const defCardData : CardType = {
 //     id: 999999,

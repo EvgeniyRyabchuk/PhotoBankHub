@@ -13,4 +13,8 @@ class View extends Model
         return $this->belongsTo(Image::class);
     }
 
+    public function client() {
+        return $this->belongsTo(Client::class);
+    }
+
 }

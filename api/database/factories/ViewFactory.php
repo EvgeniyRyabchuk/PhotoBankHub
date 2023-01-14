@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Client;
 use App\Models\Image;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,10 +19,12 @@ class ViewFactory extends Factory
     public function definition()
     {
         $image = Image::inRandomOrder()->first();
+        $client = Client::inRandomOrder()->first();
 
         return [
             'image_id' => $image->id,
             'ip' => fake()->ipv4,
+            'client_id' => $client->id,
         ];
     }
 }

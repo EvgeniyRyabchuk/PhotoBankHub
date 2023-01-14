@@ -13,6 +13,9 @@ const getPreview = (preview) => {
     return `${API_URL_WITH_PUBLIC_STORAGE}${preview}`;
 }
 
+const imagePlaceholder = `${API_URL_WITH_PUBLIC_STORAGE}/static/gallery_preview.jpeg`;
+
+
 const downloadFile = (data) => {
     const href = URL.createObjectURL(data);
 
@@ -32,5 +35,6 @@ const downloadFile = (data) => {
 export {
     getAvatar,
     getPreview,
+    imagePlaceholder,
     downloadFile
 }

@@ -25,6 +25,9 @@ import {
 // import ScrollBar from "simplebar-react";
 import {FlexBox} from "../../assets/shared/styles";
 import {H5} from "../../assets/typography";
+import {useSearchParams} from "react-router-dom";
+import {defLimit} from "../../utills/const";
+import {getPageCount} from "../../utills/page";
 
 // component props interface
 // interface CustomTableProps {
@@ -64,7 +67,7 @@ const StyledPagination = styled(Pagination)(({ theme }) => ({
 }));
 
 const CustomTable = (props) => {
-  const { data, rowClick, showFooter, columnShape, hidePagination } = props;
+  const { data, rowClick, showFooter, columnShape, hidePagination, setPage, total } = props;
   // hooks
   const theme = useTheme();
   const tableData = useMemo(() => data, [data]);
@@ -90,6 +93,7 @@ const CustomTable = (props) => {
   );
   // handle pagination
   const handleChange = (_e, currentPageNo) => {
+    setPage(currentPageNo);
     gotoPage(currentPageNo - 1);
   };
 
@@ -173,6 +177,7 @@ const CustomTable = (props) => {
                         borderTop: "1px solid",
                         borderBottom: "1px solid",
                         borderColor,
+                        textAlign: 'center'
                       }}
                     >
                       {cell.render("Cell")}
@@ -188,7 +193,7 @@ const CustomTable = (props) => {
       {!hidePagination && (
         <Stack alignItems="flex-end" marginY={1}>
           <StyledPagination
-            count={pageOptions.length}
+            count={getPageCount(total, defLimit)}
             shape="rounded"
             onChange={handleChange}
           />

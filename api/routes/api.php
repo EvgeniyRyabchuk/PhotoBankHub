@@ -71,7 +71,8 @@ Route::controller(ImageController::class)
 
             });
 
-        Route::post('/{imageId}/views','addView');
+        Route::post('/{imageId}/views','addView')
+            ->middleware('auth:api');
 
     });
 
@@ -190,7 +191,14 @@ Route::prefix('clients/{clientId}')
                 Route::get('/{favoriteId}/images', 'getImageByFavorite');
                 Route::post('/{favoriteId}/images/', 'addImageToFavorite');
                 Route::delete('/{favoriteId}/images/{imageId}', 'deleteImageFromFavorite');
-            });
+        });
+
+        Route::get('/downloads', 'getDownloads');
+        Route::get('/views', 'getViewedImages');
+        Route::get('/likes', 'getLikedImages');
+
+
+
     });
 
 

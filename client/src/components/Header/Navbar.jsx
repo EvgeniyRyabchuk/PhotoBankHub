@@ -183,16 +183,16 @@ const Navbar = () => {
                     <MenuItem onClick={() => navigate(`/profile`)}>
                         <Avatar src={getAvatar(user)} /> Profile
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem onClick={() => navigate(`/bills`)}>
                         <AttachMoney sx={{ mr: 1}}/> Bills & Payment
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem onClick={() => navigate(`/favorites`)}>
                         <Favorite sx={{ mr: 1}}/> Favorites
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem  onClick={() => navigate(`/likes`)}>
                         <ThumbUp sx={{ mr: 1}}/> Likes
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem  onClick={() => navigate(`/views`)}>
                         <Visibility sx={{ mr: 1}}/> Views
                     </MenuItem>
                     <MenuItem onClick={() => navigate('/downloads')}>
@@ -204,7 +204,7 @@ const Navbar = () => {
                         isAuth && user.client &&
                         <Box>
                             <p>
-                                Left image: {user.client.left_image_count} 
+                                Left image: {user.client.left_image_count}
                             </p>
                             <p>
                                 Your plan: standard

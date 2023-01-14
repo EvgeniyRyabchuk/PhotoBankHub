@@ -40,7 +40,7 @@ const AddToFavorite = ({
 
     useEffect(() => {
         fetchFavorites();
-    }, []);
+    }, [image]);
 
     const [favoriteChange, favoriteChangeLoading, favoriteChangeError] =
         useFetching(async (favorite, isAdd) =>  {

@@ -33,7 +33,6 @@ const ModalTransitionType = {
     seven: 'seven',
 };
 
-
 export {
     defPage,
     defLimit,
@@ -52,5 +51,4 @@ export {
 
     SimpleModalModeList,
     ModalTransitionType
-
 }

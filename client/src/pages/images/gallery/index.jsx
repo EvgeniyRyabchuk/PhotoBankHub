@@ -28,9 +28,6 @@ import {FilterAlt, Sort} from "@mui/icons-material";
 import {getImagesWithOverlay} from "../shared";
 
 
-//TODO: hide default value in search params
-//TODO: sort
-
 
 const ImageGalleryPage = () => {
 

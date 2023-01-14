@@ -3,29 +3,41 @@
 import {H6, Small, Tiny} from "../../assets/typography";
 import UkoAvatar from "../UI/UkoAvatar";
 import {FlexBox} from "../../assets/shared/styles";
+import {getPreview} from "../../utills/axios";
+import moment from "moment";
+import {Button} from "@mui/material";
+import {Download} from "@mui/icons-material";
+import ImageService from "../../services/ImageService";
+import ClientService from "../../services/ClientService";
 
-const UserListColumnShape = [
+const DownloadListColumnShape = [
   {
-    Header: "Name",
-    accessor: "name",
+    Header: ({ value }) => (<div style={{ textAlign: 'center'}}>ID</div>),
+    accessor: 'id',
+    minWidth: 50,
+    Cell: ({ value }) => (<div style={{ textAlign: 'center'}}>{value}</div>),
+  },
+  {
+    Header: ({ value }) => (<div style={{ textAlign: 'center'}}>Name</div>),
+    accessor: "image.name",
     minWidth: 200,
     Cell: ({ row }) => {
-      const { avatar, name, address } = row.original;
+      const { image, created_at } = row.original;
       return (
         <FlexBox alignItems="center">
-          <UkoAvatar src={avatar} />
+          <img width={50} height={50} src={getPreview(image.preview)} />
           <FlexBox flexDirection="column" ml={1}>
-            <H6 color="text.primary">{name}</H6>
-            <Tiny color="text.disabled">{address}</Tiny>
+            <H6 color="text.primary">{image.name}</H6>
+            <Tiny color="text.disabled">{image.tags.map(t => t.name).join(',')}</Tiny>
           </FlexBox>
         </FlexBox>
       );
     },
   },
   {
-    Header: "Role",
-    accessor: "role",
-    minWidth: 200,
+    Header: ({ value }) => (<div style={{ textAlign: 'center'}}>Image Variant</div>),
+    accessor: "image_variant",
+    minWidth: 100,
     Cell: ({ value }) => (
       <Small
         sx={{
@@ -35,26 +47,45 @@ const UserListColumnShape = [
           backgroundColor: "#A798FF",
         }}
       >
-        {value}
+        {value.size.name}
       </Small>
     ),
   },
   {
-    Header: "Company",
-    accessor: "company",
+    Header: ({ value }) => (<div style={{ textAlign: 'center'}}>Download Date</div>),
+    accessor: "created_at",
     minWidth: 150,
+    Cell: ({ value }) => (
+        <Small
+            sx={{
+              borderRadius: 10,
+              padding: ".2rem 1rem",
+              color: "background.paper",
+              backgroundColor: "#B233CF",
+            }}
+        >
+          {moment(value).format('yyyy-mm-DD')}
+        </Small>
+    ),
   },
   {
-    Header: "Project",
-    accessor: "project",
-    minWidth: 150,
-  },
-  {
-    Header: "Verified",
-    accessor: "verified",
+    Header: "Actions",
+    id: "actions",
     minWidth: 100,
     maxWidth: 100,
+    Cell: ({ row }) => (
+        <div>
+            <Button onClick={async (e) => {
+                const { image_variant } = row.values;
+                await ClientService.download(image_variant.image_id, image_variant.id);
+            }}>
+                <Download />
+            </Button>
+        </div>
+    )
   },
 ];
 
-export default UserListColumnShape;
+export{
+  DownloadListColumnShape
+};

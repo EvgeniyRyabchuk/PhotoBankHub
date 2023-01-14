@@ -22,6 +22,14 @@ class Favorite extends Model
             ->select('image_id');
     }
 
+    public function lastImage() {
+        return $this->belongsToMany(Image::class)
+            ->orderBy('created_at', 'desc')
+            ->take(1);
+
+    }
+
+
     public function client() {
         return $this->belongsTo(Client::class);
     }

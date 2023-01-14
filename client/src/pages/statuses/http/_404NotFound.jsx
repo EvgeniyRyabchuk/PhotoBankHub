@@ -1,12 +1,12 @@
 import React from 'react';
-import {FlexBox} from "../assets/shared/styles";
+import {FlexBox} from "../../../assets/shared/styles";
 import {Box, useTheme} from "@mui/material";
-import {H1, Paragraph} from "../assets/typography";
-import {NavLink} from "react-router-dom";
-
+import {H1, Paragraph} from "../../../assets/typography";
+import {NavLink, useNavigate} from "react-router-dom";
 
 const _404NotFound = () => {
     const theme = useTheme();
+    const navigate = useNavigate();
 
 
     return (
@@ -18,8 +18,7 @@ const _404NotFound = () => {
             justifyContent="center"
         >
             <Box maxWidth={350}>
-                <img
-                    src="/static/illustration/error-page.svg"
+                <img src="/static/illustration/error-page.svg"
                     width="100%"
                     alt="Error 404"
                 />
@@ -32,7 +31,7 @@ const _404NotFound = () => {
             </Paragraph>
 
             <NavLink
-                to="/dashboard"
+                onClick={() => navigate(-1)}
                 style={{
                     display: "block",
                     marginTop: "1.5rem",
@@ -41,7 +40,7 @@ const _404NotFound = () => {
                     color: theme.palette.primary.main,
                 }}
             >
-                Back to Dashboard
+                Back to Prev Page
             </NavLink>
         </FlexBox>
     );

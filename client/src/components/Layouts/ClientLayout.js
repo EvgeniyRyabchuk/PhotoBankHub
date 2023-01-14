@@ -10,7 +10,6 @@ import {useDispatch} from "react-redux";
 const Main = tw.div`min-h-screen`
 
 const ClientLayout = () => {
-
     const { fetchCategories } = useAction();
 
     useEffect(() => {

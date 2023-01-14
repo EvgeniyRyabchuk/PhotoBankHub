@@ -9,24 +9,19 @@ const AuthGuard = ({accessRoles, children}) => {
     const navigation = useNavigate();
 
     if(!isAuth && !localStorage.getItem('access_token')) {
-        console.log('not auth', isAuth, user);
-        console.log('roles', accessRoles);
-        navigation('/login');
+        navigation('/statuses/not_authorized');
     }
 
     const check = () => {
         if(isAuth && accessRoles && accessRoles.length > 0) {
             const existAccessRole = accessRoles.find(ar => ar === user.role.name);
-            console.log(existAccessRole);
-
             if(!existAccessRole) {
-                navigation('/login');
+                navigation('/statuses/forbidden');
             }
         }
     }
 
     useEffect(() => {
-        console.log('use effect with check role')
         check();
     }, [isAuth])
 

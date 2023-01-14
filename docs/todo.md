@@ -11,3 +11,10 @@
 5. Change php post limit 
 
 6. Imagick on hosting 
+
+7. Image Ration Error 
+
+8. test client ip for views 
+
+9. Not take away the available image if download it twice 
+

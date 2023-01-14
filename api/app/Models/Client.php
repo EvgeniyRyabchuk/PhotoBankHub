@@ -50,4 +50,12 @@ class Client extends Model
         return $this->hasMany(Favorite::class);
     }
 
+    public function views() {
+        return $this->hasMany(View::class);
+    }
+
+    public function likes() {
+        return $this->hasMany(Like::class);
+    }
+
 }

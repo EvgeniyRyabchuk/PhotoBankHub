@@ -1,6 +1,6 @@
 // styled component
 import {styled} from "@mui/material";
-import {FlexBox} from "../../assets/shared/styles";
+import {FlexBox} from "../../../assets/shared/styles";
 
 const StyledFlexBox = styled(FlexBox)(({ theme }) => ({
     justifyContent: "space-between",

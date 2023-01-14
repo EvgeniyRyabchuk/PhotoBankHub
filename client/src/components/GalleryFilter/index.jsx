@@ -36,14 +36,6 @@ import zIndex from "@mui/material/styles/zIndex";
 import {useSelector} from "react-redux";
 import CategoryService from "../../services/CategoryService";
 
-//TODO:
-// categories, created_at, image_orientation, Resolution, search by image name (tags)
-// search by creator name
-// model
-// level
-// most liked, most viewed, most downloaded, Editor choose
-
-
 
 const GalleryFilter = ({
      isOpen,
