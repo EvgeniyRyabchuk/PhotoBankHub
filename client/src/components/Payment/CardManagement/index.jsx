@@ -3,18 +3,20 @@ import CreditCardModal from "../../modals/CreditCardModal";
 // import {Card as CardType} from "../../../../types/card";
 import CardIconSwitcher from "../../icons/Payment/CardIconSwitcher";
 // @ts-ignore
-import Card from 'react-credit-cards-2';
 import {useAction} from "../../../hooks/useAction";
 import {useSelector} from "react-redux";
-import {Box, Button, Grid, styled, Typography} from "@mui/material";
+import {Box, Button, Grid, Typography, useTheme} from "@mui/material";
 import {getLast4Numbers} from "../shared";
 import CreditCardService from "../../../services/CreditCardService";
-import {Add, Delete, Edit, PlusOne} from "@mui/icons-material";
+import {Add, Delete, Edit} from "@mui/icons-material";
 import {CardItem, CardListWrapper, CardManagementHeader, CardManagementWrapper} from "./styled";
+import {toast} from "react-toastify";
+import {setCards} from "../../../store/action-creator/card";
 
 
-const CardManagement = ({ viewMode= 'full', onCardSelected}) => {
+const CardManagement = ({ viewMode= 'full', onCardSelected, cardListMinHeight}) => {
 
+    const theme = useTheme();
     const [isOpen, setIsOpen] = useState(false);
     const [mode, setMode] = useState('create');
     // const [cards, setCards] = useState<CardType[]>([]);
@@ -47,7 +49,6 @@ const CardManagement = ({ viewMode= 'full', onCardSelected}) => {
         setIsOpen(true);
         setMode('create');
     }
-
     const deleteCard = () => {
         if(selectedCard) {
             const newCards = cards.filter(card => card.number !== selectedCard.number);
@@ -55,7 +56,6 @@ const CardManagement = ({ viewMode= 'full', onCardSelected}) => {
             setSelectedCard(null);
         }
     }
-
     const updateCard = () => {
         setMode('update');
         setIsOpen(true);
@@ -72,8 +72,21 @@ const CardManagement = ({ viewMode= 'full', onCardSelected}) => {
         }
     }
 
+    const onCardClick = async (card) => {
+        setSelectedCard(card);
+        onCardSelected(card);
+        const newCard = {...card, isMain: true };
+        const newCards = cards.map(card => card.id === newCard.id
+            ? newCard : {...card, isMain: false});
+        await CreditCardService.updateCard(newCard);
+        setCards(newCards);
+        toast.info('Card Selected As Main')
+    }
+
     return (
-        <CardManagementWrapper viewMode={viewMode} >
+        <CardManagementWrapper
+            viewMode={viewMode}
+            cardListMinHeight={cardListMinHeight}>
             <CardManagementHeader>
                 <Typography variant='h4'>
                     Cards
@@ -84,18 +97,15 @@ const CardManagement = ({ viewMode= 'full', onCardSelected}) => {
                 </Button>
             </CardManagementHeader>
 
-            <CardListWrapper>
+            <CardListWrapper cardListMinHeight={cardListMinHeight}>
                 { cards.map((card) =>
                         <CardItem
                             card={card}
                             selectedCard={selectedCard}
                             key={card.id}
-                            onClick={() => {
-                                setSelectedCard(card);
-                                onCardSelected(card);
-                            }}>
+                            onClick={() => onCardClick(card)}>
                             <Grid container className='card-grid' sx={{ p: 1}}>
-                                <Grid xs={9} sm={9} md={9} lg={9} xl={9}
+                                <Grid item xs={9} sm={9} md={9} lg={9} xl={9}
                                       sx={{
                                           display: 'flex',
                                           justifyContent: 'start',
@@ -118,7 +128,7 @@ const CardManagement = ({ viewMode= 'full', onCardSelected}) => {
                                         </div>
                                     </div>
                                 </Grid>
-                                <Grid xs={3} sm={3} md={3} lg={3} xl={3}>
+                                <Grid item xs={3} sm={3} md={3} lg={3} xl={3}>
                                     <div style={{ display: 'flex', justifyContent: 'right'}}>
                                         <Button>
                                             <Edit />

@@ -23,6 +23,8 @@ import AddBillingInfo from "../../components/AddBillingInfo";
 import {Payment} from "@mui/icons-material";
 import {toast} from "react-toastify";
 import BillingService from "../../services/BillingService";
+import CreditCardService from "../../services/CreditCardService";
+import {setCards} from "../../store/action-creator/card";
 
 
 const CheckOutWrapper = styled(Box)(({ theme,  }) => ({
@@ -40,6 +42,7 @@ const CheckOut = () => {
     const theme = useTheme();
 
     const navigate = useNavigate();
+    const { cards } = useSelector(state => state.card);
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -112,7 +115,7 @@ const CheckOut = () => {
                     <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
                         <CardManagement
                             viewMode='mini'
-                            onCardSelected={(card) => {
+                            onCardSelected={ async (card) => {
                                 setSelectedCard(card);
                             }}
                         />

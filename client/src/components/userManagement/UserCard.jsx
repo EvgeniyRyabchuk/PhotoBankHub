@@ -1,20 +1,21 @@
 import { Box, Card, Divider, Grid, IconButton, styled } from "@mui/material";
-import { H3, H6, Small, Tiny } from "components/Typography";
-import UkoAvatar from "components/UkoAvatar";
+
 import React, { FC } from "react";
+import UkoAvatar from "../UI/UkoAvatar";
+import {H3, H6, Small, Tiny} from "../../assets/typography";
 
 // component props interface
-interface UserCardProps {
-  user: {
-    cover: string;
-    avatar: string;
-    name: string;
-    position: string;
-    post: number;
-    follower: number;
-    following: number;
-  };
-}
+// interface UserCardProps {
+//   user: {
+//     cover: string;
+//     avatar: string;
+//     name: string;
+//     position: string;
+//     post: number;
+//     follower: number;
+//     following: number;
+//   };
+// }
 
 // styled components
 const ImageWrapper = styled(Box)(({ theme }) => ({
@@ -45,7 +46,7 @@ const StyledAvatar = styled(UkoAvatar)(({ theme }) => ({
   borderColor: theme.palette.background.paper,
 }));
 
-const UserCard: FC<UserCardProps> = ({ user }) => {
+const UserCard = ({ user }) => {
   return (
     <Card>
       <ImageWrapper>

@@ -24,4 +24,46 @@ class Creator extends Model
     public function images() {
         return $this->hasMany(Image::class);
     }
+
+    public function subscribes() {
+        return $this->belongsToMany(
+        Client::class,
+        'content_subscriptions',
+'creator_id',
+'client_id'
+        );
+    }
+
+    public function totalDownloads() {
+        return $this->hasManyThrough(
+            Download::class,
+            Image::class,
+            'creator_id',
+            'image_id',
+            'id',
+            'id'
+        );
+    }
+
+    public function totalLikes() {
+        return $this->hasManyThrough(
+            Like::class,
+            Image::class,
+            'creator_id',
+            'image_id',
+            'id',
+            'id'
+        );
+    }
+
+    public function totalViews() {
+        return $this->hasManyThrough(
+            View::class,
+            Image::class,
+            'creator_id',
+            'image_id',
+            'id',
+            'id'
+        );
+    }
 }

@@ -71,8 +71,7 @@ Route::controller(ImageController::class)
 
             });
 
-        Route::post('/{imageId}/views','addView')
-            ->middleware('auth:api');
+        Route::post('/{imageId}/views','addView');
 
     });
 
@@ -168,13 +167,13 @@ Route::controller(CategoryController::class)
     });
 
 
-Route::prefix('creators/{creatorId}')
-    ->middleware('isCreator')
+Route::prefix('creators')
     ->controller(CreatorController::class)
     ->group(function () {
-        Route::get('/collections', 'getCollections');
-
-    });
+        Route::get('/', 'getCreators');
+        Route::get('/{creatorId}', 'showCreator');
+        Route::get('/{creatorId}/collections', 'getCollections');
+});
 
 Route::prefix('clients/{clientId}')
     ->middleware('isClient')

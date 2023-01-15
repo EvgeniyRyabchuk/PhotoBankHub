@@ -23,9 +23,10 @@ class BillingController extends Controller
         $query = Billing::with('plan', 'billStatus', 'billingInfo');
         $query->where('client_id', $client->id);
         $query->orderBy('created_at', 'desc');
-        $billings = $query->paginate(10);
+        $billings = $query->paginate(8);
         return response()->json($billings);
     }
+
 
 
     public function subscribe(Request $request) {
@@ -88,15 +89,29 @@ class BillingController extends Controller
             "client_id" => $client->id,
             "last_card_number" => _Utills::last4Number($creditCard->number),
             "valid_period_type" => $valid_period_type,
-            "issuer" => $request->issuer,
+            "issuer" => $creditCard->issuer,
         ]);
-        $newBill = Billing::create([
-            "plan_id" => $plan->id,
-            "billing_info_id" => $billingInfo->id,
-            "bill_status_id" => $newStatus->id,
-            "client_id" => $client->id,
-            "valid_period_type" => $valid_period_type,
-        ]);
+
+        // TODO: create or update method
+        $newBill = Billing::where([
+            'client_id' => $client->id,
+            'bill_status_id' => $newStatus->id])
+            ->first();
+
+        if($newBill) {
+            $newBill->plan_id = $plan->id;
+            $newBill->billing_info_id = $billingInfo->id;
+            $newBill->valid_period_type = $valid_period_type;
+            $newBill->save();
+        } else {
+            $newBill = Billing::create([
+                "plan_id" => $plan->id,
+                "billing_info_id" => $billingInfo->id,
+                "bill_status_id" => $newStatus->id,
+                "client_id" => $client->id,
+                "valid_period_type" => $valid_period_type,
+            ]);
+        }
 
         if(!$creditCardId) {
             $creditCard->save();

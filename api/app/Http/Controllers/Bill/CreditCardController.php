@@ -17,6 +17,9 @@ class CreditCardController extends Controller
             ->get();
         return response()->json($cards);
     }
+    public function markCardAsMain(Request $request, $cardId) {
+
+    }
 
     protected function storeOrUpdate($request, $mode, $creditCardId = null) : Model {
         $client = Auth::user()->client;
@@ -26,7 +29,11 @@ class CreditCardController extends Controller
         $expire_year = $request->expire_year;
         $cvc = $request->cvc;
         $issuer = $request->issuer;
-        $isMain = $request->isMain ?? false;
+        $isMain = boolval($request->isMain ?? false);
+
+        if($isMain) {
+            CreditCard::query()->update(['isMain' => false]);
+        }
 
         if($mode === 'create') {
             $card = new CreditCard();

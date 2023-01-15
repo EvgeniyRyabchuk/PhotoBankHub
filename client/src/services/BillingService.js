@@ -7,8 +7,8 @@ import {
 
 export default class BillingService {
 
-    static async getBills() {
-        return await $api.get(`/billings`);
+    static async getBills(page) {
+        return await $api.get(`/billings?page=${page}`);
     }
 
     static async subscribe( plan_id,  creditCardId, valid_period_type, billing_info_id) {

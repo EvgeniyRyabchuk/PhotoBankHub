@@ -83,7 +83,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CategorySeeder::class);
 
-        $this->call(ImageSeeder::class, false, ['count' => 50]);
+        $this->call(ImageSeeder::class, false, ['count' => 3]);
 
         $this->call(SizeSeeder::class);
 
@@ -144,7 +144,7 @@ class DatabaseSeeder extends Seeder
         $clientCount = Client::where('plan_expired_at', '>=', Carbon::now())
             ->has('plan')->count();
         if($clientCount > 0) {
-//            Download::factory(10)->create();
+            Download::factory(20)->create();
         }
 
       $this->call(ImageLoadStatusSeeder::class);

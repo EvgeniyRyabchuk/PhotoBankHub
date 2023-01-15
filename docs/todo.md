@@ -18,3 +18,5 @@
 
 9. Not take away the available image if download it twice 
 
+10. Don't send request if no acces token 
+

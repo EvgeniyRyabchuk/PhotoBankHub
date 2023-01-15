@@ -27,7 +27,8 @@ class DownloadFactory extends Factory
             ->first();
 
 
-        $image = Image::inRandomOrder()->where('isFree', false)->first();
+        $image = Image::inRandomOrder()->first();
+
 
         $level = $client->plan->access_level;
         $imageSize = Size::where('min_access_level', '>=', $level)->inRandomOrder()->first();

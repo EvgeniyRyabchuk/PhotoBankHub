@@ -48,6 +48,7 @@ class StaticUserSeeder extends Seeder
         $clientUser->phone()->associate($phone);
         $clientUser->save();
         $client->plan()->associate($maxPlan);
+        $client->left_image_count = $maxPlan->image_count;
         $client->user()->associate($clientUser);
         $client->save();
 

@@ -7,11 +7,13 @@ const AuthGuard = ({accessRoles, children}) => {
 
     const {isAuth, user} = useSelector(store => store.user);
     const navigation = useNavigate();
-
+    console.log(localStorage.getItem('access_token'), 'adsgsdfg')
+    // check auth
     if(!isAuth && !localStorage.getItem('access_token')) {
         navigation('/statuses/not_authorized');
     }
 
+    // check roles
     const check = () => {
         if(isAuth && accessRoles && accessRoles.length > 0) {
             const existAccessRole = accessRoles.find(ar => ar === user.role.name);

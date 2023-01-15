@@ -32,7 +32,7 @@ class ClientController extends Controller
             $favorite->imageIds = $favorite->imageIds->pluck('image_id');
             return $favorite;
         });
-        
+
         return response()->json($favorites);
     }
 

@@ -1,12 +1,18 @@
 
+// static url for navigation
+
 export const navigations = [
+    // {
+    //     title: 'Home',
+    //     url: '/',
+    // },
     {
-        title: 'Home',
-        url: '/',
+        title: 'All Images',
+        url: '/images'
     },
     {
-        title: 'All',
-        url: '/images'
+        title: 'Creators/Authors',
+        url: '/creators'
     }
     // {
     //     title: 'Services',

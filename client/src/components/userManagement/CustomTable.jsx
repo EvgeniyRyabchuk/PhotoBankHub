@@ -66,8 +66,9 @@ const StyledPagination = styled(Pagination)(({ theme }) => ({
   },
 }));
 
-const CustomTable = (props) => {
-  const { data, rowClick, showFooter, columnShape, hidePagination, setPage, total } = props;
+const CustomTable = (propsData) => {
+  const { data, rowClick, showFooter, columnShape,
+    hidePagination, setPage, total, limit, ...props } = propsData;
   // hooks
   const theme = useTheme();
   const tableData = useMemo(() => data, [data]);
@@ -102,7 +103,7 @@ const CustomTable = (props) => {
     theme.palette.mode === "light" ? "text.secondary" : "divider";
 
   return (
-    <Box>
+    <Box {...props}>
       <Box>
         <Table
           {...getTableProps()}
@@ -193,7 +194,7 @@ const CustomTable = (props) => {
       {!hidePagination && (
         <Stack alignItems="flex-end" marginY={1}>
           <StyledPagination
-            count={getPageCount(total, defLimit)}
+            count={getPageCount(total, limit ?? defLimit)}
             shape="rounded"
             onChange={handleChange}
           />
