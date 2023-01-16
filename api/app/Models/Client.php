@@ -33,8 +33,11 @@ class Client extends Model
 
     public function contentSubscriptions() {
         return $this->belongsToMany(
-            Creator::class, 'content_subscriptions',
-            'client_id', 'creator_id');
+        Creator::class,
+        'content_subscriptions',
+'client_id',
+'creator_id'
+        );
     }
 
     public function billing() {

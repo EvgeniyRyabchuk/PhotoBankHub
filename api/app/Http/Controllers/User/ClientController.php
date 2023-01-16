@@ -17,6 +17,8 @@ use Termwind\Components\Li;
 
 class ClientController extends Controller
 {
+
+
     public function getFavorites(Request $request) {
         $client = Auth::user()->client;
         //TODO: limit eager load relationship

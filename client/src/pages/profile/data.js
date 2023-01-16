@@ -1,3 +1,7 @@
+import UserPlusIcon from "../../assets/icons/UserPlusIcon";
+import FollowerIcon from "../../assets/icons/FollowerIcon";
+
+
 const followers = [
     {
         image: "/static/avatar/040-man-11.svg",
@@ -157,7 +161,61 @@ const friends = [
     },
 ];
 
+const getCountListForClient = (user) => {
+    return [
+        {
+            title: 'Subscriptions',
+            value: user.client.content_subscriptions_count,
+            icon:  <UserPlusIcon fontSize="small" />
+        },
+        {
+            title: 'Downloads',
+            value: user.client.downloads_count,
+            icon:  <FollowerIcon fontSize="small" />,
+            iconColor: '#FF9777'
+        },
+    ]
+}
+
+const getCountListForCreator = (user, short = false) => {
+
+    return [
+        {
+            title: 'Followers',
+            value: user.creator.subscribes_count,
+            icon:  <FollowerIcon fontSize="small" />,
+            iconColor: '#FF9777'
+        },
+        {
+            title: 'Downloads',
+            value: user.creator.total_downloads_count,
+            icon:  <FollowerIcon fontSize="small" />,
+            iconColor: '#FF9777'
+        },
+        {
+            title: 'Views',
+            value: user.creator.total_views_count,
+            icon:  <FollowerIcon fontSize="small" />,
+            iconColor: '#FF9777'
+        },
+        {
+            title: 'Likes',
+            value: user.creator.total_likes_count,
+            icon:  <FollowerIcon fontSize="small" />,
+            iconColor: '#FF9777'
+        },
+        {
+            title: 'Images',
+            value: user.creator.images_count,
+            icon:  <FollowerIcon fontSize="small" />,
+            iconColor: '#FF9777'
+        },
+    ]
+}
+
 export {
     followers,
-    friends
+    friends,
+    getCountListForClient,
+    getCountListForCreator
 }

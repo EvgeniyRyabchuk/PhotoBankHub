@@ -49,10 +49,17 @@ const Home = () => {
                         <Divider />
                         <Actions>
                             <input
+                                onKeyDown={(e) => {
+                                    if(e.key === 'Enter') {
+                                        onSearchHandler();
+                                    }
+                                }}
                                 type="text"
                                 placeholder="Input image name, tags, etc..."
                                 value={search}
-                                onChange={(e) => setSearch(e.target.value)}
+                                onChange={(e) =>
+                                    setSearch(e.target.value)
+                                }
                             />
                             <button onClick={onSearchHandler}>Search</button>
                         </Actions>

@@ -22,25 +22,7 @@ import PlanService from "../../services/PlansService";
 import {PageLoader, PageLoaderElement} from "../../components/Loadable";
 import {useNavigate} from "react-router-dom";
 import {CardActionTypes} from "../../store/reducers/cardReducer";
-import {useDispatch} from "react-redux";
-
-// const defaultPlans = [
-//     {
-//         name: "Free Plan",
-//         durationPrices: ["$0", "$0"],
-//         mainFeature: "For Personal Blogs",
-//         features: ["30 Templates", "7 Landing Pages", "12 Internal Pages", "Basic Assistance"],
-//         multiplicator: 1,
-//     },
-//     {
-//         name: "Pro Plan",
-//         durationPrices: ["$49", "$499"],
-//         mainFeature: "Suited for Production Websites",
-//         features: ["60 Templates", "8 Landing Pages", "22 Internal Pages", "Priority Assistance", "Lifetime Updates"],
-//         featured: true,
-//         multiplicator: 12,
-//     }
-// ];
+import {useDispatch, useSelector} from "react-redux";
 
 
 const Plans = ({
@@ -66,6 +48,8 @@ const Plans = ({
         }
     ]
 
+    const { user, isAuth } = useSelector(state => state.user);
+
     const [plans, setPlans] = useState([]);
 
     const [fetching, isLoading, error] = useFetching(async () => {
@@ -79,6 +63,14 @@ const Plans = ({
 
 
     const [activeDurationIndex, setActiveDurationIndex] = useState(0);
+
+    const planSelect = (plan) => {
+        console.log(123);
+        if(!isAuth)
+            navigate(`/login`);
+        else
+            navigate(`/checkout?planId=${plan.id}&periodIndex=${activeDurationIndex}`)
+    }
 
     return (
         <Box sx={{ margin: '0 auto'}}>
@@ -136,9 +128,7 @@ const Plans = ({
                                     </PlanFeatures>
                                     <PlanAction>
                                         <BuyNowButton
-                                            onClick={() => {
-                                                navigate(`/checkout?planId=${plan.id}&periodIndex=${activeDurationIndex}`)
-                                            }}
+                                            onClick={() => planSelect(plan)}
                                         >
                                             {primaryButtonText}
                                         </BuyNowButton>

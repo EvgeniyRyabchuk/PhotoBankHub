@@ -1,16 +1,18 @@
 import React, {useEffect, useRef, useState} from 'react';
+import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
-import {useFetching} from "../../../hooks/useFetching";
-import {useObserver} from "../../../hooks/useObserver";
 import {defLimit, defPage} from "../../../utills/const";
+import {useFetching} from "../../../hooks/useFetching";
 import ClientService from "../../../services/ClientService";
 import {getImagesWithOverlay} from "../../images/shared";
-import {Gallery} from "react-grid-gallery";
-import {Box, CircularProgress, Typography} from "@mui/material";
-import {useNavigate} from "react-router-dom";
 import {getPageCount} from "../../../utills/page";
+import {useObserver} from "../../../hooks/useObserver";
+import ImageService from "../../../services/ImageService";
+import {Box, CircularProgress, Typography} from "@mui/material";
+import {Gallery} from "react-grid-gallery";
 
-const Likes = () => {
+const CreatorGallery = ({ creatorId }) => {
+
     const navigate = useNavigate();
     const { user } = useSelector(state => state.user);
     const lastElementRef = useRef();
@@ -18,8 +20,8 @@ const Likes = () => {
     const [totalPage, setTotalPage] = useState(0);
     const [images, setImages] = useState([]);
 
-    const [fetchLikes, isLoading, error] = useFetching(async () => {
-        const { data } = await ClientService.getLikes(user.client.id, page);
+    const [fetchImages, isLoading, error] = useFetching(async () => {
+        const { data } = await ImageService.getAll(`?page=${page}&creatorId=${creatorId}`);
         const newImagesWithLayout = getImagesWithOverlay(data.data);
 
         setTotalPage(getPageCount(data.total, defLimit));
@@ -41,7 +43,7 @@ const Likes = () => {
     })
 
     useEffect(() => {
-        fetchLikes();
+        fetchImages();
     }, [page]);
 
     const handleClick = (index, item) => navigate(`/images/${item.id}`);
@@ -50,18 +52,15 @@ const Likes = () => {
     return (
         <Box sx={{ my: 3 }}>
             <Typography variant='h4'>
-                Liked Image List
+                Images
             </Typography>
-
             <Box sx={{ my: 5}}>
                 <Gallery
                     images={images}
-                    // onSelect={handleSelect}
                     enableImageSelection={true}
                     onClick={handleClick}
                 />
-                {
-                    !isLoading && images.length === 0 &&
+                { !isLoading && images.length === 0 &&
                     <h3>No data</h3>
                 }
                 { isLoading && <CircularProgress /> }
@@ -73,9 +72,8 @@ const Likes = () => {
                      }}>
                 </div>
             </Box>
-
         </Box>
     );
 };
 
-export default Likes;
+export default CreatorGallery;

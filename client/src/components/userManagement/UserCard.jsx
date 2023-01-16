@@ -32,7 +32,6 @@ const ImageWrapper = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.primary[100],
   },
 }));
-
 const StyledAvatar = styled(UkoAvatar)(({ theme }) => ({
   zIndex: 1,
   width: 50,
@@ -68,36 +67,50 @@ const UserCard = ({ user }) => {
           {user.position}
         </Tiny>
 
-        <Box marginTop={2}>
-          <IconButton>
-            <img src="/static/social-media/facebook.svg" alt="" />
-          </IconButton>
-          <IconButton>
-            <img src="/static/social-media/twitter.svg" alt="" />
-          </IconButton>
-          <IconButton>
-            <img src="/static/social-media/instagram.svg" alt="" />
-          </IconButton>
-          <IconButton>
-            <img src="/static/social-media/dribble.svg" alt="" />
-          </IconButton>
-        </Box>
+        {/*<Box marginTop={2}>*/}
+        {/*  <IconButton>*/}
+        {/*    <img src="/static/social-media/facebook.svg" alt="" />*/}
+        {/*  </IconButton>*/}
+        {/*  <IconButton>*/}
+        {/*    <img src="/static/social-media/twitter.svg" alt="" />*/}
+        {/*  </IconButton>*/}
+        {/*  <IconButton>*/}
+        {/*    <img src="/static/social-media/instagram.svg" alt="" />*/}
+        {/*  </IconButton>*/}
+        {/*  <IconButton>*/}
+        {/*    <img src="/static/social-media/dribble.svg" alt="" />*/}
+        {/*  </IconButton>*/}
+        {/*</Box>*/}
+      </Box>
+
+
+      <Box marginTop={2}>
+        <Grid container spacing={3} mb={2}>
+          <Grid item xs={6} textAlign="center">
+            <H3>{user.subscribes}</H3>
+            <Small color="text.disabled">Subscribes: </Small>
+          </Grid>
+          <Grid item xs={6} textAlign="center">
+            <H3>{user.downloads}</H3>
+            <Small color="text.disabled">Downloads: </Small>
+          </Grid>
+        </Grid>
       </Box>
 
       <Divider sx={{ my: 2 }} />
 
       <Grid container spacing={3} mb={2}>
         <Grid item xs={4} textAlign="center">
-          <H3>{user.post}</H3>
-          <Small color="text.disabled">Post Avg.</Small>
+          <H3>{user.images}</H3>
+          <Small color="text.disabled">Images: </Small>
         </Grid>
         <Grid item xs={4} textAlign="center">
-          <H3>{user.follower}</H3>
-          <Small color="text.disabled">Followers</Small>
+          <H3>{user.likes}</H3>
+          <Small color="text.disabled">Likes: </Small>
         </Grid>
         <Grid item xs={4} textAlign="center">
-          <H3>{user.following}</H3>
-          <Small color="text.disabled">Following</Small>
+          <H3>{user.views}</H3>
+          <Small color="text.disabled">Views: </Small>
         </Grid>
       </Grid>
     </Card>

@@ -3,7 +3,7 @@ import $api from "../http";
 
 export default class CreatorService {
 
-    static async getAllCreator(creatorId, search) {
+    static async getAllCreator(search) {
         return $api.get(`/creators${search}`);
     }
 

@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Box} from "@mui/material";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
-import {DownloadListColumnShape} from "../../../components/userManagement/columnShape";
 import CustomTable from "../../../components/userManagement/CustomTable";
 import SearchInput from "../../../components/UI/SearchInput";
 import {StyledFlexBox} from "./styled";
@@ -9,6 +8,7 @@ import {useSelector} from "react-redux";
 import ClientService from "../../../services/ClientService";
 import useDebounce from "../../../hooks/useDebounce";
 import {defPage} from "../../../utills/const";
+import DownloadListColumnShape from "./columnShape";
 
 
 const Downloads = () => {

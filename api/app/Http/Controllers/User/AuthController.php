@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\UnauthorizedException;
+use Intervention\Image\Exception\NotFoundException;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
@@ -51,9 +52,35 @@ class AuthController extends Controller
     }
 
     public function profile(Request $request) {
+        $clientRole = Role::where('name', 'client')->first();
+        $creatorRole = Role::where('name', 'creator')->first();
+
         $user = Auth::user();
-        $user->load('role', 'phone', 'client.plan', 'creator');
-        return response()->json($user);
+
+        if($user->role->id === $clientRole->id) {
+            $user = User::with('role', 'phone')
+                ->findOrFail($user->id);
+            $client = Client::with('plan')
+                ->withCount(['contentSubscriptions'])
+                ->withCount(['downloads', 'favorites', 'views', 'likes'])
+                ->findOrFail($user->client->id);
+
+            return response()->json(compact('user', 'client'));
+        }
+        else if($user->role->id === $creatorRole->id) {
+            $user = User::with('role', 'phone')
+                ->findOrFail($user->id);
+            $creator = Creator::withCount(['subscribes', 'images'])
+                ->withCount(['totalDownloads', 'totalLikes', 'totalViews'])
+                ->findOrFail($user->creator->id);
+
+            return response()->json(compact('user', 'creator'));
+        }
+        else {
+//            return response()->json($user);
+            return throw new NotFoundException('not such role');
+        }
+
     }
 
     public function profileDetail(Request $request) {

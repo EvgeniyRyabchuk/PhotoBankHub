@@ -1,30 +1,35 @@
 import React, {Fragment, useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
-import {store} from "../store";
 
 const AuthGuard = ({accessRoles, children}) => {
 
-    const {isAuth, user} = useSelector(store => store.user);
-    const navigation = useNavigate();
-    console.log(localStorage.getItem('access_token'), 'adsgsdfg')
+    const {isAuth, loading, user} = useSelector(store => store.user);
+    const navigate = useNavigate();
     // check auth
-    if(!isAuth && !localStorage.getItem('access_token')) {
-        navigation('/statuses/not_authorized');
+
+    const checkAuth = () => {
+        if(!loading && !isAuth) {
+            navigate('/statuses/not_authorized');
+        }
+        if(!localStorage.getItem('access_token')) {
+            navigate('/statuses/not_authorized');
+        }
     }
 
     // check roles
-    const check = () => {
+    const checkRole = () => {
         if(isAuth && accessRoles && accessRoles.length > 0) {
             const existAccessRole = accessRoles.find(ar => ar === user.role.name);
             if(!existAccessRole) {
-                navigation('/statuses/forbidden');
+                navigate('/statuses/forbidden');
             }
         }
     }
 
     useEffect(() => {
-        check();
+        checkAuth();
+        checkRole();
     }, [isAuth])
 
     return (

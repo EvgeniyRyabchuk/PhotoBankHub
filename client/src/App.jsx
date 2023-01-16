@@ -12,7 +12,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 function App() {
 
     const { profile } = useAction();
-    const location = useLocation()
+    const { pathname, search} = useLocation()
     const { user, isAuth, loading } = useSelector(store => store.user);
 
     useEffect(() => {
@@ -22,7 +22,7 @@ function App() {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [location]);
+    }, [pathname]);
 
     return (
       <div className="App">

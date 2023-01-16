@@ -78,6 +78,8 @@ const CheckOut = () => {
         ])
     });
 
+    //TODO: check if card select and show alert if not
+
     useEffect(() => {
         fetching();
     }, []);

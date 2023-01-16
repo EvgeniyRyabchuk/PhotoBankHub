@@ -1,57 +1,15 @@
 import { BusinessCenter, Mail, Place } from "@mui/icons-material";
 import { Box, Card, Divider, Grid, styled } from "@mui/material";
 import PostCard from "./PostCard";
-import {FlexBox} from "../../assets/shared/styles";
+import {FlexBox, FollowWrapper, IconWrapper} from "../../assets/shared/styles";
 import UserPlusIcon from "../../assets/icons/UserPlusIcon";
 import {H3, H4, H6, Small} from "../../assets/typography";
 import FollowerIcon from "../../assets/icons/FollowerIcon";
 import MoreOptions from "../MoreOptions";
 import {useState} from "react";
+import moment from "moment";
 
-// styled components
-const IconWrapper = styled(Box)(({ theme, color }) => ({
-  width: 40,
-  height: 40,
-  color: "white",
-  display: "flex",
-  borderRadius: "4px",
-  alignItems: "center",
-  justifyContent: "center",
-  backgroundColor: color ? color : theme.palette.primary.main,
-}));
 
-const FollowWrapper = styled(Box)(() => ({
-  maxWidth: 300,
-  margin: "auto",
-  paddingTop: 32,
-  paddingBottom: 32,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-}));
-
-const details = [
-  {
-    Icon: Place,
-    boldText: "Kuwait",
-    smallText: "Lives at",
-  },
-  {
-    Icon: Mail,
-    boldText: "",
-    smallText: "Lenore_Rosenbaum@gmail.com",
-  },
-  {
-    Icon: BusinessCenter,
-    boldText: "UI_LIB",
-    smallText: "Manager at",
-  },
-  {
-    Icon: BusinessCenter,
-    smallText: "Studied at",
-    boldText: "Corwin - Blick",
-  },
-];
 
 const postList = [
   {
@@ -66,44 +24,58 @@ const postList = [
   },
 ];
 
-const Profile = () => {
+
+const Profile = ({ user, isPostShow = true, countList = [], counterFullWidth = false }) => {
   const [moreEl, setMoreEl] = useState(null);
   const handleMoreOpen = (event) => {
     setMoreEl(event.currentTarget);
   };
   const handleMoreClose = () => setMoreEl(null);
 
+
+  const details = [
+    {
+      Icon: Place,
+      boldText: "Kuwait",
+      smallText: "Lives at",
+    },
+    {
+      Icon: Mail,
+      boldText: user.email,
+      smallText: "Email: " ,
+    },
+    {
+      Icon: BusinessCenter,
+      boldText: "Company Name: ",
+      smallText: user.company_name,
+    },
+    {
+      Icon: BusinessCenter,
+      smallText: "Created Account at: ",
+      boldText: moment(user.created_at).format('DD-MM-yyyy'),
+    },
+  ];
+
   return (
     <Grid container spacing={3}>
-      <Grid item md={5} xs={12}>
+      <Grid item md={isPostShow ? 5 : 12} xs={12}>
         <Card>
-          <FollowWrapper>
-            <FlexBox alignItems="center">
-              <IconWrapper>
-                <UserPlusIcon fontSize="small" />
-              </IconWrapper>
-              <Box marginLeft={1.5}>
-                <H6 color="text.disabled" lineHeight={1}>
-                  Following
-                </H6>
-                <H3 lineHeight={1} mt={0.6}>
-                  93,675
-                </H3>
-              </Box>
-            </FlexBox>
-            <FlexBox alignItems="center">
-              <IconWrapper color="#FF9777">
-                <FollowerIcon fontSize="small" />
-              </IconWrapper>
-              <Box marginLeft={1.5}>
-                <H6 color="text.disabled" lineHeight={1}>
-                  Followers
-                </H6>
-                <H3 lineHeight={1} mt={0.6}>
-                  82,469
-                </H3>
-              </Box>
-            </FlexBox>
+          <FollowWrapper fullWidth={counterFullWidth}>
+            { countList.map((e, index) =>
+              <FlexBox alignItems="center" sx={{ p: 1}}>
+                <IconWrapper color={e.iconColor ?? ''}>
+                  { e.icon }
+                </IconWrapper>
+                <Box marginLeft={1.5}>
+                  <H6 color="text.disabled" lineHeight={1}>
+                    {e.title}
+                  </H6>
+                  <H3 lineHeight={1} mt={0.6}>
+                    {e.value}
+                  </H3>
+                </Box>
+              </FlexBox>
+            )}
           </FollowWrapper>
 
           <Divider />
@@ -111,8 +83,7 @@ const Profile = () => {
           <Box padding={3}>
             <H4 fontWeight={600}>About</H4>
             <Small mt={1} display="block" lineHeight={1.9}>
-              Tart I love sugar plum I love oat cake. Sweet roll caramels I love
-              jujubes. Topping cake wafer..
+              {user.about} ...
             </Small>
 
             <Box mt={3}>
@@ -129,13 +100,17 @@ const Profile = () => {
         </Card>
       </Grid>
 
-      <Grid item md={7} xs={12}>
-        {postList.map((post) => (
-          <PostCard post={post} key={post.id} handleMore={handleMoreOpen} />
-        ))}
+      {
+        isPostShow &&
+          <Grid item md={7} xs={12}>
+            {postList.map((post) => (
+                <PostCard post={post} key={post.id} handleMore={handleMoreOpen} />
+            ))}
 
-        <MoreOptions anchorEl={moreEl} handleMoreClose={handleMoreClose} />
-      </Grid>
+            <MoreOptions anchorEl={moreEl} handleMoreClose={handleMoreClose} />
+          </Grid>
+      }
+
     </Grid>
   );
 };

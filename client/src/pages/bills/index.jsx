@@ -17,15 +17,14 @@ import CardManagement from "../../components/Payment/CardManagement";
 import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {useFetching} from "../../hooks/useFetching";
-import {getLast4Numbers} from "../../components/Payment/shared";
 import BillingService from "../../services/BillingService";
-import {defLimit, defPage} from "../../utills/const";
-import {getPageCount} from "../../utills/page";
+import {defPage} from "../../utills/const";
 import {StyledFlexBox} from "../history/downloads/styled";
 import SearchInput from "../../components/UI/SearchInput";
 import CustomTable from "../../components/userManagement/CustomTable";
-import {BillsListColumnShape, DownloadListColumnShape} from "../../components/userManagement/columnShape";
+
 import moment from "moment";
+import BillsListColumnShape from "./columnShape";
 
 const Bills = () => {
     const theme = useTheme();

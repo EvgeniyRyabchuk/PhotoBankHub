@@ -1,26 +1,21 @@
-import React, {useState} from 'react';
-
-import { Box, Card, Grid, styled, Tab } from "@mui/material";
-import {FlexBox} from "../../assets/shared/styles/index";
+import React, {useMemo, useState} from 'react';
+import {Box, Grid} from "@mui/material";
 import SearchInput from "../../components/UI/SearchInput";
-import { H3, Small } from "../../assets/typography";
-import UkoAvatar from "../../components/UI/UkoAvatar";
+import {H3} from "../../assets/typography";
 import FollowerCard from "../../components/userProfile/FollowerCard";
 import FriendCard from "../../components/userProfile/FriendCard";
 import Gallery from "../../components/userProfile/Gallery";
 import Profile from "../../components/userProfile/Profile";
-import {TabContext, TabList, TabPanel} from "@mui/lab";
+import {TabContext} from "@mui/lab";
 import {useSelector} from "react-redux";
-import {getAvatar} from "../../utills/axios";
-import {ContentWrapper, StyledCard, StyledTab, StyledTabList, StyledTabPanel} from "./styled";
-import {followers, friends} from "./data";
-
+import {StyledTabPanel} from "./styled";
+import {followers, friends, getCountListForClient, getCountListForCreator} from "./data";
+import ProfileHeader from "../../components/userProfile/ProfileHeader";
+import userRole from "../../auth/roles";
+import ProfileSetting from "../../components/userProfile/ProfileSetting";
 
 
 const ProfilePage = () => {
-    // change navbar title
-    // useTitle("User Profile");
-    // const { user } = useAuth();
 
     const { user } = useSelector(store => store.user);
 
@@ -30,55 +25,51 @@ const ProfilePage = () => {
         setValue(newValue);
     };
 
+    const countList = useMemo(() => {
+        if(user.role.name === userRole.Client) {
+            return getCountListForClient(user);
+        } else if(user.role.name === userRole.Creator) {
+            return getCountListForCreator(user);
+        }
+        return [];
+    }, [user]);
+    const tabList = useMemo(() => {
+        if(user.role.name === userRole.Client) {
+            return [
+                { label: 'Profile', value: '1' },
+                { label: 'Subscriptions', value: '2' },
+                { label: 'Favorites', value: '3' },
+                { label: 'Setting', value: '5' },
+            ];
+        } else if(user.role.name === userRole.Creator) {
+            return [
+                { label: 'Profile', value: '1' },
+                { label: 'Followers', value: '2' },
+                { label: 'Collections', value: '3' },
+                { label: 'Gallery', value: '4' },
+                { label: 'Setting', value: '5' },
+            ];
+        }
+        return [];
+    }, [user]);
+
+
+
     return (
         <Box pt={2} pb={4}>
             <TabContext value={value}>
-                <StyledCard>
-                    <Box sx={{ height: 200, width: "100%", overflow: "hidden" }}>
-                        <img
-                            src="/static/background/user-cover-pic.png"
-                            alt="User Cover"
-                            height="100%"
-                            width="100%"
-                            style={{ objectFit: "cover" }}
-                        />
-                    </Box>
-
-                    <FlexBox
-                        flexWrap="wrap"
-                        padding="0 2rem"
-                        alignItems="center"
-                        justifyContent="space-between"
-                    >
-                        <ContentWrapper>
-                            <UkoAvatar
-                                src={getAvatar(user) ?? "/static/avatar/001-man.svg"}
-                                sx={{
-                                    border: 4,
-                                    width: 100,
-                                    height: 100,
-                                    borderColor: "background.paper",
-                                }}
-                            />
-
-                            <Box marginLeft={3} marginTop={3}>
-                                <H3 lineHeight={1.2}>{user.full_name}</H3>
-                                <Small color="text.disabled">{user.role.name}</Small>
-                            </Box>
-                        </ContentWrapper>
-
-                        <StyledTabList onChange={handleChange}>
-                            <StyledTab label="Profile" value="1" />
-                            <StyledTab label="Follower" value="2" />
-                            <StyledTab label="Friends" value="3" />
-                            <StyledTab label="Gallery" value="4" />
-                        </StyledTabList>
-                    </FlexBox>
-                </StyledCard>
+                <ProfileHeader
+                    user={user}
+                    onChange={handleChange}
+                    tabList={tabList}
+                />
 
                 <Box marginTop={3}>
                     <StyledTabPanel value="1">
-                        <Profile />
+                        <Profile
+                            user={user}
+                            countList={countList}
+                        />
                     </StyledTabPanel>
 
                     <StyledTabPanel value="2">
@@ -106,6 +97,10 @@ const ProfilePage = () => {
 
                     <StyledTabPanel value="4">
                         <Gallery />
+                    </StyledTabPanel>
+
+                    <StyledTabPanel value="5">
+                        <ProfileSetting />
                     </StyledTabPanel>
                 </Box>
             </TabContext>

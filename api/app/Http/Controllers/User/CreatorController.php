@@ -8,46 +8,35 @@ use App\Models\Creator;
 use App\Models\Download;
 use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class CreatorController extends Controller
 {
     public function getCreators(Request $request) {
-        $creators = Creator::with('user')
-            ->paginate(20);
+        $search = $request->input('search');
+        $query = Creator::with('user')
+            ->withCount(['subscribes', 'images'])
+            ->withCount(['totalDownloads', 'totalLikes', 'totalViews']);
+
+        if($search && $search !== '') {
+            $query->join('users', 'creators.user_id', 'users.id');
+            $query->where('users.full_name', 'LIKE', "%$search%");
+        }
+
+         $creators = $query->paginate(20);
         return response()->json($creators);
     }
 
     public function showCreator(Request $request, $creatorId) {
-        //TODO: count of downloads and views
-
-        //TODO: downloads increment fix
-
-        $creator = Creator::with('user',
-            'images.imageVariants')
+        $creator = Creator::with('user.role')
             ->withCount(['subscribes', 'images'])
             ->withCount(['totalDownloads', 'totalLikes', 'totalViews'])
-
-
-//            ->join('images', 'creators.id', 'images.creator_id')
-//            ->join('downloads', 'images.id', 'downloads.image_id')
-//            ->join('views', 'images.id', 'views.image_id')
-//            ->withCount( 'images', function ($q) {
-////                $q->join('downloads', 'images.id', 'downloads.image_id');
-////                $q->withCount('downloads');
-//            })
             ->findOrFail($creatorId);
 
-//        $counter = Image::where('creator_id', $creator->id)
-//            ->withCount('downloads')
-//            ->withCount('views')
-//            ->withSum('downloads')
-//            ->withSum('views')
-//        ;
+//        $images = Image::where('creator_id', $creator->id)
+//            ->paginate(15);
 
-        $counter = [];
-
-        return response()->json(compact('creator', 'counter'));
+        return response()->json( $creator);
     }
 
     public function getCollections(Request $request) {
