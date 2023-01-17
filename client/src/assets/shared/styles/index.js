@@ -1,4 +1,4 @@
-import {Box, styled} from "@mui/material";
+import {Box, Button, styled} from "@mui/material";
 
 const FlexBox = ({ children, ...props }) => (
     <Box display="flex" {...props}>
@@ -72,7 +72,31 @@ const FollowWrapper = styled(Box)(( {theme, fullWidth} ) => ({
     }
 }));
 
+const ObserverItem = styled('div')(( {theme, isShow = true} ) => ({
+    display: isShow ? 'block' : 'none',
+    width: '100%',
+    height: '20px',
+    background: 'red',
+}));
 
+
+const UploadNavigateButton = styled(Button)(( {theme} ) => ({
+    backgroundColor: '#0043AD',
+    color: 'white',
+    "&: hover": {
+        backgroundColor: '#01214f',
+        color: 'white'
+    }
+}));
+
+const FollowButton = styled(Button)(( {theme, isSubscribe = false} ) => ({
+    backgroundColor: isSubscribe ? '#EA0000' : '#584f4f',
+    color: 'white',
+    "&: hover": {
+        backgroundColor:  isSubscribe ? '#A30000' : "#2d2626",
+        color: 'white'
+    }
+}));
 
 
 export {
@@ -85,6 +109,11 @@ export {
     ErrorSpan,
 
     IconWrapper,
-    FollowWrapper
+    FollowWrapper,
+
+    ObserverItem,
+
+    UploadNavigateButton,
+    FollowButton
 }
 

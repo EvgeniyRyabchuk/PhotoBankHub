@@ -26,8 +26,8 @@ class UserController extends Controller
 
     }
 
-    public function update(UserUpdateRequest $request, $userId) {
-
+    // validate if multupart form data UserUpdateRequest
+    public function update(Request $request, $userId) {
         $user = User::findOrFail($userId);
         if($user->full_name !== $request->full_name) {
             if(User::where('email', $request->email)->first()) {
@@ -38,11 +38,11 @@ class UserController extends Controller
 
         $user->full_name = $request->full_name;
         $user->email = $request->email;
-
+        $user->about = $request->about ?? $user->about;
+        $user->website = $request->website ?? $user->website;
 
         if($request->has('phone')) {
             $phoneDataDecoded = json_decode($request->phone);
-
             $phone = Phone::create([
                 'phone_number' => $phoneDataDecoded->phone->number,
                 'countryCode' => $phoneDataDecoded->phone->countryData->name,
@@ -50,10 +50,8 @@ class UserController extends Controller
                 'dialCode' => $phoneDataDecoded->phone->countryData->countryCode,
                 'format' => $phoneDataDecoded->phone->countryData->format,
             ]);
-
             $user->phone()->associate($phone);
         }
-
 
 
         if($request->hasFile('avatar')) {
@@ -62,7 +60,7 @@ class UserController extends Controller
             $user->avatar = $path;
         }
         $user->save();
-        return response()->json("OK");
+        return response()->json($user);
     }
 
     public function delete(Request $request, $userId) {

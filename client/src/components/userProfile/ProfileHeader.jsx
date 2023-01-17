@@ -1,18 +1,46 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {ContentWrapper, StyledCard, StyledTab, StyledTabList} from "../../pages/profile/styled";
 import {Box, Button} from "@mui/material";
-import {FlexBox} from "../../assets/shared/styles";
+import {FlexBox, FollowButton, UploadNavigateButton} from "../../assets/shared/styles";
 import UkoAvatar from "../UI/UkoAvatar";
 import {getAvatar} from "../../utills/axios";
 import {H3, Small} from "../../assets/typography";
+import ClientService from "../../services/ClientService";
+import {useSelector} from "react-redux";
+import {useAction} from "../../hooks/useAction";
+import userRole from "../../auth/roles";
+import {useNavigate} from "react-router-dom";
 
-const ProfileHeader = ({ onChange, user, tabList}) => {
+
+
+
+const ProfileHeader = ({ onChange, user, creator, tabList, isMyProfile}) => {
+
+    const navigate = useNavigate();
+    const { user: authUser, isAuth} = useSelector(store => store.user);
+    const { profile } = useAction();
+
+    const isSubscribe = useMemo(() => {
+        if(!creator) return;
+        if(creator.user.id === authUser.id) return;
+        const exist = authUser.client.content_subscriptions.find(following => following.id === creator.id);
+        return !exist ? true : false;
+    }, [authUser, creator]);
+
+
+    const subscribeHandler = async () => {
+        if(isSubscribe)
+            await ClientService.contentSubscribe(authUser.client.id, creator.id);
+        else
+            await ClientService.contentUnSubscribe(authUser.client.id, creator.id);
+        await profile();
+    }
+
 
     return (
             <StyledCard>
                 <Box sx={{ height: 200, width: "100%", overflow: "hidden" }}>
-                    <img
-                        src="/static/background/user-cover-pic.png"
+                    <img src="/static/background/user-cover-pic.png"
                         alt="User Cover"
                         height="100%"
                         width="100%"
@@ -44,46 +72,23 @@ const ProfileHeader = ({ onChange, user, tabList}) => {
                     </ContentWrapper>
 
                     <Box>
-                        <Button
-                            variant='container'
-                            sx={{
-                                backgroundColor: '#EA0000',
-                                color: 'white',
-                                "&: hover": {
-                                    backgroundColor: '#A30000',
-                                    color: 'white'
-                                }
-                            }}
-                            onClick={() => {
-                                // TODO: follow
-                                // check if already following
-
-                            }}
-                        >
-                            Follow
-                        </Button>
-                        <Button
-                            variant='container'
-                            sx={{
-                                backgroundColor: '#0043AD',
-                                color: 'white',
-                                "&: hover": {
-                                    backgroundColor: '#00378B',
-                                    color: 'white'
-                                }
-                            }}
-                            color='primary'
-                            onClick={() => {}}>
-                            Upload Image
-                        </Button>
-
+                        {
+                            !isMyProfile &&  authUser.role.name === userRole.Client &&
+                            <FollowButton isSubscribe={isSubscribe} onClick={subscribeHandler}>
+                                { isSubscribe ? 'Follow' : 'Unfollow'}
+                            </FollowButton>
+                        }
+                        {
+                            isMyProfile && authUser.role.name === userRole.Creator &&
+                            <UploadNavigateButton variant='container' onClick={() => navigate(`/uploads`) }>
+                                Upload Image
+                            </UploadNavigateButton>
+                        }
                     </Box>
 
-                    {
-                        tabList &&
+                    { tabList &&
                         <StyledTabList onChange={onChange}>
-                            {
-                                tabList.map((tab, index) =>
+                            { tabList.map((tab, index) =>
                                     <StyledTab key={index} label={tab.label} value={tab.value} />
                                 )
                             }

@@ -25,7 +25,7 @@ const Likes = () => {
         setTotalPage(getPageCount(data.total, defLimit));
 
         if(page > 1) {
-            setImages(newImagesWithLayout);
+            // setImages(newImagesWithLayout);
             setImages([...images, ...newImagesWithLayout]);
         }
         else if(page === 1) {

@@ -1,12 +1,11 @@
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {ToastContainer} from "react-toastify";
 import Routing from "./routing/index";
 import 'react-toastify/dist/ReactToastify.css';
 import React, {useEffect} from "react";
 import {useAction} from "./hooks/useAction";
 import GlobalStyles from "./assets/shared/styles/GlobalStyles";
-import {CardActionTypes} from "./store/reducers/cardReducer";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 
 
 function App() {

@@ -104,8 +104,6 @@ const CreatorShow = () => {
         setCreator(data);
     });
 
-
-
     useEffect(() => {
         fetchCreator();
     }, []);
@@ -117,15 +115,17 @@ const CreatorShow = () => {
         setValue(newValue);
     };
 
+
     return (
         <Box sx={{ p: 5}}>
             <TabContext value={value}>
                 {isLoadingCreator && <CircularProgress />}
-                {
-                    !isLoadingCreator && creator &&
+                { !isLoadingCreator && creator && creator !== null &&
                     <>
                         <ProfileHeader
+                            isMyProfile={false}
                             user={creator.user}
+                            creator={creator}
                             tabList={[
                                 { label: 'Overview', value: '1' }
                             ]}
@@ -141,7 +141,7 @@ const CreatorShow = () => {
                                 />
                             </StyledTabPanel>
                         </Box>
-                        <CreatorGallery creatorId={creator.id}/>
+                        <CreatorGallery creatorId={creator.id} />
                     </>
                 }
             </TabContext>

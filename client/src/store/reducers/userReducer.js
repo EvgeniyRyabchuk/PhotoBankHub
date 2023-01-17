@@ -19,6 +19,7 @@ export const userReducer = (state= initialState, action) => {
             const {user, client, creator} = action.payload;
             user.client = client;
             user.creator = creator;
+            console.log(123);
             return {
                 loading: false,
                 error: null,

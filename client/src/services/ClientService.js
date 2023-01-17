@@ -19,6 +19,17 @@ export default class ClientService {
         return $api.get(`clients/${clientId}/favorites/${favoriteId}/images?page=${page}`);
     }
 
+    static async getSubscriptionContent(clientId, page) {
+        return $api.get(`clients/${clientId}/subscriptions/content?page=${page}`);
+    }
 
+    static async contentSubscribe(clientId, creatorId) {
+        return $api.post(`clients/${clientId}/content-subscribe`, { creatorId });
+    }
+    static async contentUnSubscribe(clientId, creatorId) {
+        return $api.delete(`clients/${clientId}/content-subscribe`, {
+           data: { creatorId }
+        });
+    }
 
 }

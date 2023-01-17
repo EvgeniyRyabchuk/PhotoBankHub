@@ -60,7 +60,7 @@ class AuthController extends Controller
         if($user->role->id === $clientRole->id) {
             $user = User::with('role', 'phone')
                 ->findOrFail($user->id);
-            $client = Client::with('plan')
+            $client = Client::with('plan', 'contentSubscriptions.user')
                 ->withCount(['contentSubscriptions'])
                 ->withCount(['downloads', 'favorites', 'views', 'likes'])
                 ->findOrFail($user->client->id);

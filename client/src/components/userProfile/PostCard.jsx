@@ -14,6 +14,9 @@ import {H5, H6, Small, Tiny} from "../../assets/typography";
 import CommentIcon from "../../assets/icons/CommentIcon";
 import UploadIcon from "../../assets/icons/UploadIcon";
 import ShareIcon from "../../assets/icons/ShareIcon";
+import {getAvatar, getPreview} from "../../utills/axios";
+import {NavLink} from "react-router-dom";
+import moment from "moment";
 
 
 // component props interface
@@ -44,37 +47,41 @@ const PostCard = ({ post, handleMore }) => {
   const theme = useTheme();
   return (
     <Card sx={{ padding: 2, mb: 3 }}>
-      <FlexBox justifyContent="space-between">
-        <FlexBox alignItems="center">
-          <ImageWrapper>
-            <img
-              src="/static/user/user-10.png"
-              alt="User"
-              width="100%"
-              height="100%"
-            />
-          </ImageWrapper>
+      <NavLink to={`/creators/${post.creator.id}`}>
+        <FlexBox justifyContent="space-between">
+          <FlexBox alignItems="center">
+            <ImageWrapper>
+              <img
+                  src={getAvatar(post.creator.user)}
+                  alt="User"
+                  width="100%"
+                  height="100%"
+              />
+            </ImageWrapper>
 
-          <Box marginLeft={1}>
-            <H5 lineHeight={1}>Martha Hawk</H5>
-            <Tiny fontWeight={500} color="text.disabled">
-              22 June 2020
-            </Tiny>
-          </Box>
+            <Box marginLeft={1}>
+              <H5 lineHeight={1}>{post.creator.user.full_name}</H5>
+              <Tiny fontWeight={500} color="text.disabled">
+                { moment(post.created_at).format('MM/DD/YYYY') }
+              </Tiny>
+            </Box>
+          </FlexBox>
+
+          <IconButton onClick={handleMore}>
+            <MoreVert fontSize="small" color="disabled" />
+          </IconButton>
         </FlexBox>
-
-        <IconButton onClick={handleMore}>
-          <MoreVert fontSize="small" color="disabled" />
-        </IconButton>
-      </FlexBox>
+      </NavLink>
 
       <Box marginTop={3}>
-        <Small fontWeight={600}>{post.postTitle}</Small>
+        <Small fontWeight={600}>{post.name}</Small>
 
-        {post.postImage && (
-          <PostImageWrapper>
-            <img src={post.postImage} alt="Post One" width="100%" />
-          </PostImageWrapper>
+        {post.preview && (
+            <NavLink to={`/images/${post.id}`}>
+              <PostImageWrapper>
+                <img src={getPreview(post.preview)} alt="Post One" width="100%" />
+              </PostImageWrapper>
+            </NavLink>
         )}
 
         <FlexBox alignItems="center" justifyContent="space-between" my={2}>

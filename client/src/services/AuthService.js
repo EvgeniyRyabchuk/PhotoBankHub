@@ -71,8 +71,6 @@ export default class AuthService {
         }
     }
 
-
-
     static async getRoles() {
         return $api.get('/roles');
     }

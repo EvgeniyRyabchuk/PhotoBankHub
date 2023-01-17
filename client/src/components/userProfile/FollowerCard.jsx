@@ -2,6 +2,8 @@ import { Box, Button, Card, styled, useTheme } from "@mui/material";
 import {FlexBox} from "../../assets/shared/styles";
 import UkoAvatar from "../UI/UkoAvatar";
 import {H6, Tiny} from "../../assets/typography";
+import {getAvatar} from "../../utills/axios";
+import {NavLink} from "react-router-dom";
 
 // component props interface
 // interface FollowerCardProps {
@@ -35,16 +37,19 @@ const FollowerCard = ({ follower }) => {
   return (
     <Card sx={{ padding: 3 }}>
       <FlexBox justifyContent="space-between" alignItems="center">
-        <FlexBox>
-          <UkoAvatar src={follower.image} sx={{ width: 42, height: 42 }} />
+        <NavLink to={`/creators/${follower.id}`}>
+          <FlexBox>
+            <UkoAvatar src={getAvatar(follower.user)}
+                       sx={{ width: 42, height: 42 }} />
+            <Box marginLeft={1}>
+              <H6>{follower.user.full_name}</H6>
+              <Tiny color="text.disabled" fontWeight={500}>
+                Creator
+              </Tiny>
+            </Box>
+          </FlexBox>
+        </NavLink>
 
-          <Box marginLeft={1}>
-            <H6>{follower.name}</H6>
-            <Tiny color="text.disabled" fontWeight={500}>
-              {follower.profession}
-            </Tiny>
-          </Box>
-        </FlexBox>
 
         {follower.following ? (
           <StyledButton
@@ -63,7 +68,7 @@ const FollowerCard = ({ follower }) => {
               "&:hover": { borderColor },
             }}
           >
-            Follow
+            Unfollow
           </StyledButton>
         )}
       </FlexBox>

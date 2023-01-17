@@ -1,8 +1,9 @@
 import Loadable from "../../components/Loadable";
 import {lazy} from "react";
 import _404NotFound from "../../pages/statuses/http/_404NotFound";
-import {PublicRoutes} from "./pubic";
-import {ClientRoutes} from "./client";
+import PublicRoutes from "./pubic";
+import ClientRoutes from "./client";
+import CreatorRoutes from "./creator";
 
 
 const ProfilePage = Loadable(lazy(() => import('../../pages/profile')));
@@ -14,10 +15,9 @@ const routes = [
     { path: '/creators', element: <CreatorAllPage />, exact: true },
     { path: '/creators/:id', element: <CreatorShowPage />, exact: true },
 
-
-
     ...PublicRoutes,
     ...ClientRoutes,
+    ...CreatorRoutes,
 
     { path: '*', element: <_404NotFound/>, exact: true }
 ];

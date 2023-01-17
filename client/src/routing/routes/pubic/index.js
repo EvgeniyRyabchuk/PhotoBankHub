@@ -1,6 +1,6 @@
 import Loadable from "../../../components/Loadable";
 import {lazy} from "react";
-import {SessionRoutes} from "./sessions";
+import SessionRoutes from "./sessions";
 import StatusesRoutes from "./statuses";
 
 
@@ -12,7 +12,7 @@ const ShowImagePage = Loadable(lazy(() => import('../../../pages/images/show')))
 
 
 
-export const PublicRoutes = [
+const PublicRoutes = [
     { path: '/', element: <HomePage />, exact: true },
     { path: '/plans', element: <PlansPage />, exact: true, },
     { path: '/categories/:id', element: <CategoriesPage />, exact: true },
@@ -20,4 +20,7 @@ export const PublicRoutes = [
     { path: '/images/:id', element: <ShowImagePage />, exact: true },
     ...SessionRoutes,
     ...StatusesRoutes,
-]
+];
+
+
+export default PublicRoutes;

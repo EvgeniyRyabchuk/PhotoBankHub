@@ -1,14 +1,19 @@
-import { BusinessCenter, Mail, Place } from "@mui/icons-material";
-import { Box, Card, Divider, Grid, styled } from "@mui/material";
+import {BusinessCenter, Mail, Place} from "@mui/icons-material";
+import {Box, Card, Divider, Grid} from "@mui/material";
 import PostCard from "./PostCard";
-import {FlexBox, FollowWrapper, IconWrapper} from "../../assets/shared/styles";
-import UserPlusIcon from "../../assets/icons/UserPlusIcon";
+import {FlexBox, FollowWrapper, IconWrapper, ObserverItem} from "../../assets/shared/styles";
 import {H3, H4, H6, Small} from "../../assets/typography";
-import FollowerIcon from "../../assets/icons/FollowerIcon";
 import MoreOptions from "../MoreOptions";
-import {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import moment from "moment";
-
+import {useFetching} from "../../hooks/useFetching";
+import ClientService from "../../services/ClientService";
+import {defPage} from "../../utills/const";
+import {useObserver} from "../../hooks/useObserver";
+import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {getPageCount} from "../../utills/page";
+import userRole from "../../auth/roles";
 
 
 const postList = [
@@ -25,13 +30,43 @@ const postList = [
 ];
 
 
-const Profile = ({ user, isPostShow = true, countList = [], counterFullWidth = false }) => {
+const Profile = ({
+       isPostShow = true,
+       countList = [],
+       counterFullWidth = false
+  }) => {
+
+  const navigate = useNavigate();
+  const { user } = useSelector(state => state.user);
+  const lastElementRef = useRef();
+
   const [moreEl, setMoreEl] = useState(null);
+  const [page, setPage] = useState(defPage);
+  const [totalPage, setTotalPage] = useState(0);
+  const [posts, setPosts] = useState([]);
+
+
   const handleMoreOpen = (event) => {
     setMoreEl(event.currentTarget);
   };
+
   const handleMoreClose = () => setMoreEl(null);
 
+  const [fetchPosts, isLoading, error] = useFetching(async () => {
+      const { data } = await ClientService.getSubscriptionContent(user.client.id, page);
+      setTotalPage(getPageCount(data.total, 5));
+
+    if(page > 1) {
+      setPosts([...posts, ...data.data]);
+    }
+    else if(page === 1) {
+      setPosts([...data.data]);
+    }
+    else {
+      setPosts([]);
+    }
+
+  });
 
   const details = [
     {
@@ -46,8 +81,8 @@ const Profile = ({ user, isPostShow = true, countList = [], counterFullWidth = f
     },
     {
       Icon: BusinessCenter,
-      boldText: "Company Name: ",
-      smallText: user.company_name,
+      boldText: user.website,
+      smallText:  "WebSite: "
     },
     {
       Icon: BusinessCenter,
@@ -55,6 +90,16 @@ const Profile = ({ user, isPostShow = true, countList = [], counterFullWidth = f
       boldText: moment(user.created_at).format('DD-MM-yyyy'),
     },
   ];
+
+  useObserver(lastElementRef, page < totalPage, isLoading, () => {
+    setPage(page + 1);
+  })
+
+  useEffect(() => {
+    if(isPostShow) {
+      fetchPosts();
+    }
+  }, [page, isPostShow]);
 
   return (
     <Grid container spacing={3}>
@@ -100,16 +145,23 @@ const Profile = ({ user, isPostShow = true, countList = [], counterFullWidth = f
         </Card>
       </Grid>
 
-      {
-        isPostShow &&
-          <Grid item md={7} xs={12}>
-            {postList.map((post) => (
-                <PostCard post={post} key={post.id} handleMore={handleMoreOpen} />
-            ))}
+        { isPostShow && user.role.name === userRole.Client &&
+            <Grid item md={7} xs={12}>
+              {posts.map((post) => (
+                  <PostCard post={post} key={post.id} handleMore={handleMoreOpen} />
+              ))}
 
-            <MoreOptions anchorEl={moreEl} handleMoreClose={handleMoreClose} />
-          </Grid>
-      }
+              <MoreOptions anchorEl={moreEl} handleMoreClose={handleMoreClose} />
+            </Grid>
+        }
+        { user.role.name === userRole.Creator &&
+            <Grid item md={7} xs={12}>
+              Creator Image Gallery
+              <MoreOptions anchorEl={moreEl} handleMoreClose={handleMoreClose} />
+            </Grid>
+        }
+
+       <ObserverItem ref={lastElementRef} isShow={isPostShow} />
 
     </Grid>
   );

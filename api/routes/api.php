@@ -196,6 +196,9 @@ Route::prefix('clients/{clientId}')
         Route::get('/views', 'getViewedImages');
         Route::get('/likes', 'getLikedImages');
 
+        Route::get('/subscriptions/content', 'getSubscriptionContent');
+        Route::post('/content-subscribe', 'contentSubscribe');
+        Route::delete('/content-subscribe', 'contentUnSubscribe');
 
 
     });

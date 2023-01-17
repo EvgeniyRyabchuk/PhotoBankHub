@@ -10,7 +10,7 @@ const FavoritePage = Loadable(lazy(() => import('../../../pages/favorites/show')
 const BillsPage = Loadable(lazy(() => import('../../../pages/bills/index')));
 
 
-export const ClientRoutes = [
+const ClientRoutes = [
     ...ClientHistoryRoutes,
     {
         path: '/favorites',
@@ -41,3 +41,5 @@ export const ClientRoutes = [
         accessRoles: [userRole.Client]
     },
 ]
+
+export default ClientRoutes;

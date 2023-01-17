@@ -26,6 +26,7 @@
     "material-react-table": "^1.4.3",
     "moment": "^2.29.4",
     "react": "^18.2.0",
+    "react-avatar-image-cropper": "^1.4.2",
     "react-credit-cards-2": "^0.9.0",
     "react-dom": "^18.2.0",
     "react-grid-gallery": "^1.0.0",

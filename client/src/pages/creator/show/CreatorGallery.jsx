@@ -3,13 +3,13 @@ import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {defLimit, defPage} from "../../../utills/const";
 import {useFetching} from "../../../hooks/useFetching";
-import ClientService from "../../../services/ClientService";
 import {getImagesWithOverlay} from "../../images/shared";
 import {getPageCount} from "../../../utills/page";
 import {useObserver} from "../../../hooks/useObserver";
 import ImageService from "../../../services/ImageService";
 import {Box, CircularProgress, Typography} from "@mui/material";
 import {Gallery} from "react-grid-gallery";
+import {ObserverItem} from "../../../assets/shared/styles";
 
 const CreatorGallery = ({ creatorId }) => {
 
@@ -38,6 +38,8 @@ const CreatorGallery = ({ creatorId }) => {
         }
     });
 
+    console.log(page)
+
     useObserver(lastElementRef, page < totalPage, isLoading, () => {
         setPage(page + 1);
     })
@@ -64,13 +66,7 @@ const CreatorGallery = ({ creatorId }) => {
                     <h3>No data</h3>
                 }
                 { isLoading && <CircularProgress /> }
-                <div ref={lastElementRef}
-                     style={{
-                         width: '100%',
-                         height: '20px',
-                         background: 'red',
-                     }}>
-                </div>
+                <ObserverItem ref={lastElementRef} />
             </Box>
         </Box>
     );

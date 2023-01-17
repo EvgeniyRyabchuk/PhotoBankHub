@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Creator;
 use App\Models\Download;
 use App\Models\Favorite;
 use App\Models\Image;
@@ -210,5 +211,48 @@ class ClientController extends Controller
         return response()->json($images);
     }
 
+
+    public function contentSubscribe(Request $request) {
+        $client = Auth::user()->client;
+        $creator = Creator::findOrFail($request->creatorId);
+        $subscriptionExist = DB::table('content_subscriptions')
+            ->where(['client_id' => $client->id, 'creator_id' => $creator->id])
+            ->first();
+        if($subscriptionExist) {
+            return response()->json(['message' => 'subscription already exist'], 409);
+        }
+        $client->contentSubscriptions()->attach($creator);
+        $client->save();
+
+        return response()->json('OK');
+    }
+
+    public function contentUnSubscribe(Request $request) {
+        $client = Auth::user()->client;
+        $creator = Creator::findOrFail($request->creatorId);
+
+        $subscriptionExist = DB::table('content_subscriptions')
+            ->where(['client_id' => $client->id, 'creator_id' => $creator->id])
+            ->first();
+        if(!$subscriptionExist) {
+            return response()->json(['message' => 'subscription not exist'], 404);
+        }
+        $client->contentSubscriptions()->detach($creator);
+        $client->save();
+
+        return response()->json('OK');
+    }
+
+    public function getSubscriptionContent(Request $request, $clientId) {
+        $client = Auth::user()->client;
+        $followingIds = $client->contentSubscriptions->pluck('id');
+        $images = Image::with('creator.user', 'imageVariants.size')
+            ->whereIn('creator_id', $followingIds)
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+
+        return response()->json($images);
+
+    }
 
 }

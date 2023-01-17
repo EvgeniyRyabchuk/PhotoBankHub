@@ -6,7 +6,6 @@ import _403Forbidden from "../../../pages/statuses/http/_403Forbidden";
 import PaymentSuccess from "../../../pages/statuses/payment/PaymentSuccess";
 import PaymentFail from "../../../pages/statuses/payment/PaymentFail";
 import userRole from "../../../auth/roles";
-import {lazy} from "react";
 
 const httpStatusesRoutes = [
     { path: '/statuses/not_authorized', element: <_401NotAuthorized />, exact: true },

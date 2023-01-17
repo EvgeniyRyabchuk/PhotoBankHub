@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {lazy, useEffect, useMemo, useState} from 'react';
 import {Box, Grid} from "@mui/material";
 import SearchInput from "../../components/UI/SearchInput";
 import {H3} from "../../assets/typography";
@@ -13,15 +13,24 @@ import {followers, friends, getCountListForClient, getCountListForCreator} from 
 import ProfileHeader from "../../components/userProfile/ProfileHeader";
 import userRole from "../../auth/roles";
 import ProfileSetting from "../../components/userProfile/ProfileSetting";
+import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
+import Loadable from "../../components/Loadable";
 
+const FavoritePage = Loadable(lazy(() => import('../favorites/all/index')));
 
 const ProfilePage = () => {
 
     const { user } = useSelector(store => store.user);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { search } = useLocation();
+    const [value, setValue] = useState('1');
 
-    const [value, setValue] = useState("1");
+    useEffect(() => {
+        setValue(searchParams.get('tab') ?? '1');
+    }, [search]);
 
     const handleChange = (_, newValue) => {
+        setSearchParams({ ...searchParams, tab: newValue});
         setValue(newValue);
     };
 
@@ -54,11 +63,11 @@ const ProfilePage = () => {
     }, [user]);
 
 
-
     return (
         <Box pt={2} pb={4}>
             <TabContext value={value}>
                 <ProfileHeader
+                    isMyProfile={true}
                     user={user}
                     onChange={handleChange}
                     tabList={tabList}
@@ -73,30 +82,42 @@ const ProfilePage = () => {
                     </StyledTabPanel>
 
                     <StyledTabPanel value="2">
-                        <Grid container spacing={3}>
-                            {followers.map((item, index) => (
-                                <Grid item lg={4} sm={6} xs={12} key={index}>
-                                    <FollowerCard follower={item} />
-                                </Grid>
-                            ))}
-                        </Grid>
+                        { user.role.name === userRole.Client &&
+                            <Grid container spacing={3}>
+                                {user.client.content_subscriptions.map((creator, index) => (
+                                    <Grid item lg={4} sm={6} xs={12} key={creator.id} >
+                                        <FollowerCard follower={creator} />
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        }
+
                     </StyledTabPanel>
 
                     <StyledTabPanel value="3">
-                        <H3>Friends</H3>
-                        <SearchInput placeholder="Search Friends..." sx={{ my: 2 }} />
+                        { user.role.name === userRole.Creator &&
+                            <>
+                                <H3>Friends</H3>
+                                <SearchInput placeholder="Search Friends..." sx={{ my: 2 }} />
 
-                        <Grid container spacing={3}>
-                            {friends.map((friend, index) => (
-                                <Grid item lg={4} sm={6} xs={12} key={index}>
-                                    <FriendCard friend={friend} />
+                                <Grid container spacing={3}>
+                                    {friends.map((friend, index) => (
+                                        <Grid item lg={4} sm={6} xs={12} key={index}>
+                                            <FriendCard friend={friend} />
+                                        </Grid>
+                                    ))}
                                 </Grid>
-                            ))}
-                        </Grid>
+                            </>
+                        }
+                        { user.role.name === userRole.Client &&
+                            <FavoritePage />
+                        }
                     </StyledTabPanel>
 
                     <StyledTabPanel value="4">
-                        <Gallery />
+                        { user.role.name === userRole.Creator &&
+                            <Gallery/>
+                        }
                     </StyledTabPanel>
 
                     <StyledTabPanel value="5">
