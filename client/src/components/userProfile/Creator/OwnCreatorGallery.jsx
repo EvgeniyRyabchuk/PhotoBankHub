@@ -4,14 +4,15 @@ import {useSelector} from "react-redux";
 import {defLimit, defPage} from "../../../utills/const";
 import {useFetching} from "../../../hooks/useFetching";
 import ClientService from "../../../services/ClientService";
-import {getImagesWithOverlay} from "../../images/shared";
+import {getImagesWithOverlay} from "../../../pages/images/shared";
 import {getPageCount} from "../../../utills/page";
 import {useObserver} from "../../../hooks/useObserver";
+import ImageService from "../../../services/ImageService";
 import {Box, CircularProgress, Typography} from "@mui/material";
 import {Gallery} from "react-grid-gallery";
 import {ObserverItem} from "../../../assets/shared/styles";
 
-const Views = () => {
+const OwnCreatorGallery = () => {
 
     const navigate = useNavigate();
     const { user } = useSelector(state => state.user);
@@ -20,8 +21,8 @@ const Views = () => {
     const [totalPage, setTotalPage] = useState(0);
     const [images, setImages] = useState([]);
 
-    const [fetchViews, isLoading, error] = useFetching(async () => {
-        const { data } = await ClientService.getViews(user.client.id, page);
+    const [fetchImages, isLoading, error] = useFetching(async () => {
+        const { data } = await ImageService.getAll(`?creatorId=${user.creator.id}`);
         const newImagesWithLayout = getImagesWithOverlay(data.data);
 
         setTotalPage(getPageCount(data.total, defLimit));
@@ -43,16 +44,17 @@ const Views = () => {
     })
 
     useEffect(() => {
-        fetchViews();
+        fetchImages();
     }, [page]);
 
     const handleClick = (index, item) => navigate(`/images/${item.id}`);
 
 
+
     return (
-        <Box sx={{ my: 3 }}>
+        <Box>
             <Typography variant='h4'>
-                Viewed Image List
+                My Image Galley
             </Typography>
 
             <Box sx={{ my: 5}}>
@@ -69,9 +71,8 @@ const Views = () => {
                 { isLoading && <CircularProgress /> }
                 <ObserverItem ref={lastElementRef}/>
             </Box>
-
         </Box>
     );
 };
 
-export default Views;
+export default OwnCreatorGallery;

@@ -60,7 +60,7 @@ class AuthController extends Controller
         if($user->role->id === $clientRole->id) {
             $user = User::with('role', 'phone')
                 ->findOrFail($user->id);
-            $client = Client::with('plan', 'contentSubscriptions.user')
+            $client = Client::with('plan', 'contentSubscriptions.user.role')
                 ->withCount(['contentSubscriptions'])
                 ->withCount(['downloads', 'favorites', 'views', 'likes'])
                 ->findOrFail($user->client->id);
@@ -70,7 +70,8 @@ class AuthController extends Controller
         else if($user->role->id === $creatorRole->id) {
             $user = User::with('role', 'phone')
                 ->findOrFail($user->id);
-            $creator = Creator::withCount(['subscribes', 'images'])
+            $creator = Creator::with('subscribes.user.role')
+                ->withCount(['subscribes', 'images'])
                 ->withCount(['totalDownloads', 'totalLikes', 'totalViews'])
                 ->findOrFail($user->creator->id);
 

@@ -33,10 +33,14 @@ class CreatorController extends Controller
             ->withCount(['totalDownloads', 'totalLikes', 'totalViews'])
             ->findOrFail($creatorId);
 
+        $collections = $creator->collections->map(function ($item) {
+           $item->images = $item->images->take(1);
+           return $item;
+        });
 //        $images = Image::where('creator_id', $creator->id)
 //            ->paginate(15);
 
-        return response()->json( $creator);
+        return response()->json(compact('creator', 'collections'));
     }
 
     public function getCollections(Request $request) {

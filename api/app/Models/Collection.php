@@ -16,4 +16,13 @@ class Collection extends Model
     public function images() {
         return $this->hasMany(Image::class);
     }
+
+    public function imageIds() {
+        return $this->hasMany(
+            Image::class,
+            'collection_id',
+            'id')
+            ->select('id');
+    }
+
 }

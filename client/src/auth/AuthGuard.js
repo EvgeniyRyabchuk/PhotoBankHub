@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 
 const AuthGuard = ({accessRoles, children}) => {
-
+    console.log('auth guard');
     const {isAuth, loading, user} = useSelector(store => store.user);
     const navigate = useNavigate();
     // check auth

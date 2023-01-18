@@ -32,6 +32,16 @@ const _401NotAuthorized = () => {
                         Back to Home
                         <span className="MuiTouchRipple-root css-w0pj6f"></span>
                     </NavLink>
+                    <NavLink to='/login'
+                             className="MuiButtonBase-root MuiButton-root MuiButton-contained
+                                MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium
+                                MuiButton-root MuiButton-contained MuiButton-containedPrimary
+                                MuiButton-sizeMedium MuiButton-containedSizeMedium css-1qt4f5u"
+                             tabIndex="0"
+                    >
+                        Log In
+                        <span className="MuiTouchRipple-root css-w0pj6f"></span>
+                    </NavLink>
                 </div>
                 <img height="500" alt="error-illustration" src={_401Image} className="css-cud2wc"/>
             </div>

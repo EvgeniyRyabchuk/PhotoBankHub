@@ -18,15 +18,12 @@ use Termwind\Components\Li;
 
 class ClientController extends Controller
 {
-
-
     public function getFavorites(Request $request) {
         $client = Auth::user()->client;
         //TODO: limit eager load relationship
         // https://github.com/staudenmeir/eloquent-eager-limit
 
         $favorites = Favorite::where('client_id', $client->id)
-//            ->orderBy('created_at', 'desc')
             ->withCount('images')
             ->get();
 

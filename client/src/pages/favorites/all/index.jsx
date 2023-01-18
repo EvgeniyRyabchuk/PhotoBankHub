@@ -1,16 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import AddToFavorite from "../../../components/modals/AddToFavorite";
-import {Star} from "@mui/icons-material";
-import {Box, Button, styled} from "@mui/material";
+import {Box, Button} from "@mui/material";
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import CreateFavorite from "../../../components/modals/AddToFavorite/CreateFavorite";
+import CreateFavorite from "../../../components/modals/favorites/CreateFavorite";
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import FavoriteService from "../../../services/FavoriteService";
-import {imagePlaceholder, getPreview} from "../../../utills/axios";
+import {getPreview, imagePlaceholder} from "../../../utills/axios";
 import {FavoriteCardImage, FavoriteCardWrapper} from "./styled";
 import {useFetching} from "../../../hooks/useFetching";
 
@@ -49,11 +47,7 @@ const Favorites = () => {
                 onChange={(value) => createFavorite(value)}
             />
 
-            <Box sx={{
-                px: 2,
-                display: 'flex',
-                flexWrap: 'wrap',
-            }}>
+            <Box sx={{ px: 2, display: 'flex',  flexWrap: 'wrap', }}>
                 {favorites.map(favorite =>
                         <FavoriteCardWrapper key={favorite.id}>
                             <Card>

@@ -15,6 +15,9 @@ import userRole from "../../auth/roles";
 import ProfileSetting from "../../components/userProfile/ProfileSetting";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import Loadable from "../../components/Loadable";
+import OwnCreatorGallery from "../../components/userProfile/Creator/OwnCreatorGallery";
+import Index from "../collections/all";
+import Collections from "../collections/all";
 
 const FavoritePage = Loadable(lazy(() => import('../favorites/all/index')));
 
@@ -53,9 +56,9 @@ const ProfilePage = () => {
         } else if(user.role.name === userRole.Creator) {
             return [
                 { label: 'Profile', value: '1' },
-                { label: 'Followers', value: '2' },
-                { label: 'Collections', value: '3' },
-                { label: 'Gallery', value: '4' },
+                { label: 'My Followers', value: '2' },
+                { label: 'My Collections', value: '3' },
+                { label: 'My gallery', value: '4' },
                 { label: 'Setting', value: '5' },
             ];
         }
@@ -91,23 +94,20 @@ const ProfilePage = () => {
                                 ))}
                             </Grid>
                         }
-
+                        {user.role.name === userRole.Creator &&
+                            <Grid container spacing={3}>
+                                {user.creator.subscribes.map((subscriber, index) => (
+                                    <Grid item lg={4} sm={6} xs={12} key={subscriber.id} >
+                                        <FollowerCard follower={subscriber} isUnfollowShow={false} />
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        }
                     </StyledTabPanel>
 
                     <StyledTabPanel value="3">
                         { user.role.name === userRole.Creator &&
-                            <>
-                                <H3>Friends</H3>
-                                <SearchInput placeholder="Search Friends..." sx={{ my: 2 }} />
-
-                                <Grid container spacing={3}>
-                                    {friends.map((friend, index) => (
-                                        <Grid item lg={4} sm={6} xs={12} key={index}>
-                                            <FriendCard friend={friend} />
-                                        </Grid>
-                                    ))}
-                                </Grid>
-                            </>
+                            <Collections />
                         }
                         { user.role.name === userRole.Client &&
                             <FavoritePage />
@@ -116,7 +116,7 @@ const ProfilePage = () => {
 
                     <StyledTabPanel value="4">
                         { user.role.name === userRole.Creator &&
-                            <Gallery/>
+                            <OwnCreatorGallery />
                         }
                     </StyledTabPanel>
 
@@ -132,79 +132,4 @@ const ProfilePage = () => {
 
 export default ProfilePage;
 
-
-// const Profile = () => {
-//
-//     const { user, isAuth } = useSelector(store => store.user);
-//     const { profile } = useAction();
-//
-//     const [token, setToken] = useState('');
-//     const sendVerifyEmail = async () => {
-//         const data = await AuthService.sendEmailVerification();
-//     }
-//
-//     const emailVerify = async () => {
-//         const data = await AuthService.emailVerify(token);
-//         profile();
-//     }
-//
-//     const sendChangePasswordRequest = async () => {
-//         const data = await AuthService.sendPasswordReset(user.email);
-//     }
-//
-//     return (
-//         <div>
-//             <h1>Profile</h1>
-//
-//             <h3>Name: {user.full_name}</h3>
-//             <h3>Email: {user.email}</h3>
-//             <h3>About: {user.about}</h3>
-//             <a href={user.website}>{user.website}</a>
-//             <h3>{user.role.name}</h3>
-//             <h3>Email verify: {user.email_verified_at ? 'yes' : 'no'}</h3>
-//             <hr/>
-//             <br/>
-//
-//             <Button variant='contained'
-//             onClick={sendVerifyEmail}>
-//                 Send Verify Email
-//             </Button>
-//
-//             <br/>
-//             <br/>
-//
-//             <input
-//                 type="text"
-//                 value={token}
-//                 onChange={(e) =>
-//                     setToken(e.target.value)
-//                 }
-//             />
-//             <br/>
-//             <br/>
-//             <Button variant='contained'
-//                     onClick={emailVerify}>
-//                 Verify Email
-//             </Button>
-//
-//             <br/>
-//
-//             <hr/>
-//
-//             <input
-//                 type="text"
-//                 value={user.email}
-//             />
-//
-//             <Button
-//                 variant='contained'
-//                 onClick={sendChangePasswordRequest}
-//             >
-//                 Change Password
-//             </Button>
-//
-//
-//         </div>
-//     );
-// };
 

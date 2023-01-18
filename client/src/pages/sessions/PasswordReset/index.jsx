@@ -38,6 +38,8 @@ const PasswordReset = () => {
             validationSchema,
             onSubmit: async (values) => {
                 const data = await AuthService.passwordReset(id, token, values.newPassword);
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
                 navigate('/login');
             },
         });

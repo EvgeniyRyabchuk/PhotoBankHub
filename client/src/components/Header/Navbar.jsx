@@ -16,9 +16,10 @@ import {NavLink, useNavigate} from "react-router-dom";
 import CategoryService from "../../services/CategoryService";
 import {useSelector} from "react-redux";
 import {getAvatar} from "../../utills/axios";
-import {AttachMoney, Download, Favorite, ThumbUp, Visibility} from "@mui/icons-material";
+import {AttachMoney, CollectionsBookmark, Download, Favorite, ThumbUp, Visibility} from "@mui/icons-material";
 import {useAction} from "../../hooks/useAction";
 import {JustifyBox} from "../../assets/shared/styles";
+import userRole from "../../auth/roles";
 
 
 const Navbar = () => {
@@ -61,7 +62,6 @@ const Navbar = () => {
         return result;
     }
 
-
     const formattedCategories = useMemo(() => {
         if(categories.length === 0) return [];
 
@@ -73,8 +73,6 @@ const Navbar = () => {
         }
         return result;
     }, [categories]);
-
-
 
   return (
     <nav>
@@ -183,21 +181,39 @@ const Navbar = () => {
                     <MenuItem onClick={() => navigate(`/profile`)}>
                         <Avatar src={getAvatar(user)} /> Profile
                     </MenuItem>
-                    <MenuItem onClick={() => navigate(`/bills`)}>
-                        <AttachMoney sx={{ mr: 1}}/> Bills & Payment
-                    </MenuItem>
-                    <MenuItem onClick={() => navigate(`/favorites`)}>
-                        <Favorite sx={{ mr: 1}}/> Favorites
-                    </MenuItem>
-                    <MenuItem  onClick={() => navigate(`/likes`)}>
-                        <ThumbUp sx={{ mr: 1}}/> Likes
-                    </MenuItem>
-                    <MenuItem  onClick={() => navigate(`/views`)}>
-                        <Visibility sx={{ mr: 1}}/> Views
-                    </MenuItem>
-                    <MenuItem onClick={() => navigate('/downloads')}>
-                        <Download sx={{ mr: 1}}/> Downloads
-                    </MenuItem>
+                    {
+                        user.role.name === userRole.Client &&
+                        <>
+                            <MenuItem onClick={() => navigate(`/bills`)}>
+                                <AttachMoney sx={{ mr: 1}}/> Bills & Payment
+                            </MenuItem>
+                            <MenuItem onClick={() => navigate(`/favorites`)}>
+                                <Favorite sx={{ mr: 1}}/> Favorites
+                            </MenuItem>
+                            <MenuItem  onClick={() => navigate(`/likes`)}>
+                                <ThumbUp sx={{ mr: 1}}/> Likes
+                            </MenuItem>
+                            <MenuItem  onClick={() => navigate(`/views`)}>
+                                <Visibility sx={{ mr: 1}}/> Views
+                            </MenuItem>
+                            <MenuItem onClick={() => navigate('/downloads')}>
+                                <Download sx={{ mr: 1}}/> Downloads
+                            </MenuItem>
+                        </>
+                    }
+
+                    {
+                        user.role.name === userRole.Creator &&
+                        <>
+                            <MenuItem onClick={() => navigate('/collections')}>
+                                <CollectionsBookmark sx={{ mr: 1}}/> Collections
+                            </MenuItem>
+                            <MenuItem onClick={() => navigate('/uploads')}>
+                                <Download sx={{ mr: 1}}/> Upload Image
+                            </MenuItem>
+                        </>
+                    }
+
 
                     <Divider />
                     {
@@ -216,7 +232,7 @@ const Navbar = () => {
 
                     <Divider />
 
-                    <MenuItem>
+                    <MenuItem onClick={() => navigate(`/profile?tab=5`)}>
                         <ListItemIcon>
                             <SettingsIcon fontSize="small" />
                         </ListItemIcon>

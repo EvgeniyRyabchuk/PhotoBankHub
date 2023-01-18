@@ -1,5 +1,5 @@
 import tw from "twin.macro";
-import {Box, BoxProps, styled} from "@mui/material";
+import {Box, BoxProps, Button, styled, Typography} from "@mui/material";
 import clsx from "clsx";
 
 
@@ -277,3 +277,11 @@ export const Tiny = ({
         </StyledBox>
     );
 };
+
+
+
+export const TextWithEllipsis = styled(Typography)(( {theme} ) => ({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
+}));

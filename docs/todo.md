@@ -20,3 +20,11 @@
 
 10. Don't send request if no acces token 
 
+11. Change avatar if google auth 
+    
+12. Change password and enail if google auth 
+
+13. Client And Creator Available Difference 
+
+14. Redirect to log in page if not auth 
+

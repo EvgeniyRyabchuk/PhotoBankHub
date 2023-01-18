@@ -5,17 +5,135 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Collection;
 use App\Models\CreditCard;
+use App\Models\Favorite;
+use App\Models\Image;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CollectionController extends Controller
 {
     public function index(Request $request) {
-        $collections = Collection::with('creator.user')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $creatorIdParam = $request->creatorId;
+
+        $query = Collection::with('creator.user')
+            ->withCount('images')
+            ->orderBy('created_at', 'desc');
+
+       if($creatorIdParam) {
+           $query->where('creator_id', $creatorIdParam);
+       }
+
+       $collections = $query->get();
+
+        $collections = $collections->map(function ($collection) {
+            $collection->images = $collection->images->take(1);
+            $collection->imageIds = $collection->imageIds->pluck('image_id');
+            return $collection;
+        });
+
         return response()->json($collections);
+    }
+
+    protected function attahcOrDettachImageFromCollection($request, $isAttach) {
+        $creator = Auth::user()->creator;
+        $collectionId = $request->collectionId;
+        $imageId = $request->imageId;
+        $image = Image::findOrFail($imageId);
+
+        $collection = Collection::with('creator.user')
+            ->withCount('images')
+            ->where([
+            'creator_id' => $creator->id,
+            'id' => $collectionId,
+        ])->first();
+
+        if(!$collection) {
+            return [
+                'error_message' => 'access deny: not your collection',
+                'error_code' => 403,
+                'payload' => null
+            ];
+        }
+
+
+        if($isAttach) {
+            $imageInCollection = Image::where(['id' => $imageId])->first();
+
+            if(!$imageInCollection) {
+                return [
+                    'error_message' => 'such image not exist',
+                    'error_code' => 404,
+                    'payload' => null
+                ];
+            }
+            $imageInCollection->collection()->associate($collection);
+        }
+        else {
+            $imageInCollection = Image::where([
+                'id' => $imageId,
+                'collection_id' => $collectionId
+            ])->first();
+
+            if(!$imageInCollection) {
+                return [
+                    'error_message' => 'such image not exist in this collection',
+                    'error_code' => 404,
+                    'payload' => null
+                ];
+            }
+            $imageInCollection->collection()->dissociate($collection);
+        }
+
+        $imageInCollection->save();
+        $collection->images_count = Image::where('collection_id', $collection->id)->count();
+
+        return [
+            'payload' => $collection
+        ];
+    }
+
+    public function addImageToCollections(Request $request, $collectionId) {
+        $result = $this->attahcOrDettachImageFromCollection($request, true);
+        $data = $result['payload'];
+        if(!$data) {
+            return response()->json([
+                'message' => $result['error_message']], $result['error_code'
+            ]);
+        }
+        return response()->json($data);
+    }
+
+    public function deleteImageFromCollections(Request $request, $collectionId, $imageId) {
+        $result = $this->attahcOrDettachImageFromCollection($request, false);
+        $data = $result['payload'];
+        if(!$data) {
+            return response()->json([
+                'message' => $result['error_message']], $result['error_code'
+            ]);
+        }
+        return response()->json($data);
+    }
+
+    public function getImageByCollection(Request $request, $collectionId) {
+        $collection = Collection::where('collections.id', $collectionId)
+            ->leftJoin('images', 'collections.id', 'images.collection_id')
+            ->orderBy('created_at', 'desc')
+            ->withCount('images')
+            ->first();
+
+        if(!$collection) {
+            return response()->json(['message' => 'such collection not exist'], 404);
+        }
+
+        $imageIds = $collection->images->pluck('id');
+        $images = Image::with('creator.user', 'tags', 'imageVariants.size')
+            ->whereIn('images.id', $imageIds)
+            ->select('images.*')
+            ->paginate(15);
+
+        return response()->json(compact('images', 'collection'));
     }
 
     protected function storeOrUpdate($request, $mode, $creator, $collection = null) : Model {
@@ -82,4 +200,7 @@ class CollectionController extends Controller
 
         return response()->json("OK");
     }
+
+
+
 }

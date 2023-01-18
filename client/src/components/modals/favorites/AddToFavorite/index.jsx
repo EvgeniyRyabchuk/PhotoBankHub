@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import ModalWithTransition from "../ModalWithTransition";
-import {ModalTransitionType, SimpleModalModeList} from "../../../utills/const";
-import FavoriteService from "../../../services/FavoriteService";
+import ModalWithTransition from "../../ModalWithTransition";
+import {ModalTransitionType, SimpleModalModeList} from "../../../../utills/const";
+import FavoriteService from "../../../../services/FavoriteService";
 import {useSelector} from "react-redux";
 import {
     Box,
@@ -13,8 +13,8 @@ import {
     FormHelperText,
     FormLabel
 } from "@mui/material";
-import {useFetching} from "../../../hooks/useFetching";
-import CreateFavorite from "./CreateFavorite";
+import {useFetching} from "../../../../hooks/useFetching";
+import CreateFavorite from "../CreateFavorite";
 
 const AddToFavorite = ({
         isOpen,
@@ -30,8 +30,10 @@ const AddToFavorite = ({
     const [sourceCheckBoxValue, setSourceCheckBoxValue] = useState([]);
     const [checkBoxValues, setCheckBoxValues] = useState([]);
 
+
+
     const fetchFavorites = async () => {
-        const { data } = await FavoriteService.getFavorites(user.client.id, image.id);
+        const { data } = await FavoriteService.getFavorites(user.client.id);
         setFavorites(data);
         const checkBoxList = data.map(f => f.imageIds.find(e => e == image.id) ? true : false);
         setCheckBoxValues(checkBoxList);

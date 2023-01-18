@@ -208,13 +208,22 @@ Route::controller(CollectionController::class)
     ->prefix('collections')
     ->group(function () {
         Route::get('/', 'index');
+        Route::get('/{collectionId}/images', 'getImageByCollection');
+
+
+
         Route::middleware('adminOrCreatorAuth:api')
             ->group(function () {
+
                 Route::post('/', 'store');
+
+                Route::post('/{collectionId}/images', 'addImageToCollections');
+                Route::delete('/{collectionId}/images/{imageId}','deleteImageFromCollections');
+
                 Route::put('/{collectionId}', 'update');
                 Route::delete('/{collectionId}', 'delete');
             });
-    });
+});
 
 
 Route::controller(BillingController::class)

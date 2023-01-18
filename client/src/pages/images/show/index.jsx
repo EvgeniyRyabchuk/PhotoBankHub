@@ -36,7 +36,8 @@ import {simpleFormattedImages} from "../shared";
 import {JustifySpaceBetween} from "../../../assets/shared/styles";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
-import AddToFavorite from "../../../components/modals/AddToFavorite";
+import AddToFavorite from "../../../components/modals/favorites/AddToFavorite";
+import AddToCollection from "../../../components/modals/collections/AddToCollection";
 
 
 const ShowImagePage = () => {
@@ -49,6 +50,7 @@ const ShowImagePage = () => {
     const [selectedVariant, setSelectedVariant] = useState(null);
 
     const [addToFavoriteOpen, setAddToFavoriteOpen] = useState(false);
+    const [addToCollectionOpen, setAddToCollectionOpen] = useState(false);
 
     const [fetchingImage, isLoading, error] = useFetching(async () => {
         const { data: imageData } = await ImageService.show(id);
@@ -161,7 +163,10 @@ const ShowImagePage = () => {
         setAddToFavoriteOpen(true)
     }
 
-
+    const openCollectionModal = () => {
+        if(!isAuth) navigate(`/login`);
+        setAddToCollectionOpen(true)
+    }
 
     return (
         <div>
@@ -349,13 +354,22 @@ const ShowImagePage = () => {
                                     </DownloadPreview>
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
-                                    <Button fullWidth
+                                    { isAuth && user.creator && user.creator.id === image.creator.id ?
+                                        <Button fullWidth
+                                                variant="outlined"
+                                                endIcon={<Star />}
+                                                onClick={openFavoriteModal}
+                                        >
+                                            Add To My Collection
+                                        </Button> :
+                                        <Button fullWidth
                                             variant="outlined"
                                             endIcon={<Star />}
                                             onClick={openFavoriteModal}
-                                    >
-                                        Add To Favorite
-                                    </Button>
+                                        >
+                                            Add To Favorite
+                                        </Button>
+                                    }
                                 </Grid>
                             </Grid>
 
@@ -385,6 +399,14 @@ const ShowImagePage = () => {
 
             { image && user && user.client &&
                 <AddToFavorite
+                    isOpen={addToCollectionOpen}
+                    onClose={() => setAddToCollectionOpen(false)}
+                    image={image}
+                />
+            }
+
+            { image && user && user.creator && user.creator.id === image.creator.id &&
+                <AddToCollection
                     isOpen={addToFavoriteOpen}
                     onClose={() => setAddToFavoriteOpen(false)}
                     image={image}

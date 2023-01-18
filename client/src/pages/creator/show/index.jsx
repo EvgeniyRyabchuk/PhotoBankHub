@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Box, CircularProgress} from "@mui/material";
+import {Box, Button, CircularProgress} from "@mui/material";
 import CreatorService from "../../../services/CreatorService";
 import {useNavigate, useParams} from "react-router-dom";
 import useDebounce from "../../../hooks/useDebounce";
@@ -11,6 +11,7 @@ import {TabContext} from "@mui/lab";
 import {StyledTabPanel} from "../../profile/styled";
 import Profile from "../../../components/userProfile/Profile";
 import CreatorGallery from "./CreatorGallery";
+import {CollectionCard} from "../../collections/all";
 
 const details = [
     {
@@ -93,6 +94,7 @@ const CreatorShow = () => {
 
     const { id } = useParams();
     const [creator, setCreator] = useState(null);
+    const [collections, setCollections] = useState(null);
 
     const countList = useMemo(() => {
         if(!creator) return [];
@@ -101,7 +103,8 @@ const CreatorShow = () => {
 
     const [fetchCreator, isLoadingCreator, errorCreatorLoading] = useFetching(async () => {
         const { data } = await CreatorService.getCreator(id);
-        setCreator(data);
+        setCreator(data.creator);
+        setCollections(data.collections);
     });
 
     useEffect(() => {
@@ -141,6 +144,23 @@ const CreatorShow = () => {
                                 />
                             </StyledTabPanel>
                         </Box>
+
+                        {/* //TODO: show all collections */}
+
+                        <Box sx={{ my: 2 }}>
+                            <Box sx={{  display: 'flex',  flexWrap: 'wrap', }}>
+                                {
+                                    collections.slice(0, 3).map(c =>
+                                        <CollectionCard collection={c} isBottomMenuShow={false} />
+                                    )
+                                }
+                            </Box>
+                            <Button onClick={() => navigate(`/creators/${creator.id}/collections`)}>
+                                Show More
+                            </Button>
+                        </Box>
+
+
                         <CreatorGallery creatorId={creator.id} />
                     </>
                 }

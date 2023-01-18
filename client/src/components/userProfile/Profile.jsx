@@ -156,7 +156,7 @@ const Profile = ({
         }
         { user.role.name === userRole.Creator &&
             <Grid item md={7} xs={12}>
-              Creator Image Gallery
+
               <MoreOptions anchorEl={moreEl} handleMoreClose={handleMoreClose} />
             </Grid>
         }

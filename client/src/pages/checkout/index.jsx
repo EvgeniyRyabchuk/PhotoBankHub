@@ -4,7 +4,8 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import {useFetching} from "../../hooks/useFetching";
 import PlanService from "../../services/PlansService";
 import {
-    Box, Button,
+    Box,
+    Button,
     CircularProgress,
     Grid,
     Paper,
@@ -15,7 +16,8 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography, useTheme
+    Typography,
+    useTheme
 } from "@mui/material";
 import CardManagement from "../../components/Payment/CardManagement";
 import {getLast4Numbers} from "../../components/Payment/shared";
@@ -23,8 +25,6 @@ import AddBillingInfo from "../../components/AddBillingInfo";
 import {Payment} from "@mui/icons-material";
 import {toast} from "react-toastify";
 import BillingService from "../../services/BillingService";
-import CreditCardService from "../../services/CreditCardService";
-import {setCards} from "../../store/action-creator/card";
 
 
 const CheckOutWrapper = styled(Box)(({ theme,  }) => ({
@@ -49,7 +49,7 @@ const CheckOut = () => {
     const periods = [
         'monthly',
         'yearly'
-    ]
+    ];
 
     const { user } = useSelector(state => state.user);
     const [billingInfo, setBillingInfo] = useState(null);

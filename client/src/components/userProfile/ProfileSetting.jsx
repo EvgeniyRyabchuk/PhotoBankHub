@@ -1,19 +1,20 @@
 import React, {useMemo, useState} from 'react';
 import {useSelector} from "react-redux";
 import * as Yup from "yup";
-import {alpha, Box, Button, Grid, IconButton, TextField, styled, Switch, Card, Avatar} from "@mui/material";
+import {AlertTitle, alpha, Avatar, Box, Button, Grid, IconButton, styled, TextField} from "@mui/material";
 import {Formik} from "formik";
 import UserService from "../../services/UserService";
 import {useNavigate} from "react-router-dom";
 import {getAvatar} from "../../utills/axios";
-import {Edit, PhotoCamera} from "@mui/icons-material";
+import {PhotoCamera} from "@mui/icons-material";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import ImageCropper from "../ImageCropper";
-import {Small, Tiny} from "../../assets/typography";
 import {JustifyContent} from "../../assets/shared/styles";
-import AuthService from "../../services/AuthService";
 import {useAction} from "../../hooks/useAction";
 import {toast} from "react-toastify";
+import AuthService from "../../services/AuthService";
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 // styled components
 const ButtonWrapper = styled(Box)(({ theme }) => ({
@@ -60,7 +61,7 @@ const validationSchema = Yup.object().shape({
 
 const ProfileSetting = () => {
 
-    const { user } = useSelector(state => state.user);
+    const { user, isAuth} = useSelector(state => state.user);
     const [cropOpen, setCropOpen] = useState(false);
     const [imageFile, _setImageFile] = useState(null);
     const [imageUrl, _setImageUrl] = useState(getAvatar(user));
@@ -68,6 +69,26 @@ const ProfileSetting = () => {
     const { profile } = useAction();
     const navigate = useNavigate();
 
+    const [isCodeInputShow, setIsCodeInputShow] = useState(false);
+    const [isPasswordResetSentAlertShow, setIsPasswordResetSentAlertShow] = useState(false);
+
+    const [token, setToken] = useState('');
+
+    const sendVerifyEmail = async () => {
+        const data = await AuthService.sendEmailVerification();
+        setIsCodeInputShow(true);
+    }
+
+    const emailVerify = async () => {
+        const data = await AuthService.emailVerify(token);
+        setIsCodeInputShow(false);
+        profile();
+    }
+
+    const sendChangePasswordRequest = async () => {
+        const data = await AuthService.sendPasswordReset(user.email);
+        setIsPasswordResetSentAlertShow(true);
+    }
 
     const handleFormSubmit = async (values) => {
         const { data } = await UserService.update(user.id, values);
@@ -137,6 +158,66 @@ const ProfileSetting = () => {
                     />
                 }
             </JustifyContent>
+
+            <Box sx={{ width: '800px', mx: 'auto', my: 3, py: 2}}>
+                { user.email_verified_at ?
+                    <Alert severity="success">Your email verify successfully</Alert> :
+                    <Alert severity="error">Your email verify is not verify yet</Alert>
+                }
+
+                <br/>
+
+                {!user.email_verified_at &&
+                    <Button variant='contained' onClick={sendVerifyEmail}>
+                        Send Verify Email
+                    </Button>
+                }
+
+                <br/>
+                <br/>
+
+                { isCodeInputShow &&
+                    <JustifyContent>
+                        <TextField
+                            label='Email Verify Code'
+                            placeholder='input code for email verufy'
+                            type="text"
+                            value={token}
+                            onChange={(e) =>
+                                setToken(e.target.value)
+                            }
+                        />
+                        <Button variant='contained' onClick={emailVerify}>
+                            Verify Email
+                        </Button>
+                    </JustifyContent>
+                }
+
+
+                <br/>
+
+
+                {
+                   !isPasswordResetSentAlertShow &&
+                    <Button
+                        variant='contained'
+                        onClick={sendChangePasswordRequest}>
+                        Change Password
+                    </Button>
+                }
+
+                {
+                    isPasswordResetSentAlertShow &&
+                    <Alert severity="info">
+                        <AlertTitle>Password Sent</AlertTitle>
+                        Password Sent Successfully — <strong>check out your email!</strong>
+                    </Alert>
+                }
+
+
+            </Box>
+
+            <hr />
 
             <Formik
                 onSubmit={handleFormSubmit}
@@ -244,6 +325,9 @@ const ProfileSetting = () => {
                     </form>
                 )}
             </Formik>
+
+
+
 
         </Box>
     );

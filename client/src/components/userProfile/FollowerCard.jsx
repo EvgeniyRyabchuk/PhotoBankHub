@@ -4,6 +4,10 @@ import UkoAvatar from "../UI/UkoAvatar";
 import {H6, Tiny} from "../../assets/typography";
 import {getAvatar} from "../../utills/axios";
 import {NavLink} from "react-router-dom";
+import ClientService from "../../services/ClientService";
+import {useAction} from "../../hooks/useAction";
+import {useSelector} from "react-redux";
+import userRole from "../../auth/roles";
 
 // component props interface
 // interface FollowerCardProps {
@@ -25,7 +29,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   color: theme.palette.text.disabled,
 }));
 
-const FollowerCard = ({ follower }) => {
+const FollowerCard = ({ follower: followTarget, isUnfollowShow = true}) => {
   const theme = useTheme();
   // button background color
   const backgroundColor =
@@ -34,15 +38,25 @@ const FollowerCard = ({ follower }) => {
   const borderColor =
     theme.palette.mode === "light" ? "secondary.200" : "divider";
 
+  const { user: authUser} = useSelector(state => state.user);
+
+  const { profile } = useAction();
+
+
+  const subscribeHandler = async () => {
+    await ClientService.contentUnSubscribe(authUser.client.id, followTarget.id);
+    await profile();
+  }
+
   return (
     <Card sx={{ padding: 3 }}>
       <FlexBox justifyContent="space-between" alignItems="center">
-        <NavLink to={`/creators/${follower.id}`}>
+        <NavLink to={followTarget.user.role.name === userRole.Creator && `/creators/${followTarget.id}`}>
           <FlexBox>
-            <UkoAvatar src={getAvatar(follower.user)}
+            <UkoAvatar src={getAvatar(followTarget.user)}
                        sx={{ width: 42, height: 42 }} />
             <Box marginLeft={1}>
-              <H6>{follower.user.full_name}</H6>
+              <H6>{followTarget.user.full_name}</H6>
               <Tiny color="text.disabled" fontWeight={500}>
                 Creator
               </Tiny>
@@ -51,7 +65,8 @@ const FollowerCard = ({ follower }) => {
         </NavLink>
 
 
-        {follower.following ? (
+
+        {followTarget.following ? (
           <StyledButton
             sx={{
               backgroundColor,
@@ -61,15 +76,21 @@ const FollowerCard = ({ follower }) => {
             Following
           </StyledButton>
         ) : (
-          <StyledButton
-            variant="outlined"
-            sx={{
-              borderColor,
-              "&:hover": { borderColor },
-            }}
-          >
-            Unfollow
-          </StyledButton>
+            <>
+              {
+                  isUnfollowShow &&
+                  <StyledButton
+                      variant="outlined"
+                      sx={{
+                        borderColor,
+                        "&:hover": { borderColor },
+                      }}
+                      onClick={subscribeHandler}
+                  >
+                    Unfollow
+                  </StyledButton>
+              }
+            </>
         )}
       </FlexBox>
     </Card>
