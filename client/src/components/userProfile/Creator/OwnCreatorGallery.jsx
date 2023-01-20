@@ -28,7 +28,6 @@ const OwnCreatorGallery = () => {
         setTotalPage(getPageCount(data.total, defLimit));
 
         if(page > 1) {
-            setImages(newImagesWithLayout);
             setImages([...images, ...newImagesWithLayout]);
         }
         else if(page === 1) {
@@ -49,6 +48,7 @@ const OwnCreatorGallery = () => {
 
     const handleClick = (index, item) => navigate(`/images/${item.id}`);
 
+    console.log(images)
 
 
     return (

@@ -1,5 +1,10 @@
 // import { differenceInSeconds } from 'date-fns';
 
+export const calculateAspectRatioFit = (srcWidth, srcHeight, maxWidth, maxHeight) => {
+  const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+  return { width: srcWidth*ratio, height: srcHeight*ratio };
+}
+
 export function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);

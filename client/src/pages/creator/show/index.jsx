@@ -145,8 +145,6 @@ const CreatorShow = () => {
                             </StyledTabPanel>
                         </Box>
 
-                        {/* //TODO: show all collections */}
-
                         <Box sx={{ my: 2 }}>
                             <Box sx={{  display: 'flex',  flexWrap: 'wrap', }}>
                                 {

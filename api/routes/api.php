@@ -260,3 +260,7 @@ Route::controller(BillingInfoController::class)
 
 
 });
+
+
+
+Route::get('/tags', [\App\Http\Controllers\TagController::class, 'index']);

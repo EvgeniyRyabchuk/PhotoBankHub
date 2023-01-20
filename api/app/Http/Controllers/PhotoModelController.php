@@ -15,6 +15,7 @@ class PhotoModelController extends Controller
         $gender = $request->gender;
         $ethnicity = $request->ethnicity;
         $created_by_creator_id = $request->created_by_creator_id;
+        $isPaginate = filter_var($request->paginate ?? true, FILTER_VALIDATE_BOOLEAN);
 
         $query = PhotoModel::with('images');
         $query->select('photo_models.*');
@@ -38,7 +39,10 @@ class PhotoModelController extends Controller
         $query->withCount('images');
         $query->orderBy('images_count', 'desc');
 
-        $photoModels = $query->paginate(20);
+        if($isPaginate === true)
+            $photoModels = $query->paginate(20);
+        else
+            $photoModels = $query->get();
 
         return response()->json($photoModels);
     }

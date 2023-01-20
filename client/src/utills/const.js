@@ -23,6 +23,8 @@ const SimpleModalModeList = {
     update: 'update'
 }
 
+const previewDivide = 5;
+
 const ModalTransitionType = {
     one: 'one',
     two: 'two',
@@ -50,5 +52,7 @@ export {
     mainWhiteColorHex,
 
     SimpleModalModeList,
-    ModalTransitionType
+    ModalTransitionType,
+
+    previewDivide
 }

@@ -17,6 +17,13 @@ const AlignItem = styled(Box)(() => ({
     alignItems: 'center',
 }))
 
+
+const JustifyStart = styled(Box)(() => ({
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'start',
+}))
+
 const JustifySpaceBetween = styled(Box)(() => ({
     display: 'flex',
     justifyContent: 'space-between',
@@ -98,6 +105,14 @@ const FollowButton = styled(Button)(( {theme, isSubscribe = false} ) => ({
     }
 }));
 
+const ImageWrapper = styled(JustifyContent)(({theme, maxHeight = ''}) => ({
+    margin: '15px 0',
+    minHeight: '50px',
+    maxHeight: maxHeight,
+    cursor: 'pointer',
+}));
+
+
 
 
 export {
@@ -106,6 +121,7 @@ export {
     AlignItem,
     JustifyBox,
     JustifyWrap,
+    JustifyStart,
     JustifySpaceBetween,
     ErrorSpan,
 
@@ -115,6 +131,8 @@ export {
     ObserverItem,
 
     UploadNavigateButton,
-    FollowButton
+    FollowButton,
+
+    ImageWrapper
 }
 

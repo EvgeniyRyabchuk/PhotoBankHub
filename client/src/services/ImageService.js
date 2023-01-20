@@ -10,11 +10,29 @@ import {downloadFile} from "../utills/axios";
 export default class ImageService {
 
     static async getAll(searchParams = '') {
-        return await $api(`/images${searchParams}`);
+        return await $api.get(`/images${searchParams}`);
     }
 
     static async show(imageId) {
-        return await $api(`/images/${imageId}`);
+        return await $api.get(`/images/${imageId}`);
+    }
+
+    static async createImage(data) {
+        const promise = $api.post(`/images`, {
+            ...data
+        }, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        toast.promise(promise,
+            {
+                pending: PromiseAlert.FETCH_IMAGE_CREATING,
+                success: PromiseAlert.FETCH_IMAGE_CREATE_SUCCESS,
+                error: `${PromiseAlert.FETCH_IMAGE_CREATE_ERROR}`
+            }
+        )
+        return (await promise).data;
     }
 
     static async downloadPreview(imageId) {

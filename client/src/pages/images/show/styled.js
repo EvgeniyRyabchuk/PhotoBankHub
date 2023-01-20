@@ -16,12 +16,6 @@ const ImageContainerWrapper = styled(Box)(({theme}) => ({
 
 }));
 
-const ImageWrapper = styled(JustifyContent)(({theme}) => ({
-    margin: '15px 0',
-    minHeight: '50px',
-    cursor: 'pointer',
-}));
-
 const ImageName = styled(Box)(({theme, text}) => ({
     margin: '10px 0',
     textAlign: text.length > 66 ? 'justify' : "center",
@@ -55,7 +49,6 @@ const DownloadPreview = styled(Button)(({ theme }) => ({
 
 export {
     ImageContainerWrapper,
-    ImageWrapper,
     ImageName,
     ImageVariant,
     DownloadButton,

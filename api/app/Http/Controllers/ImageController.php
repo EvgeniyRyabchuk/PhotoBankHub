@@ -59,7 +59,7 @@ class ImageController extends Controller
         $originalSize = Size::where('name', 'ORIGINAL')->first();
 
 
-        $query = Image::query()->with('creator.user', 'photoModel', 'imageVariants.size', 'tags');
+        $query = Image::with('creator.user', 'photoModel', 'imageVariants.size', 'tags');
 
         $query->select('images.*');
 
@@ -252,9 +252,9 @@ class ImageController extends Controller
 
         $photoModelId = $request->photo_model_id;
         $collectionId = $request->collection_id;
-        $isFree = $request->is_free ?? false;
+        $isFree = filter_var($request->is_free ?? false, FILTER_VALIDATE_BOOLEAN);
         $people_count = $request->people_count ?? 0;
-        $tags = json_decode($request->tags ?? '[]');
+        $tags = $request->tags ? explode(',', $request->tags) : null;
 
         $nestedCategory = Category::where('parent_id', $category->id)->first();
         if($nestedCategory) {
@@ -331,7 +331,7 @@ class ImageController extends Controller
         $image->save();
 
         // adding tags if they exist in request
-        if(count($tags) > 0) {
+        if($tags && count($tags) > 0) {
             foreach ($tags as $tag) {
                 $tagDb = Tag::firstOrCreate(
                     ['name' => $tag,],

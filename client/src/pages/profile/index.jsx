@@ -82,6 +82,7 @@ const ProfilePage = () => {
                             user={user}
                             countList={countList}
                         />
+                    {/* //TODO: add my photos   */}
                     </StyledTabPanel>
 
                     <StyledTabPanel value="2">

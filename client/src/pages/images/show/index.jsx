@@ -29,11 +29,11 @@ import {
     Star,
     Visibility
 } from "@mui/icons-material";
-import {DownloadButton, DownloadPreview, ImageContainerWrapper, ImageName, ImageVariant, ImageWrapper} from "./styled";
+import {DownloadButton, DownloadPreview, ImageContainerWrapper, ImageName, ImageVariant} from "./styled";
 import {formatBytes} from "../../../utills/size";
 import {Gallery} from "react-grid-gallery";
 import {simpleFormattedImages} from "../shared";
-import {JustifySpaceBetween} from "../../../assets/shared/styles";
+import {ImageWrapper, JustifySpaceBetween} from "../../../assets/shared/styles";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 import AddToFavorite from "../../../components/modals/favorites/AddToFavorite";
@@ -181,8 +181,7 @@ const ShowImagePage = () => {
                                   flexDirection: 'column',
                                   justifyContent: 'center',
                                   alignItems: 'center'
-                              }}
-                        >
+                              }}>
                             <Box>
                                 <ImageName text={image.name}>
                                     {image.name}
@@ -196,7 +195,6 @@ const ShowImagePage = () => {
                                     />
                                 </ImageWrapper>
                             </Box>
-
 
                             <Box sx={{ }}>
                                 <Box sx={{ my: 1}}>

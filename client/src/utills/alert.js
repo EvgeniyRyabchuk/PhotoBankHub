@@ -55,8 +55,11 @@ const PromiseAlert = {
 
     FETCH_IMAGE: "Image Downloads",
     FETCH_IMAGE_SUCCESS: "Image Download success",
-    FETCH_IMAGE_ERROR: "Fail to Download Image"
+    FETCH_IMAGE_ERROR: "Fail to Download Image",
 
+    FETCH_IMAGE_CREATING: "Image Processing",
+    FETCH_IMAGE_CREATE_SUCCESS: "Image published",
+    FETCH_IMAGE_CREATE_ERROR: "Fail to Published Image"
 }
 
 
