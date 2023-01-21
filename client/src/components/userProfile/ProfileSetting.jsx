@@ -1,7 +1,7 @@
 import React, {useMemo, useState} from 'react';
 import {useSelector} from "react-redux";
 import * as Yup from "yup";
-import {AlertTitle, alpha, Avatar, Box, Button, Grid, IconButton, styled, TextField} from "@mui/material";
+import {AlertTitle, alpha, Avatar, Box, Button, Grid, IconButton, styled, TextField, Typography} from "@mui/material";
 import {Formik} from "formik";
 import UserService from "../../services/UserService";
 import {useNavigate} from "react-router-dom";
@@ -119,105 +119,114 @@ const ProfileSetting = () => {
     return (
         <Box>
             Setting
-
-            <JustifyContent>
-                <ButtonWrapper>
-                    <UploadButton>
-                        <label htmlFor="upload-btn">
-                            <Avatar sx={{ width: '100px', height: '100px', mx: 'auto'}}
-                                    src={imageUrl} />
-                            {/*<input*/}
-                            {/*    accept="image/*"*/}
-                            {/*    id="upload-btn"*/}
-                            {/*    type="file"*/}
-                            {/*    style={{ display: "none" }}*/}
-                            {/*/>*/}
-                            <Box>
-                                <IconButton
-                                    onClick={() => setCropOpen(true)} h
-                                    component="span"
-                                    style={{ borderRadius: '0px'}}
-                                >
-                                    <PhotoCamera sx={{ fontSize: 26, color: "gray" }} />
-                                    <Box>Upload New Avatar</Box>
-                                </IconButton>
-
-                            </Box>
-
-                        </label>
-
-                    </UploadButton>
-
-                </ButtonWrapper>
-                { cropOpen &&
-                    <ImageCropper
-                        onChange={(file, fileUrl) =>
-                            avatarChangeHandler(file, fileUrl)
-                        }
-                        setOpen={setCropOpen}
-                    />
-                }
-            </JustifyContent>
-
-            <Box sx={{ width: '800px', mx: 'auto', my: 3, py: 2}}>
-                { user.email_verified_at ?
-                    <Alert severity="success">Your email verify successfully</Alert> :
-                    <Alert severity="error">Your email verify is not verify yet</Alert>
-                }
-
-                <br/>
-
-                {!user.email_verified_at &&
-                    <Button variant='contained' onClick={sendVerifyEmail}>
-                        Send Verify Email
-                    </Button>
-                }
-
-                <br/>
-                <br/>
-
-                { isCodeInputShow &&
+            <br/>
+            {
+                user.google_id &&
+                <Typography variant='span'>Your authorized with google</Typography>
+            }
+            {!user.google_id &&
+                <>
                     <JustifyContent>
-                        <TextField
-                            label='Email Verify Code'
-                            placeholder='input code for email verufy'
-                            type="text"
-                            value={token}
-                            onChange={(e) =>
-                                setToken(e.target.value)
-                            }
-                        />
-                        <Button variant='contained' onClick={emailVerify}>
-                            Verify Email
-                        </Button>
+                        <ButtonWrapper>
+                            <UploadButton>
+                                <label htmlFor="upload-btn">
+                                    <Avatar sx={{ width: '100px', height: '100px', mx: 'auto'}}
+                                            src={imageUrl} />
+                                    {/*<input*/}
+                                    {/*    accept="image/*"*/}
+                                    {/*    id="upload-btn"*/}
+                                    {/*    type="file"*/}
+                                    {/*    style={{ display: "none" }}*/}
+                                    {/*/>*/}
+                                    <Box>
+                                        <IconButton
+                                            onClick={() => setCropOpen(true)} h
+                                            component="span"
+                                            style={{ borderRadius: '0px'}}
+                                        >
+                                            <PhotoCamera sx={{ fontSize: 26, color: "gray" }} />
+                                            <Box>Upload New Avatar</Box>
+                                        </IconButton>
+
+                                    </Box>
+
+                                </label>
+
+                            </UploadButton>
+
+                        </ButtonWrapper>
+                        { cropOpen &&
+                            <ImageCropper
+                                onChange={(file, fileUrl) =>
+                                    avatarChangeHandler(file, fileUrl)
+                                }
+                                setOpen={setCropOpen}
+                            />
+                        }
                     </JustifyContent>
-                }
+
+                    <Box sx={{ width: '800px', mx: 'auto', my: 3, py: 2}}>
+                        { user.email_verified_at ?
+                            <Alert severity="success">Your email verify successfully</Alert> :
+                            <Alert severity="error">Your email verify is not verify yet</Alert>
+                        }
+
+                        <br/>
+
+                        {!user.email_verified_at &&
+                            <Button variant='contained' onClick={sendVerifyEmail}>
+                                Send Verify Email
+                            </Button>
+                        }
+
+                        <br/>
+                        <br/>
+
+                        { isCodeInputShow &&
+                            <JustifyContent>
+                                <TextField
+                                    label='Email Verify Code'
+                                    placeholder='input code for email verufy'
+                                    type="text"
+                                    value={token}
+                                    onChange={(e) =>
+                                        setToken(e.target.value)
+                                    }
+                                />
+                                <Button variant='contained' onClick={emailVerify}>
+                                    Verify Email
+                                </Button>
+                            </JustifyContent>
+                        }
 
 
-                <br/>
+                        <br/>
 
 
-                {
-                   !isPasswordResetSentAlertShow &&
-                    <Button
-                        variant='contained'
-                        onClick={sendChangePasswordRequest}>
-                        Change Password
-                    </Button>
-                }
+                        {
+                            !isPasswordResetSentAlertShow &&
+                            <Button
+                                variant='contained'
+                                onClick={sendChangePasswordRequest}>
+                                Change Password
+                            </Button>
+                        }
 
-                {
-                    isPasswordResetSentAlertShow &&
-                    <Alert severity="info">
-                        <AlertTitle>Password Sent</AlertTitle>
-                        Password Sent Successfully — <strong>check out your email!</strong>
-                    </Alert>
-                }
+                        {
+                            isPasswordResetSentAlertShow &&
+                            <Alert severity="info">
+                                <AlertTitle>Password Sent</AlertTitle>
+                                Password Sent Successfully — <strong>check out your email!</strong>
+                            </Alert>
+                        }
 
 
-            </Box>
+                    </Box>
 
-            <hr />
+                    <hr />
+                </>
+            }
+
 
             <Formik
                 onSubmit={handleFormSubmit}

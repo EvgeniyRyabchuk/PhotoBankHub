@@ -1,7 +1,7 @@
 import {BusinessCenter, Mail, Place} from "@mui/icons-material";
-import {Box, Card, Divider, Grid} from "@mui/material";
+import {Box, Button, Card, Divider, Grid} from "@mui/material";
 import PostCard from "./PostCard";
-import {FlexBox, FollowWrapper, IconWrapper, ObserverItem} from "../../assets/shared/styles";
+import {FlexBox, FollowWrapper, IconWrapper, JustifySpaceBetween, ObserverItem} from "../../assets/shared/styles";
 import {H3, H4, H6, Small} from "../../assets/typography";
 import MoreOptions from "../MoreOptions";
 import React, {useEffect, useRef, useState} from "react";
@@ -14,6 +14,7 @@ import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {getPageCount} from "../../utills/page";
 import userRole from "../../auth/roles";
+import OwnCreatorGallery from "./Creator/OwnCreatorGallery";
 
 
 const postList = [
@@ -146,7 +147,7 @@ const Profile = ({
       </Grid>
 
         { isPostShow && user.role.name === userRole.Client &&
-            <Grid item md={7} xs={12}>
+            <Grid item md={counterFullWidth ? 12 : 7} xs={12}>
               {posts.map((post) => (
                   <PostCard post={post} key={post.id} handleMore={handleMoreOpen} />
               ))}
@@ -154,14 +155,22 @@ const Profile = ({
               <MoreOptions anchorEl={moreEl} handleMoreClose={handleMoreClose} />
             </Grid>
         }
-        { user.role.name === userRole.Creator &&
+        { user.role.name === userRole.Creator && !counterFullWidth &&
             <Grid item md={7} xs={12}>
+              { user.role.name === userRole.Creator &&
+                  <JustifySpaceBetween sx={{ flexDirection: 'column' }}>
+                    <OwnCreatorGallery preview={true} style={{ overflow: 'hidden', maxHeight: '467px'}}/>
+                    <Button fullWidth variant='outlined' color={"primary"} onClick={() => navigate(`/profile?tab=4`)}>
+                      Show More
+                    </Button>
+                  </JustifySpaceBetween>
 
+              }
               <MoreOptions anchorEl={moreEl} handleMoreClose={handleMoreClose} />
             </Grid>
         }
 
-       <ObserverItem ref={lastElementRef} isShow={isPostShow} />
+       <ObserverItem ref={lastElementRef} isShow={user.role.name === userRole.Client} />
 
     </Grid>
   );

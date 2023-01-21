@@ -391,9 +391,7 @@ class ImageController extends Controller
         $creator = Auth::user()->creator;
         $image = Image::where(['creator_id' => $creator->id, 'id' => $imageId])->first();
         if(!$image) {
-            return response()->json(
-                ['message' => 'this image doesn\'t belong to you'],
-            404);
+            return response()->json(['message' => 'this image doesn\'t belong to you'],404);
         }
         $image->delete();
         return response()->json("OK");
@@ -414,6 +412,7 @@ class ImageController extends Controller
         $imageVariant = ImageVariant::findOrFail($imageVariantId);
 
 
+
         if($image->isFree !== true) {
             // checking access
             if ($user->role->name === 'client') {
@@ -428,9 +427,26 @@ class ImageController extends Controller
                         if ($client->left_image_count > 0) {
                             $alreadyHaveDownload = Download::where([
                                     'client_id' => $client->id,
-                                    'image_id' => $image->id
+                                    'image_id' => $image->id,
+                                    'image_variant_id' => $imageVariant->size->id
                                 ])->first();
-                            if(!$alreadyHaveDownload) {
+
+                            if($alreadyHaveDownload) {
+                                $alreadyHaveDownload->updated_at = Carbon::now();
+                                $alreadyHaveDownload->save();
+                                /*
+                                 //                                return response()->json(Download::find($alreadyHaveDownload->id));
+//                                $alreadyHaveDownload->save();
+//                                $alreadyHaveDownload->update([
+//                                    'updated_at' => Carbon::now()->timestamp()
+//                                ]);
+//                                $alreadyHaveDownload->updated_at = Carbon::now();
+//                                $alreadyHaveDownload->touch();
+//                                $alreadyHaveDownload->save(['timestamps' => FALSE]);
+//                                Download::where('id', $alreadyHaveDownload->id)->update(['updated_at' => Carbon::now()->timestamp]);
+
+                                 */
+                            } else {
                                 Download::create([
                                     'client_id' => $client->id,
                                     'image_id' => $image->id,
@@ -501,7 +517,7 @@ class ImageController extends Controller
 //        $ip4 = \Request::getClientIp(true);
 //        dd($ip1, $ip2, $ip3, $ip4);
 
-        $client = $request->user('api');
+        $client = $request->user('api')->client;
 
         $image = Image::findOrFail($imageId);
         $viewExist = View::where([

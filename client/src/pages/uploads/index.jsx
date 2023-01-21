@@ -29,6 +29,7 @@ import {getAvatar} from "../../utills/axios";
 import CreatePhotoModel from "../../components/modals/CreatePhotoModel";
 import ImageService from "../../services/ImageService";
 import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
 
 const flexBoxCenterStyle = {
     display: 'flex',
@@ -48,10 +49,10 @@ const validationSchema = Yup.object().shape({
     description: Yup.string().optional(),
     category_id: Yup.number().required('Category is required!'),
     collection_id: Yup.number().optional(),
-    // tags: Yup.string().optional(),
-    // people_count: Yup.number().optional(),
+    tags: Yup.string().optional(),
+    people_count: Yup.number().optional(),
     is_free: Yup.boolean(),
-    // photo_model_id: Yup.boolean().optional(),
+    photo_model_id: Yup.number().optional(),
 });
 
 const UnsupportedImage = ({ width, height}) => (
@@ -68,11 +69,11 @@ const Uploads = () => {
             name: '',
             description: '',
             category_id: null,
-            collection_id: null,
+            collection_id: undefined,
             tags: '',
-            people_count: null,
+            people_count: undefined,
             is_free: false,
-            photo_model_id: null,
+            photo_model_id: undefined,
     };
     const { categories } = useSelector(state => state.general);
     const [localFileLoadStatus, setLocalFileLoadStatus] = useState(LocalFileStatusList.wait);
@@ -124,7 +125,10 @@ const Uploads = () => {
     }
 
     const submit = async (values) => {
-        console.log(values);
+        if(!file) {
+            toast.error('For Publish Image Your Must To Attach Image');
+            return;
+        }
         try {
             const result = await ImageService.createImage({ ...values, image: file});
             navigate('/profile');
@@ -487,7 +491,7 @@ const Uploads = () => {
                                                     }}
                                                 />
                                                 <Button
-                                                    sx={{ flex: '1 0 0', ml: 1 }}
+                                                    sx={{ flex: '1 0 0', ml: 1, maxHeight: '50px' }}
                                                     type='button'
                                                     variant='contained'
                                                     color='primary'
@@ -522,45 +526,3 @@ const Uploads = () => {
 export default Uploads;
 
 
-
-
-/*
-
-             categoriesId.map(parentCategory =>
-                                                <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                                                    <Autocomplete
-                                                        // defaultValue={}
-                                                        size="small"
-                                                        getOptionLabel={(option) => option.name}
-                                                        disablePortal
-                                                        id="combo-box-categories"
-                                                        options={siblings}
-                                                        sx={{ mx: 1 }}
-
-                                                        renderInput={(params) =>
-                                                                <TextField
-                                                                    {...params}
-                                                                    error={Boolean(touched.category_id && errors.category_id)}
-                                                                    fullWidth
-                                                                    helperText={touched.category_id && errors.category_id}
-                                                                    label="Categories"
-                                                                    name="category_id"
-                                                                    variant="outlined"
-                                                                />
-                                                        }
-                                                        renderOption={(props, option) => (
-                                                            <Box component="li"
-                                                                 sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
-                                                                 {...props}>
-                                                                {option.name} ({option.id})
-                                                            </Box>
-                                                        )}
-                                                        onChange={(event, values) =>
-                                                            onCategoryChange(values, setFieldValue)
-                                                        }
-                                                    />
-                                                </Grid>
-                                            )
-                                        }
-
- */

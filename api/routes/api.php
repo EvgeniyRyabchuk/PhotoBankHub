@@ -187,9 +187,13 @@ Route::prefix('clients/{clientId}')
                 Route::put('/{favoriteId}', 'updateFavorite');
                 Route::delete('/{favoriteId}', 'deleteFavorite');
 
+
                 Route::get('/{favoriteId}/images', 'getImageByFavorite');
                 Route::post('/{favoriteId}/images/', 'addImageToFavorite');
+
+                Route::delete('/{favoriteId}/images/many', 'deleteImageFromFavoriteMany');
                 Route::delete('/{favoriteId}/images/{imageId}', 'deleteImageFromFavorite');
+
         });
 
         Route::get('/downloads', 'getDownloads');

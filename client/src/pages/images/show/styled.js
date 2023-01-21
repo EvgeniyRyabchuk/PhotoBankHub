@@ -1,4 +1,4 @@
-import {Box, Button, styled} from "@mui/material";
+import {Box, Button, Grid, styled} from "@mui/material";
 import {JustifyContent} from "../../../assets/shared/styles";
 import {cyan, purple} from "@mui/material/colors";
 import {mainPrimaryColorHex, mainSecondaryColorHex} from "../../../utills/const";
@@ -47,10 +47,21 @@ const DownloadPreview = styled(Button)(({ theme }) => ({
     },
 }));
 
+const GridItemImageWrapperLeft = styled(Grid)(({ theme }) => ({
+    padding: '0 16px',
+    minHeight: '500px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+}));
+
+
 export {
     ImageContainerWrapper,
     ImageName,
     ImageVariant,
     DownloadButton,
-    DownloadPreview
+    DownloadPreview,
+    GridItemImageWrapperLeft
 }

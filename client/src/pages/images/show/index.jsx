@@ -21,15 +21,22 @@ import {useNavigate, useParams} from "react-router-dom";
 import FsLightbox from "fslightbox-react";
 import Stack from "@mui/material/Stack";
 import {
-    Collections,
-    Download,
+    Collections, Delete,
+    Download, Edit,
     Favorite,
     Grid3x3,
     KeyboardDoubleArrowRight,
     Star,
     Visibility
 } from "@mui/icons-material";
-import {DownloadButton, DownloadPreview, ImageContainerWrapper, ImageName, ImageVariant} from "./styled";
+import {
+    DownloadButton,
+    DownloadPreview,
+    GridItemImageWrapperLeft,
+    ImageContainerWrapper,
+    ImageName,
+    ImageVariant
+} from "./styled";
 import {formatBytes} from "../../../utills/size";
 import {Gallery} from "react-grid-gallery";
 import {simpleFormattedImages} from "../shared";
@@ -38,6 +45,7 @@ import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 import AddToFavorite from "../../../components/modals/favorites/AddToFavorite";
 import AddToCollection from "../../../components/modals/collections/AddToCollection";
+import userRole from "../../../auth/roles";
 
 
 const ShowImagePage = () => {
@@ -128,8 +136,6 @@ const ShowImagePage = () => {
                 </Box>
             )
         })
-
-
         return (
             <Box sx={{ my: 5}}>
                 {content}
@@ -159,6 +165,7 @@ const ShowImagePage = () => {
     }
 
     const openFavoriteModal = () => {
+        console.log(123)
         if(!isAuth) navigate(`/login`);
         setAddToFavoriteOpen(true)
     }
@@ -168,20 +175,18 @@ const ShowImagePage = () => {
         setAddToCollectionOpen(true)
     }
 
+    const handleImageDelete = async () => {
+        await ImageService.delete(image.id);
+        navigate(-1);
+    }
+
     return (
         <div>
             {isLoading && <CircularProgress />}
             { !isLoading && image &&
              <ImageContainerWrapper>
                     <Grid container>
-                        <Grid item xs={12} sm={12} md={8} lg={8} xl={7}
-                              sx={{ px: 2,
-                                  minHeight: '500px',
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  justifyContent: 'center',
-                                  alignItems: 'center'
-                              }}>
+                        <GridItemImageWrapperLeft item xs={12} sm={12} md={8} lg={8} xl={7}>
                             <Box>
                                 <ImageName text={image.name}>
                                     {image.name}
@@ -196,13 +201,12 @@ const ShowImagePage = () => {
                                 </ImageWrapper>
                             </Box>
 
-                            <Box sx={{ }}>
+                            <Box>
                                 <Box sx={{ my: 1}}>
                                     Description
                                 </Box>
                                 <Stack
                                     direction="row"
-                                    spacing={1}
                                     lexWrap='wrap'
                                     justifyContent='left'
                                     flexWrap='wrap'
@@ -212,15 +216,18 @@ const ShowImagePage = () => {
                                                 label={tag.name}
                                                 variant="outlined"
                                                 key={tag.id}
+                                                sx={{ margin: '5px' }}
                                             />
                                         )}
                                     <Chip
                                         label={`ID: ${image.id}`}
                                         icon={<Grid3x3/>}
+                                        sx={{ margin: '5px' }}
                                     />
                                     <Chip
                                         label={`Orientation: ${image.image_orientation.name}`}
                                         variant="contained"
+                                        sx={{ margin: '5px' }}
                                     />
                                     { image.isEditorsChoice === true &&
                                         <Chip
@@ -231,14 +238,14 @@ const ShowImagePage = () => {
                                     }
                                 </Stack>
                             </Box>
-                        </Grid>
+                        </GridItemImageWrapperLeft>
                         <Grid item xs={12} sm={12} md={4} lg={4} xl={5} sx={{ px: 2}}>
                             <Stack direction="row"
                                    justifyContent='center'
                                    flexWrap={'wrap'}>
                                 <Chip
                                     sx={{ cursor: 'pointer', m: 1 }}
-                                    onClick={() => {}}
+                                    onClick={() => { navigate(`/creators/${image.creator_id}`) }}
                                     avatar={
                                         <Avatar
                                             alt="Natacha"
@@ -301,15 +308,8 @@ const ShowImagePage = () => {
                                 />
                             </Stack>
 
-                            <Box sx={{
-                                display: 'flex',
-                                justifyContent: 'left',
-                                m: 3
-                            }}>
-                                <FormControl sx={{
-                                    textAlign: 'left',
-                                    width: '100%'
-                                }}>
+                            <Box sx={{display: 'flex', justifyContent: 'left', m: 3}}>
+                                <FormControl sx={{textAlign: 'left', width: '100%'}}>
                                     <FormLabel id="demo-row-radio-buttons-group-label">
                                         Image Variants
                                     </FormLabel>
@@ -391,14 +391,29 @@ const ShowImagePage = () => {
              </ImageContainerWrapper>
             }
 
+            { image &&
+                user.role.name === userRole.Creator &&
+                image.creator_id == user.creator.id &&
+                <Box sx={{ display: 'flex', justifyContent: 'left', px: 5}}>
+                    <Button sx={{ mx: 1}} type='button' variant='contained' color='error' onClick={handleImageDelete}>
+                        <Delete />
+                        Delete
+                    </Button>
+                    <Button sx={{ mx: 1}} type='button' variant='contained' color='secondary' onClick={() => {}} >
+                        <Edit />
+                        Edit
+                    </Button>
+                </Box>
+            }
+
             { likeable &&
                 renderLikeableSections()
             }
 
             { image && user && user.client &&
                 <AddToFavorite
-                    isOpen={addToCollectionOpen}
-                    onClose={() => setAddToCollectionOpen(false)}
+                    isOpen={addToFavoriteOpen}
+                    onClose={() => setAddToFavoriteOpen(false)}
                     image={image}
                 />
             }

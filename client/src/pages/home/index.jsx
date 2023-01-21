@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import CounterPanel from "./CounterPanel";
 import {Actions, Container, Content, Divider, Heading, HeroContainer, OpacityOverlay} from "./styled";
 import FaqPanel from "./FaqPanel";
@@ -28,6 +28,8 @@ const Home = () => {
 
     const [search, setSearch] = useState('');
 
+
+
     const onSearchHandler = () => {
         navigate(`/images?search=${search}`);
     }
@@ -41,9 +43,7 @@ const Home = () => {
                 <HeroContainer>
                     <Content>
                         <Heading>
-                            Book Music & Comedy Events
-                            <br />
-                            anywhere in New York
+                            Book Music & Comedy Events<br /> anywhere in New York
                         </Heading>
                         {/*<PrimaryAction>Search Events Near Me</PrimaryAction>*/}
                         <Divider />
@@ -70,9 +70,7 @@ const Home = () => {
                 </HeroContainer>
             </Container>
 
-
-            {
-                parentless.map((c, index) =>
+            {parentless.map((c, index) =>
                     <>
                         <CategorySelector
                             category={c}
@@ -85,9 +83,6 @@ const Home = () => {
             }
 
             <FaqPanel />
-
-
-
         </Box>
     );
 };

@@ -25,14 +25,18 @@ hocus:text-gray-200 focus:outline-none focus:outline`;
 
 
 const Actions = styled.div`
-  ${tw`relative w-1/2 text-center mx-auto lg:mx-0`}
+  min-width: 500px;
+  @media (max-width: 768px) { 
+    min-width: 100%;
+  }
+  ${tw`relative w-1/2 text-center mx-auto lg:mx-0`} 
   input {
     ${tw`sm:pr-48 pl-8 py-4 sm:py-5 rounded-full border-2 w-full font-medium focus:outline-none 
     transition duration-300 focus:border-sky-500 hover:border-gray-500`} 
   }
   button {
     ${tw`w-full sm:absolute right-0 top-0 bottom-0 bg-sky-500
-     text-gray-100 font-bold mr-2 my-4 sm:my-2 rounded-full py-4 flex items-center
+     text-gray-100 font-bold mr-2 my-4 sm:my-2 rounded-full py-4 flex items-center 
      justify-center sm:w-40 sm:leading-none 
      focus:outline-none hover:bg-sky-900 transition duration-300`}
   }

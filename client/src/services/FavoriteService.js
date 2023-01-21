@@ -22,4 +22,13 @@ export default class FavoriteService {
     static async removeImageFromFavorite(clientId, favoriteId, imageId) {
         return $api.delete(`/clients/${clientId}/favorites/${favoriteId}/images/${imageId}`);
     }
+
+    static async removeImagesFromFavorite(clientId, favoriteId, imageIds) {
+        return $api.delete(`/clients/${clientId}/favorites/${favoriteId}/images/many`, {
+            data: {
+                imageIds
+            }
+        });
+    }
+
 }

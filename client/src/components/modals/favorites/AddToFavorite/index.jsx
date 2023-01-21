@@ -92,14 +92,15 @@ const AddToFavorite = ({
             isOpen={isOpen}
             title='Select Your Favorite Folder'>
 
-            {
-                createFavoriteLoading || favoriteChangeLoading &&
+            {createFavoriteLoading || favoriteChangeLoading &&
                 <CircularProgress />
             }
+
             <Box sx={{ display: 'flex', flexDirection: 'column'}}>
                <CreateFavorite
                     onChange={(value) => createFavorite(value)}
                />
+
                 <FormControl
                     sx={{ m: 3 }}
                     component="fieldset"
@@ -130,8 +131,7 @@ const AddToFavorite = ({
                         Total Favorites Count: {favorites.length}
                     </FormHelperText>
 
-                    {
-                        JSON.stringify(sourceCheckBoxValue) !== JSON.stringify(checkBoxValues) &&
+                    {JSON.stringify(sourceCheckBoxValue) !== JSON.stringify(checkBoxValues) &&
                         <Button
                             sx={{ mt: 2}}
                             variant='contained'

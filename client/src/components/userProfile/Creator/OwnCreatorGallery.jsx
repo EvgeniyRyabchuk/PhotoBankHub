@@ -12,7 +12,7 @@ import {Box, CircularProgress, Typography} from "@mui/material";
 import {Gallery} from "react-grid-gallery";
 import {ObserverItem} from "../../../assets/shared/styles";
 
-const OwnCreatorGallery = () => {
+const OwnCreatorGallery = ({ preview = false, ...props}) => {
 
     const navigate = useNavigate();
     const { user } = useSelector(state => state.user);
@@ -48,14 +48,14 @@ const OwnCreatorGallery = () => {
 
     const handleClick = (index, item) => navigate(`/images/${item.id}`);
 
-    console.log(images)
-
 
     return (
-        <Box>
-            <Typography variant='h4'>
-                My Image Galley
-            </Typography>
+        <Box {...props}>
+            { !preview &&
+                <Typography variant='h4'>
+                    My Image Galley
+                </Typography>
+            }
 
             <Box sx={{ my: 5}}>
                 <Gallery
@@ -69,7 +69,8 @@ const OwnCreatorGallery = () => {
                     <h3>No data</h3>
                 }
                 { isLoading && <CircularProgress /> }
-                <ObserverItem ref={lastElementRef}/>
+                <ObserverItem ref={lastElementRef} isShow={!preview} />
+
             </Box>
         </Box>
     );

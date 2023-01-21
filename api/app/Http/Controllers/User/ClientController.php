@@ -60,16 +60,38 @@ class ClientController extends Controller
         return response()->json(compact('images', 'favorite'));
     }
 
-    protected function attahcOrDettachImageFromFavorite($request, $isAttach) {
+    protected function attahcOrDettachImageFromFavorite($request, $isAttach, $many = false) {
         $client = Auth::user()->client;
         $favoriteId = $request->favoriteId;
-        $imageId = $request->imageId;
-        $image = Image::findOrFail($imageId);
 
         $favorite = Favorite::withCount('images')->where([
             'client_id' => $client->id,
             'id' => $favoriteId,
         ])->first();
+
+        if($many && !$isAttach) {
+            $imageIds = explode(',', $request->imageIds);
+            $images = Image::whereIn('id', $imageIds)->get();
+            foreach ($images as $image) {
+                $favorite->images()->detach($image);
+            }
+            $favorite->save();
+
+            $imageIds = $favorite->images->pluck('id');
+            $images = Image::with('creator.user', 'tags', 'imageVariants.size')
+                ->whereIn('images.id', $imageIds)
+                ->select('images.*')
+                ->paginate(15);
+
+            return [
+                'payload' => $images
+            ];
+        }
+
+        $imageId = $request->imageId;
+        $image = Image::findOrFail($imageId);
+
+
         if(!$favorite) {
             return [
                 'error_message' => 'access deny: not your favorite',
@@ -125,6 +147,18 @@ class ClientController extends Controller
         }
         return response()->json($data);
     }
+
+    public function deleteImageFromFavoriteMany(Request $request, $clientId) {
+        $result = $this->attahcOrDettachImageFromFavorite($request, false, true);
+        $data = $result['payload'];
+        if(!$data) {
+            return response()->json([
+                'message' => $result['error_message']], $result['error_code'
+            ]);
+        }
+        return response()->json($data);
+    }
+
 
     protected function storeOrUpdateFavorite($request, $mode, $client, $favorite = null): Model {
         $title = $request->title;

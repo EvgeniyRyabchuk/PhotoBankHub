@@ -35,6 +35,10 @@ export default class ImageService {
         return (await promise).data;
     }
 
+    static async delete(imageId) {
+        return await $api.delete(`/images/${imageId}`);
+    }
+
     static async downloadPreview(imageId) {
         const promise = $api.get(`/images/${imageId}/download`, {
             responseType: 'blob',
@@ -55,6 +59,11 @@ export default class ImageService {
     static async download(imageId, variantId) {
         const promise = $api.get(`/images/${imageId}/variants/${variantId}/download`, {
             responseType: 'blob',
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache',
+                'Expires': '0',
+            }
         });
 
         toast.promise(promise,
@@ -76,8 +85,6 @@ export default class ImageService {
     static async view(imageId) {
         return $api.post(`/images/${imageId}/views`);
     }
-
-
 
     static async getMinMaxValues() {
         return $api.get(`/images/min-max`);

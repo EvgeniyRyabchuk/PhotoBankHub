@@ -8,7 +8,7 @@ import ImageService from "../../../services/ImageService";
 import {getPageCount} from "../../../utills/pages";
 import {useFetching} from "../../../hooks/useFetching";
 import {Box, CircularProgress, IconButton, MenuItem, Select} from "@mui/material";
-import {JustifyContent} from "../../../assets/shared/styles";
+import {JustifyContent, ObserverItem} from "../../../assets/shared/styles";
 import GalleryFilter from "../../../components/GalleryFilter";
 import defOrderSortOrderData, {getSortOrderOptionValue} from "./sortOptions";
 import {FilterAlt, Sort} from "@mui/icons-material";
@@ -257,13 +257,7 @@ const ImageGalleryPage = () => {
                     <h3>No data</h3>
                 }
                 { isLoading && <CircularProgress /> }
-                <div ref={lastElementRef}
-                     style={{
-                         width: '100%',
-                         height: '20px',
-                         background: 'red',
-                     }}>
-                </div>
+                <ObserverItem ref={lastElementRef} />
 
                 <PaginationBar limit={limit} page={page} totalPage={totalPage}
                     onLimitChange={onLimitChange}
@@ -271,15 +265,6 @@ const ImageGalleryPage = () => {
                     onShowMore={showMore}
                 />
             </Box>
-
-
-            {/*<FsLightbox*/}
-            {/*    toggler={lightboxController.toggler}*/}
-            {/*    sources={images.map(i => i.src)}*/}
-            {/*    slide={lightboxController.slide}*/}
-            {/*    types={[...new Array(images.length).fill('image')]}*/}
-            {/*/>*/}
-
         </div>
     );
 };

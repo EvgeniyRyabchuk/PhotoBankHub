@@ -30,6 +30,11 @@ const Downloads = () => {
     }
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [page])
+
+
+    useEffect(() => {
         fetchDownloads();
     }, [searchParams])
 

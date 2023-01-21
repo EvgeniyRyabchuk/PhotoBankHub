@@ -75,6 +75,7 @@ const AddToCollection = ({
         onClose();
     }
 
+    console.log(isOpen)
 
     return (
         <ModalWithTransition
@@ -83,8 +84,7 @@ const AddToCollection = ({
             isOpen={isOpen}
             title='Select Your Collection'>
 
-            {
-                collectionChangeLoading &&
+            {collectionChangeLoading &&
                 <CircularProgress />
             }
             <Box sx={{ display: 'flex', flexDirection: 'column'}}>

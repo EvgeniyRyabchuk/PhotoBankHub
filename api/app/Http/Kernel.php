@@ -49,7 +49,7 @@ class Kernel extends HttpKernel
 
         ],
 
-        'adminOrCreatorAuth:api' => [
+        'adminOrCreator' => [
             'auth:api',
             \App\Http\Middleware\Role\AdminOrCreatorMiddleware::class,
         ],
@@ -92,8 +92,5 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-
-
-
     ];
 }

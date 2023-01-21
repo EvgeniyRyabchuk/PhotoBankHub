@@ -29,6 +29,7 @@ const ProfilePage = () => {
     const [value, setValue] = useState('1');
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         setValue(searchParams.get('tab') ?? '1');
     }, [search]);
 
@@ -117,7 +118,7 @@ const ProfilePage = () => {
 
                     <StyledTabPanel value="4">
                         { user.role.name === userRole.Creator &&
-                            <OwnCreatorGallery />
+                            <OwnCreatorGallery preview={false} />
                         }
                     </StyledTabPanel>
 

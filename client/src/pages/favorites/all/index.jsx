@@ -35,7 +35,7 @@ const Favorites = () => {
         fetchFavorites();
     }, [])
 
-    const getLastImage = (favorite) => favorite.images.length > 0 ?
+    const getLastImage = (favorite) => favorite.images && favorite.images.length > 0 ?
         getPreview(favorite.images[0].preview) :
         imagePlaceholder
 

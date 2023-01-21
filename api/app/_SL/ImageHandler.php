@@ -75,20 +75,22 @@ class ImageHandler {
     }
 
 
-    //TODO: solve
+
     public static function getImageRation($data) {
         $interventionImg = Image::make($data);
         $width = $interventionImg->width();
         $height = $interventionImg->height();
 
-        $divisor = gmp_intval( gmp_gcd( $width, $height ) );
+        $divisor = gmp_intval(gmp_gcd($width, $height));
         $str =  $width / $divisor . ':' . $height / $divisor;
 
         $r1 = $width / $divisor;
         $r2 = $height / $divisor;
-
+        //TODO: solve
+        if($r1 > 99 || $r2 > 99) { $r1 = 3; $r2 = 2; }
         $r1 = _Utills::isDecimal($r1) ? $r1 : number_format($r1, 2);
         $r2 = _Utills::isDecimal($r2) ? $r2 : number_format($r2, 2);
+
         return [$r1, $r2, $str];
     }
 

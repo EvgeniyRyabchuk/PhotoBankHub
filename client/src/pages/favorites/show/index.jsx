@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {defLimit, defPage} from "../../../utills/const";
@@ -7,9 +7,10 @@ import ClientService from "../../../services/ClientService";
 import {getImagesWithOverlay} from "../../images/shared";
 import {getPageCount} from "../../../utills/page";
 import {useObserver} from "../../../hooks/useObserver";
-import {Box, CircularProgress, Typography} from "@mui/material";
+import {Box, Button, CircularProgress, Typography} from "@mui/material";
 import {Gallery} from "react-grid-gallery";
-import {ObserverItem} from "../../../assets/shared/styles";
+import {JustifyContent, ObserverItem} from "../../../assets/shared/styles";
+import FavoriteService from "../../../services/FavoriteService";
 
 const Favorite = () => {
 
@@ -51,20 +52,79 @@ const Favorite = () => {
 
     const handleClick = (index, item) => navigate(`/images/${item.id}`);
 
+    const hasSelected = images.some((image) => image.isSelected);
+
+    const handleSelect = (index) => {
+        const nextImages = images.map((image, i) =>
+            i === index ? { ...image, isSelected: !image.isSelected } : image
+        );
+        setImages(nextImages);
+    };
+
+    const handleSelectAllClick = () => {
+        const nextImages = images.map((image) => ({
+            ...image,
+            isSelected: !hasSelected,
+        }));
+        setImages(nextImages);
+    };
+
+    const selectedImages = useMemo(() => {
+        return images.filter(i => i.isSelected);
+    }, [images]);
+
+
+    const undo = () => {
+        setImages(images.map(i => {
+            i.isSelected = false; return i;
+        }));
+    }
+
+    const handleDelete = async () => {
+        const ids = selectedImages.map(i => i.id).join(',');
+        const { data } = await FavoriteService.removeImagesFromFavorite(user.client.id, favorite.id, ids);
+        const newImagesWithLayout = getImagesWithOverlay(data.data);
+        setTotalPage(getPageCount(data.total, defLimit));
+        setPage(defPage);
+        setImages(newImagesWithLayout);
+    }
 
     return (
         <Box sx={{ my: 3 }}>
             { isLoading && <CircularProgress />}
-            {
-                !isLoading &&
+            { !isLoading &&
                 <>
                     <Typography variant='h4'>
                         Favorite: {favorite.title}
                     </Typography>
+
                     <Box sx={{ my: 5}}>
+                        <JustifyContent sx={{ "& > button": {
+                                margin: '0 5px'
+                            },
+                            justifyContent: 'start'
+                        }}>
+                            <Button variant='contained' color={hasSelected ? 'secondary' : 'primary'} onClick={handleSelectAllClick}>
+                                {hasSelected ? "Clear selection" : "Select all"}
+                            </Button>
+                            {selectedImages.length > 0 &&
+                                <>
+                                    <Button variant='contained' color='error' onClick={handleDelete}>
+                                        Delete
+                                    </Button>
+                                    <Button variant='contained' onClick={undo}>
+                                        Undo
+                                    </Button>
+                                </>
+                            }
+                            <Typography variant='p'>
+                                Selected Images: {selectedImages.length};
+                            </Typography>
+                        </JustifyContent>
+
                         <Gallery
                             images={images}
-                            // onSelect={handleSelect}
+                            onSelect={handleSelect}
                             enableImageSelection={true}
                             onClick={handleClick}
                         />

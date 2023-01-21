@@ -25,6 +25,7 @@ import AddBillingInfo from "../../components/AddBillingInfo";
 import {Payment} from "@mui/icons-material";
 import {toast} from "react-toastify";
 import BillingService from "../../services/BillingService";
+import {useAction} from "../../hooks/useAction";
 
 
 const CheckOutWrapper = styled(Box)(({ theme,  }) => ({
@@ -40,7 +41,7 @@ const CheckOutWrapper = styled(Box)(({ theme,  }) => ({
 const CheckOut = () => {
 
     const theme = useTheme();
-
+    const { profile } = useAction();
     const navigate = useNavigate();
     const { cards } = useSelector(state => state.card);
 
@@ -101,6 +102,8 @@ const CheckOut = () => {
 
             toast.success('Your subscription is active. Enjoy!');
             navigate('/statuses/payment/success');
+            profile();
+
         } catch (error) {
             toast.error('Fail to get subscription')
             navigate('/statuses/payment/fail');
