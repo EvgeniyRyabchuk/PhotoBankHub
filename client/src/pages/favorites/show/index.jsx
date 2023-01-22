@@ -99,27 +99,28 @@ const Favorite = () => {
                     </Typography>
 
                     <Box sx={{ my: 5}}>
-                        <JustifyContent sx={{ "& > button": {
-                                margin: '0 5px'
-                            },
-                            justifyContent: 'start'
-                        }}>
-                            <Button variant='contained' color={hasSelected ? 'secondary' : 'primary'} onClick={handleSelectAllClick}>
-                                {hasSelected ? "Clear selection" : "Select all"}
-                            </Button>
-                            {selectedImages.length > 0 &&
-                                <>
-                                    <Button variant='contained' color='error' onClick={handleDelete}>
-                                        Delete
-                                    </Button>
-                                    <Button variant='contained' onClick={undo}>
-                                        Undo
-                                    </Button>
-                                </>
-                            }
-                            <Typography variant='p'>
-                                Selected Images: {selectedImages.length};
-                            </Typography>
+                        <JustifyContent sx={{ "& > button": {margin: '0 5px'}, justifyContent: 'space-between', px: 5}}>
+                            <Box>
+                                <Button variant='contained' color={hasSelected ? 'secondary' : 'primary'} onClick={handleSelectAllClick}>
+                                    {hasSelected ? "Clear selection" : "Select all"}
+                                </Button>
+                                {selectedImages.length > 0 &&
+                                    <>
+                                        <Button variant='contained' color='error' onClick={handleDelete}>
+                                            Delete
+                                        </Button>
+                                        <Button variant='contained' onClick={undo}>
+                                            Undo
+                                        </Button>
+                                    </>
+                                }
+                            </Box>
+                            <Box>
+                                <Typography variant='p'>
+                                    Selected Images: {selectedImages.length}
+                                </Typography>
+                            </Box>
+
                         </JustifyContent>
 
                         <Gallery

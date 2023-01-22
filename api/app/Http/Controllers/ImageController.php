@@ -485,7 +485,6 @@ class ImageController extends Controller
         return response()->download($path);
     }
 
-
     public function addLike(Request $request, $imageId) {
         $client = Auth::user()->client;
         $image = Image::findOrFail($imageId);
@@ -654,7 +653,6 @@ class ImageController extends Controller
 
         return response()->json($response);
     }
-
 
     public function getMinMax(Request $request) {
         $createdAt = [ Image::min('created_at'), Image::max('created_at') ];

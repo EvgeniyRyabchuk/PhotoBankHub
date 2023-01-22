@@ -20,6 +20,11 @@ import {AttachMoney, CollectionsBookmark, Download, Favorite, ThumbUp, Visibilit
 import {useAction} from "../../hooks/useAction";
 import {JustifyBox} from "../../assets/shared/styles";
 import userRole from "../../auth/roles";
+import {styled} from "@mui/material";
+import Index from "./MobileNavigate";
+import MobileNavigate from "./MobileNavigate";
+import {NavigateList, PaperProps, RightMenu} from "./styled";
+
 
 
 const Navbar = () => {
@@ -42,13 +47,11 @@ const Navbar = () => {
 
     const formatting = (category, categories) => {
         const children = categories.filter(c => c.parent_id === category.id);
-
         const result = {
             id: category.id,
             title: category.name,
             url: `/categories/${category.id}`,
         }
-
         if(children && children.length > 0) {
             const formattedChildren = [];
             for (let c of children)
@@ -56,17 +59,13 @@ const Navbar = () => {
 
             result.submenu = formattedChildren;
         } else {
-            result.url = `/images?categoriesIds=${result.id}`
+            result.url = `/images?categoriesIds=${result.id}`;
         }
-
         return result;
     }
-
     const formattedCategories = useMemo(() => {
         if(categories.length === 0) return [];
-
         const parrentless = categories.filter(c => c.parent_id === null);
-
         const result = [];
         for(let category of parrentless) {
             result.push(formatting(category, categories));
@@ -75,19 +74,21 @@ const Navbar = () => {
     }, [categories]);
 
   return (
-    <nav>
-      <ul className="menus">
-        {navigations.map((menu, index) => {
-          const depthLevel = 0;
-          return (
-            <MenuItems
-              items={menu}
-              key={index}
-              depthLevel={depthLevel}
-            />
-          );
-        })}
-          {
+    <nav style={{ maxHeight: '73px' }}>
+
+        <NavigateList className="menus">
+            {navigations.map((menu, index) => {
+                  const depthLevel = 0;
+                  return (
+                    <MenuItems
+                      items={menu}
+                      key={index}
+                      depthLevel={depthLevel}
+                    />
+                  );
+                })
+            }
+            {
               formattedCategories.map((category) => {
                   const depthLevel = 0;
                   return (
@@ -97,15 +98,14 @@ const Navbar = () => {
                           depthLevel={depthLevel}
                       />
                   );
-            })
-          }
+              })
+            }
+        </NavigateList>
 
-      </ul>
-
-        <JustifyBox>
-            <Box>
+        <RightMenu>
+            <Box className='right-menu-first-box'>
                 {/*<Typography sx={{ minWidth: 100 }}>Contact</Typography>*/}
-                <NavLink style={{ display: 'inline-block' }} to='/plans'>
+                <NavLink className='plan-link' style={{ display: 'inline-block' }} to='/plans'>
                     <Typography sx={{ minWidth: 100 }}>Plans</Typography>
                 </NavLink>
 
@@ -121,10 +121,7 @@ const Navbar = () => {
                     </>
                 }
 
-
-
-                {
-                    isAuth &&
+                { isAuth &&
                     <Tooltip title="Account settings">
                         <IconButton
                             onClick={handleClick}
@@ -141,48 +138,22 @@ const Navbar = () => {
 
             </Box>
 
-            {
-                isAuth &&
+            { isAuth &&
                 <Menu
                     anchorEl={anchorEl}
                     id="account-menu"
                     open={open}
                     onClose={handleClose}
                     onClick={handleClose}
-                    PaperProps={{
-                        elevation: 0,
-                        sx: {
-                            overflow: 'visible',
-                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                            mt: 1.5,
-                            '& .MuiAvatar-root': {
-                                width: 32,
-                                height: 32,
-                                ml: -0.5,
-                                mr: 1,
-                            },
-                            '&:before': {
-                                content: '""',
-                                display: 'block',
-                                position: 'absolute',
-                                top: 0,
-                                right: 14,
-                                width: 10,
-                                height: 10,
-                                bgcolor: 'background.paper',
-                                transform: 'translateY(-50%) rotate(45deg)',
-                                zIndex: 0,
-                            },
-                        },
-                    }}
+                    PaperProps={PaperProps}
                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
                     <MenuItem onClick={() => navigate(`/profile`)}>
                         <Avatar src={getAvatar(user)} /> Profile
                     </MenuItem>
-                    {
-                        user.role.name === userRole.Client &&
+
+                    { user.role.name === userRole.Client &&
                         <>
                             <MenuItem onClick={() => navigate(`/bills`)}>
                                 <AttachMoney sx={{ mr: 1}}/> Bills & Payment
@@ -202,8 +173,7 @@ const Navbar = () => {
                         </>
                     }
 
-                    {
-                        user.role.name === userRole.Creator &&
+                    {user.role.name === userRole.Creator &&
                         <>
                             <MenuItem onClick={() => navigate('/collections')}>
                                 <CollectionsBookmark sx={{ mr: 1}}/> Collections
@@ -214,11 +184,10 @@ const Navbar = () => {
                         </>
                     }
 
-
                     <Divider />
-                    {
-                        isAuth && user.client &&
-                        <Box>
+
+                    { isAuth && user.client &&
+                        <Box sx={{ px: 2, py: 1 }}>
                             <p>
                                 Left image: {user.client.left_image_count}
                             </p>
@@ -227,8 +196,6 @@ const Navbar = () => {
                             </p>
                         </Box>
                     }
-
-
 
                     <Divider />
 
@@ -250,8 +217,9 @@ const Navbar = () => {
                 </Menu>
             }
 
+            <MobileNavigate categories={formattedCategories} />
+        </RightMenu>
 
-        </JustifyBox>
     </nav>
   );
 };

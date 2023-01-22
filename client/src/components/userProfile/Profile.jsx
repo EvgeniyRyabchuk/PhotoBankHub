@@ -1,5 +1,5 @@
 import {BusinessCenter, Mail, Place} from "@mui/icons-material";
-import {Box, Button, Card, Divider, Grid} from "@mui/material";
+import {Box, Button, Card, Divider, Grid, Typography} from "@mui/material";
 import PostCard from "./PostCard";
 import {FlexBox, FollowWrapper, IconWrapper, JustifySpaceBetween, ObserverItem} from "../../assets/shared/styles";
 import {H3, H4, H6, Small} from "../../assets/typography";
@@ -66,7 +66,6 @@ const Profile = ({
     else {
       setPosts([]);
     }
-
   });
 
   const details = [
@@ -82,7 +81,7 @@ const Profile = ({
     },
     {
       Icon: BusinessCenter,
-      boldText: user.website,
+      boldText: <a style={{ color: 'blue' }} href={user.website}>{user.website}</a>,
       smallText:  "WebSite: "
     },
     {
@@ -136,7 +135,7 @@ const Profile = ({
               {details.map(({ Icon, smallText, boldText }, index) => (
                 <FlexBox alignItems="center" mt={1.5} key={index}>
                   <Icon />
-                  <H6 marginLeft={1}>
+                  <H6 style={{ textAlign: 'left' }} marginLeft={1}>
                     <Small>{smallText}</Small> {boldText}
                   </H6>
                 </FlexBox>
@@ -151,10 +150,11 @@ const Profile = ({
               {posts.map((post) => (
                   <PostCard post={post} key={post.id} handleMore={handleMoreOpen} />
               ))}
-
+              {posts.length === 0 && <Typography>Your not have subscriptions yet</Typography>}
               <MoreOptions anchorEl={moreEl} handleMoreClose={handleMoreClose} />
             </Grid>
         }
+
         { user.role.name === userRole.Creator && !counterFullWidth &&
             <Grid item md={7} xs={12}>
               { user.role.name === userRole.Creator &&

@@ -6,6 +6,7 @@ import {useAction} from "../../hooks/useAction";
 import Navbar from "./Navbar";
 import LogoImg from '../../assets/images/custom/small_logo_main.png';
 import {LogoContainerLink} from "./styled";
+import {Typography} from "@mui/material";
 
 
 const Header = () => {
@@ -15,11 +16,13 @@ const Header = () => {
 
     return (
         <header>
-
             <div className="nav-area">
                 <LogoContainerLink to='/'>
-                    <img src={LogoImg} />
-                    <span>PhotoBank<span style={{ color: 'red'}}>Hub</span></span>
+                    {/*<Typography className='logo-text'>*/}
+                    {/*    PhotoBank<span style={{ color: 'red' }}>Hub</span>*/}
+                    {/*</Typography>*/}
+                    <img className='logo-image' src={LogoImg} />
+                    <span className='logo-text'>PhotoBank<span style={{ color: 'red'}}>Hub</span></span>
                 </LogoContainerLink>
                 <Navbar />
             </div>

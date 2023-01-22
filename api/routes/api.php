@@ -127,7 +127,7 @@ Route::prefix('photo-models')
         Route::get('genders', 'getAllGender');
 
 
-        Route::middleware('adminOrCreatorAuth:api')
+        Route::middleware('adminOrCreator')
             ->group(function () {
                 Route::post('/', 'store');
                 Route::put('/{photoModelId}', 'update');
@@ -187,7 +187,6 @@ Route::prefix('clients/{clientId}')
                 Route::put('/{favoriteId}', 'updateFavorite');
                 Route::delete('/{favoriteId}', 'deleteFavorite');
 
-
                 Route::get('/{favoriteId}/images', 'getImageByFavorite');
                 Route::post('/{favoriteId}/images/', 'addImageToFavorite');
 
@@ -203,8 +202,6 @@ Route::prefix('clients/{clientId}')
         Route::get('/subscriptions/content', 'getSubscriptionContent');
         Route::post('/content-subscribe', 'contentSubscribe');
         Route::delete('/content-subscribe', 'contentUnSubscribe');
-
-
     });
 
 
@@ -214,14 +211,13 @@ Route::controller(CollectionController::class)
         Route::get('/', 'index');
         Route::get('/{collectionId}/images', 'getImageByCollection');
 
-
-
-        Route::middleware('adminOrCreatorAuth:api')
+        Route::middleware('adminOrCreator')
             ->group(function () {
-
                 Route::post('/', 'store');
 
                 Route::post('/{collectionId}/images', 'addImageToCollections');
+
+                Route::delete('/{collectionId}/images/many', 'deleteImageFromCollectionsMany');
                 Route::delete('/{collectionId}/images/{imageId}','deleteImageFromCollections');
 
                 Route::put('/{collectionId}', 'update');

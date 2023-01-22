@@ -278,6 +278,9 @@ class ClientController extends Controller
         $client = Auth::user()->client;
         $followingIds = $client->contentSubscriptions->pluck('id');
         $images = Image::with('creator.user', 'imageVariants.size')
+            ->withCount('likes')
+            ->withCount('views')
+            ->withCount('downloads') 
             ->whereIn('creator_id', $followingIds)
             ->orderBy('created_at', 'desc')
             ->paginate(5);

@@ -26,8 +26,5 @@
 
 13. Redirect to log in page if not auth + 
 
-14. Search Resize + 
+14. Burger if mobile screen 
 
-15. Show empty post and subscription for client who not have subscriptions 
-
-16. Delete Edit Images From Favorite, Collections 

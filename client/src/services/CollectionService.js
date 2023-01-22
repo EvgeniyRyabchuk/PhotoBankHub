@@ -40,4 +40,12 @@ export default class CollectionService {
         return $api.delete(`/collections/${collectionId}/images/${imageId}`);
     }
 
+    static async removeImagesFromCollection(clientId, collectionId, imageIds) {
+        return $api.delete(`/collections/${collectionId}/images/many`, {
+            data: {
+                imageIds
+            }
+        });
+    }
+
 }

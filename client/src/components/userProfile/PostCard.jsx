@@ -85,12 +85,12 @@ const PostCard = ({ post, handleMore }) => {
         )}
 
         <FlexBox alignItems="center" justifyContent="space-between" my={2}>
-          {postDetails.map(({ Icon, count }, index) => (
+          {postDetails.map(({ Icon, count, name }, index) => (
             <ButtonBase disableRipple key={index}>
               <FlexBox alignItems="center">
                 <Icon fontSize="small" color="disabled" />
                 <H6 color="text.disabled" ml={1}>
-                  {count}
+                  {name === 'favorite' ? post.likes_count : count}
                 </H6>
               </FlexBox>
             </ButtonBase>
@@ -131,18 +131,22 @@ const PostCard = ({ post, handleMore }) => {
 
 const postDetails = [
   {
+    name: 'favorite',
     Icon: Favorite,
     count: 150,
   },
   {
+    name: 'comment',
     Icon: CommentIcon,
     count: 15,
   },
   {
+    name: 'upload',
     Icon: UploadIcon,
     count: 15,
   },
   {
+    name: 'share',
     Icon: ShareIcon,
     count: 12,
   },

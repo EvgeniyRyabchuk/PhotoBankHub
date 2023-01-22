@@ -16,12 +16,11 @@ import CreateCollectionModal from "../../../components/modals/collections/Create
 import {toast} from "react-toastify";
 
 
-export const CollectionCard = ({ collection, isBottomMenuShow = true }) => {
+export const CollectionCard = ({ collection, isBottomMenuShow = true, onDelete }) => {
     const navigate = useNavigate();
 
-    const getLastImage = (collection) => collection.images.length > 0 ?
-        getPreview(collection.images[0].preview) :
-        imagePlaceholder
+    const getLastImage = (collection) => collection.images && collection.images.length > 0 ?
+        getPreview(collection.images[0].preview) : imagePlaceholder
 
     return (
         <FavoriteCardWrapper style={{ height: isBottomMenuShow ? '350px' : '300px' }} key={collection.id}>
@@ -47,7 +46,7 @@ export const CollectionCard = ({ collection, isBottomMenuShow = true }) => {
                     isBottomMenuShow &&
                     <CardActions>
                         <Button size="small">Edit</Button>
-                        <Button size="small">Delete</Button>
+                        <Button size="small" onClick={onDelete}>Delete</Button>
                     </CardActions>
                 }
 
@@ -91,6 +90,12 @@ const Collections = () => {
         toast.success('Collection Created Success');
         setCollections([newCollection, ...collections]);
     }
+
+    const handleDeleteCollection = async (collectionId) => {
+        await CollectionService.deleteCollection(user.id, collectionId);
+        const newCollections = collections.filter(c => c.id !== collectionId);
+        setCollections(newCollections);
+    }
     
     return (
         <Box>
@@ -98,8 +103,7 @@ const Collections = () => {
                 Create New Collection 
             </Button>
 
-            {
-                isModalOpen &&
+            { isModalOpen &&
                 <CreateCollectionModal
                     isOpen={isModalOpen}
                     setIsOpen={setIsModalOpen}
@@ -112,7 +116,10 @@ const Collections = () => {
             Collections
             <Box sx={{ px: 2,  display: 'flex',  flexWrap: 'wrap', }}>
                 {collections.map(collection =>
-                    <CollectionCard collection={collection} />
+                    <CollectionCard
+                        collection={collection}
+                        onDelete={() => handleDeleteCollection(collection.id) }
+                    />
                 )}
             </Box>
         </Box>

@@ -13,6 +13,10 @@ export default class FavoriteService {
         });
     }
 
+    static async deleteFavorite(clientId, favoriteId) {
+        return $api.delete(`/clients/${clientId}/favorites/${favoriteId}`);
+    }
+
     static async addImageToFavorite(clientId, favoriteId, imageId) {
         return $api.post(`/clients/${clientId}/favorites/${favoriteId}/images`, {
             imageId

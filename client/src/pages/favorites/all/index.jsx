@@ -11,6 +11,7 @@ import FavoriteService from "../../../services/FavoriteService";
 import {getPreview, imagePlaceholder} from "../../../utills/axios";
 import {FavoriteCardImage, FavoriteCardWrapper} from "./styled";
 import {useFetching} from "../../../hooks/useFetching";
+import CollectionService from "../../../services/CollectionService";
 
 
 const Favorites = () => {
@@ -39,9 +40,14 @@ const Favorites = () => {
         getPreview(favorite.images[0].preview) :
         imagePlaceholder
 
+    const handleDeleteFavorite = async (favoriteId) => {
+        await FavoriteService.deleteFavorite(user.client.id, favoriteId);
+        const newFavorites = favorites.filter(c => c.id !== favoriteId);
+        setFavorites(newFavorites);
+    }
+
     return (
         <Box>
-
             <CreateFavorite
                 style={{ margin: '20px 0', padding: '0 20px' }}
                 onChange={(value) => createFavorite(value)}
@@ -71,7 +77,10 @@ const Favorites = () => {
                                 </Box>
                                 <CardActions>
                                     <Button size="small">Edit</Button>
-                                    <Button size="small">Delete</Button>
+                                    <Button size="small"
+                                            onClick={() => handleDeleteFavorite(favorite.id)}>
+                                        Delete
+                                    </Button>
                                 </CardActions>
                             </Card>
                         </FavoriteCardWrapper>

@@ -1,6 +1,8 @@
 
 // static url for navigation
 
+import {Architecture, BurstMode} from "@mui/icons-material";
+
 export const navigations = [
     // {
     //     title: 'Home',
@@ -8,12 +10,15 @@ export const navigations = [
     // },
     {
         title: 'All Images',
-        url: '/images'
+        url: '/images',
+        icon: <BurstMode />
     },
     {
         title: 'Creators/Authors',
-        url: '/creators'
+        url: '/creators',
+        icon: <Architecture />
     }
+
     // {
     //     title: 'Services',
     //     url: '/services',

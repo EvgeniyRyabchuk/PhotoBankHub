@@ -46,6 +46,7 @@ const ProfilePage = () => {
         }
         return [];
     }, [user]);
+
     const tabList = useMemo(() => {
         if(user.role.name === userRole.Client) {
             return [
@@ -83,7 +84,6 @@ const ProfilePage = () => {
                             user={user}
                             countList={countList}
                         />
-                    {/* //TODO: add my photos   */}
                     </StyledTabPanel>
 
                     <StyledTabPanel value="2">
@@ -108,18 +108,12 @@ const ProfilePage = () => {
                     </StyledTabPanel>
 
                     <StyledTabPanel value="3">
-                        { user.role.name === userRole.Creator &&
-                            <Collections />
-                        }
-                        { user.role.name === userRole.Client &&
-                            <FavoritePage />
-                        }
+                        { user.role.name === userRole.Creator && <Collections />}
+                        { user.role.name === userRole.Client && <FavoritePage />}
                     </StyledTabPanel>
 
                     <StyledTabPanel value="4">
-                        { user.role.name === userRole.Creator &&
-                            <OwnCreatorGallery preview={false} />
-                        }
+                        { user.role.name === userRole.Creator && <OwnCreatorGallery preview={false} />}
                     </StyledTabPanel>
 
                     <StyledTabPanel value="5">

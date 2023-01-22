@@ -36,18 +36,14 @@ class CollectionController extends Controller
         return response()->json($collections);
     }
 
-    protected function attahcOrDettachImageFromCollection($request, $isAttach) {
+    protected function attahcOrDettachImageFromCollection($request, $isAttach, $many = false) {
         $creator = Auth::user()->creator;
         $collectionId = $request->collectionId;
-        $imageId = $request->imageId;
-        $image = Image::findOrFail($imageId);
 
         $collection = Collection::with('creator.user')
             ->withCount('images')
-            ->where([
-            'creator_id' => $creator->id,
-            'id' => $collectionId,
-        ])->first();
+            ->where(['creator_id' => $creator->id, 'id' => $collectionId])
+            ->first();
 
         if(!$collection) {
             return [
@@ -57,6 +53,28 @@ class CollectionController extends Controller
             ];
         }
 
+        if(!$isAttach && $many) {
+            $imageIds = explode(',', $request->imageIds);
+            $imagesInCollection = Image::where(['collection_id' => $collectionId])
+                ->whereIn('id', $imageIds)
+                ->first();
+            if(!$imagesInCollection) {
+                return [
+                    'error_message' => 'such image not exist in this collection',
+                    'error_code' => 404,
+                    'payload' => null
+                ];
+            }
+            foreach ($imagesInCollection as $image) {
+                $collection->images()->delete($image);
+            }
+            $collection->save();
+            $images = Image::where('collection_id', $collection->id)->paginate(15);
+            return ['payload' => $images];
+        }
+
+        $imageId = $request->imageId;
+        $image = Image::findOrFail($imageId);
 
         if($isAttach) {
             $imageInCollection = Image::where(['id' => $imageId])->first();
@@ -89,9 +107,7 @@ class CollectionController extends Controller
         $imageInCollection->save();
         $collection->images_count = Image::where('collection_id', $collection->id)->count();
 
-        return [
-            'payload' => $collection
-        ];
+        return ['payload' => $collection];
     }
 
     public function addImageToCollections(Request $request, $collectionId) {
@@ -107,6 +123,17 @@ class CollectionController extends Controller
 
     public function deleteImageFromCollections(Request $request, $collectionId, $imageId) {
         $result = $this->attahcOrDettachImageFromCollection($request, false);
+        $data = $result['payload'];
+        if(!$data) {
+            return response()->json([
+                'message' => $result['error_message']], $result['error_code'
+            ]);
+        }
+        return response()->json($data);
+    }
+
+    public function deleteImageFromCollectionsMany(Request $request, $collectionId) {
+        $result = $this->attahcOrDettachImageFromCollection($request, false, true);
         $data = $result['payload'];
         if(!$data) {
             return response()->json([
