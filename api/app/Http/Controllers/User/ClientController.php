@@ -42,7 +42,7 @@ class ClientController extends Controller
             'client_id' => $client->id,
             'favorites.id' => $favoriteId
         ])
-        ->join('favorite_image', 'favorites.id', 'favorite_image.favorite_id')
+        ->leftJoin('favorite_image', 'favorites.id', 'favorite_image.favorite_id')
         ->orderBy('favorite_image.created_at', 'desc')
         ->withCount('images')
         ->first();
@@ -280,7 +280,7 @@ class ClientController extends Controller
         $images = Image::with('creator.user', 'imageVariants.size')
             ->withCount('likes')
             ->withCount('views')
-            ->withCount('downloads') 
+            ->withCount('downloads')
             ->whereIn('creator_id', $followingIds)
             ->orderBy('created_at', 'desc')
             ->paginate(5);

@@ -99,10 +99,10 @@ const FaqPanel = ({
     });
     return (
         <PrimaryBackgroundContainer>
-            <ContentWithPaddingXl>
-                <HeadingContainer>
+            <ContentWithPaddingXl style={{ padding: '0px 20px'}}>
+                <HeadingContainer style={{ marginTop: '20px'}}>
                     {subheading && <Subheading>{subheading}</Subheading>}
-                    <Heading>{heading}</Heading>
+                    <Heading style={{ paddingTop: '20px' }}>{heading}</Heading>
                     <Description>{description}</Description>
                 </HeadingContainer>
                 <FaqsContainer>

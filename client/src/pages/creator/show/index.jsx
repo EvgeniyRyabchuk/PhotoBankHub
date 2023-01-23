@@ -147,8 +147,7 @@ const CreatorShow = () => {
 
                         <Box sx={{ my: 2 }}>
                             <Box sx={{  display: 'flex',  flexWrap: 'wrap', }}>
-                                {
-                                    collections.slice(0, 3).map(c =>
+                                {collections.slice(0, 3).map(c =>
                                         <CollectionCard collection={c} isBottomMenuShow={false} />
                                     )
                                 }

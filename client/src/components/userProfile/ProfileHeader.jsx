@@ -22,6 +22,8 @@ const ProfileHeader = ({ onChange, user, creator, tabList, isMyProfile}) => {
 
     const isSubscribe = useMemo(() => {
         if(!creator) return;
+        if(!isAuth) return false;
+        if(authUser.role.name !== userRole.Client) return false;
         if(creator.user.id === authUser.id) return;
         const exist = authUser.client.content_subscriptions.find(following => following.id === creator.id);
         return !exist ? true : false;
@@ -29,6 +31,8 @@ const ProfileHeader = ({ onChange, user, creator, tabList, isMyProfile}) => {
 
 
     const subscribeHandler = async () => {
+        if(!isAuth) navigate(`/login`);
+        if(authUser.role.name !== userRole.Client) navigate(`/login`);
         if(isSubscribe)
             await ClientService.contentSubscribe(authUser.client.id, creator.id);
         else
@@ -44,7 +48,7 @@ const ProfileHeader = ({ onChange, user, creator, tabList, isMyProfile}) => {
                         alt="User Cover"
                         height="100%"
                         width="100%"
-                        style={{ objectFit: "cover" }}
+                        style={{ objectFit: "cover", height: '100%'}}
                     />
                 </Box>
 
@@ -73,13 +77,13 @@ const ProfileHeader = ({ onChange, user, creator, tabList, isMyProfile}) => {
 
                     <Box>
                         {
-                            !isMyProfile &&  authUser.role.name === userRole.Client &&
+                            !isMyProfile && isAuth && authUser.role.name === userRole.Client &&
                             <FollowButton isSubscribe={isSubscribe} onClick={subscribeHandler}>
                                 { isSubscribe ? 'Follow' : 'Unfollow'}
                             </FollowButton>
                         }
                         {
-                            isMyProfile && authUser.role.name === userRole.Creator &&
+                            isMyProfile && isAuth && authUser.role.name === userRole.Creator &&
                             <UploadNavigateButton variant='container' onClick={() => navigate(`/uploads`) }>
                                 Upload Image
                             </UploadNavigateButton>

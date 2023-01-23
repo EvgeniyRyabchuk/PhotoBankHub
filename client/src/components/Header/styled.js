@@ -8,7 +8,7 @@ const LogoContainerLink = styled(Link)(({ theme }) => ({
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
-
+    position: 'relative',
     "& span": {
         fontSize: '22px',
         textAlign: 'center',
@@ -27,10 +27,9 @@ const LogoContainerLink = styled(Link)(({ theme }) => ({
             display: 'block',
             fontSize: '16px'
         },
-        "& .logo-image": {
-            display: 'none'
-        },
-        width: 'auto',
+        width: '100%',
+        // position: 'absolute',
+        // left: '10px'
     },
 
 }));

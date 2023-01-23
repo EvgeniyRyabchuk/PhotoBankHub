@@ -66,7 +66,7 @@ const Bills = () => {
         const period = user.client.valid_period_type;
         const image_count = user.client.left_image_count;
         const expiredAt = moment(user.client.plan_expired_at).format('yyyy-MM-DD');
-        console.log(123)
+
         const rows = [
             { title: 'Plan Name', value: plan.name },
             { title: 'Period', value: period },
@@ -100,10 +100,7 @@ const Bills = () => {
 
                     <CardManagement
                         viewMode='mini'
-                        onCardSelected={(card) => {
-                            setSelectedCard(card);
-
-                        }}
+                        onCardSelected={(card) => {setSelectedCard(card);}}
                         cardListMinHeight='auto'
                     />
                 </Grid>

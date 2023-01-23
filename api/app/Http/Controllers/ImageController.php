@@ -516,7 +516,7 @@ class ImageController extends Controller
 //        $ip4 = \Request::getClientIp(true);
 //        dd($ip1, $ip2, $ip3, $ip4);
 
-        $client = $request->user('api')->client;
+        $client = $request->user('api') ? $request->user('api')->client : null;
 
         $image = Image::findOrFail($imageId);
         $viewExist = View::where([

@@ -70,7 +70,9 @@ const ProfilePage = () => {
 
     return (
         <Box pt={2} pb={4}>
-            <TabContext value={value}>
+            <TabContext
+                value={value}
+            >
                 <ProfileHeader
                     isMyProfile={true}
                     user={user}
@@ -80,10 +82,7 @@ const ProfilePage = () => {
 
                 <Box marginTop={3}>
                     <StyledTabPanel value="1">
-                        <Profile
-                            user={user}
-                            countList={countList}
-                        />
+                        <Profile user={user} countList={countList} />
                     </StyledTabPanel>
 
                     <StyledTabPanel value="2">

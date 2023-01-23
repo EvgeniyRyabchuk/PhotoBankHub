@@ -44,53 +44,47 @@ class CategorySeeder extends Seeder
                 'parent_id' => $photosCategory->id
             ],
              [
-                 'name' => 'abstraction',
+                 'name' => 'Technology',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
-                 'name' => 'technology',
-                 'preview' => '/static/gallery_preview.jpeg',
-                 'parent_id' => $photosCategory->id
-
-             ],
-             [
-                 'name' => 'business',
+                 'name' => 'Business',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
-                 'name' => 'cars',
+                 'name' => 'Cars',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
-                 'name' => 'food',
+                 'name' => 'Food',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
-                 'name' => 'family',
+                 'name' => 'Family',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
-                 'name' => 'travels',
+                 'name' => 'Travels',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
-                 'name' => 'nature',
+                 'name' => 'Nature',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
-                 'name' => 'people',
+                 'name' => 'People',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
              [
-                 'name' => 'animals',
+                 'name' => 'Animals',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $photosCategory->id
              ],
@@ -98,7 +92,7 @@ class CategorySeeder extends Seeder
 
         Category::insert([
              [
-                 'name' => 'abstraction',
+                 'name' => 'Abstraction',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
@@ -113,37 +107,37 @@ class CategorySeeder extends Seeder
                  'parent_id' => $illustrationsCategory->id
              ],
              [
-                 'name' => 'technology',
+                 'name' => 'Technology',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
-                 'name' => 'cars',
+                 'name' => 'Cars',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
-                 'name' => 'food',
+                 'name' => 'Food',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
-                 'name' => 'a family',
+                 'name' => 'Family',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
-                 'name' => 'travels',
+                 'name' => 'Travels',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
-                 'name' => 'nature',
+                 'name' => 'Nature',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
              [
-                 'name' => 'people',
+                 'name' => 'People',
                  'preview' => '/static/gallery_preview.jpeg',
                  'parent_id' => $illustrationsCategory->id
              ],
@@ -163,8 +157,5 @@ class CategorySeeder extends Seeder
                  'parent_id' => $illustrationsCategory->id
              ],
         ]);
-
-
-
     }
 }

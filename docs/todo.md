@@ -26,5 +26,4 @@
 
 13. Redirect to log in page if not auth + 
 
-14. Burger if mobile screen 
-
+14. Dumb 

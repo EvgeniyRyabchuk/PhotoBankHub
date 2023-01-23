@@ -49,6 +49,7 @@ const CardManagement = ({ viewMode= 'full', onCardSelected, cardListMinHeight}) 
         setIsOpen(true);
         setMode('create');
     }
+
     const deleteCard = () => {
         if(selectedCard) {
             const newCards = cards.filter(card => card.number !== selectedCard.number);
@@ -73,9 +74,11 @@ const CardManagement = ({ viewMode= 'full', onCardSelected, cardListMinHeight}) 
     }
 
     const onCardClick = async (card) => {
+
         setSelectedCard(card);
         onCardSelected(card);
         const newCard = {...card, isMain: true };
+        console.log(newCard)
         const newCards = cards.map(card => card.id === newCard.id
             ? newCard : {...card, isMain: false});
         await CreditCardService.updateCard(newCard);
@@ -133,7 +136,10 @@ const CardManagement = ({ viewMode= 'full', onCardSelected, cardListMinHeight}) 
                                         <Button>
                                             <Edit />
                                         </Button>
-                                        <Button onClick={() => onCardDeleteHandler(card)}>
+                                        <Button onClick={(e) => {
+                                            e.stopPropagation();
+                                            onCardDeleteHandler(card)
+                                        }}>
                                             <Delete />
                                         </Button>
                                     </div>

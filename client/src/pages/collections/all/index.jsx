@@ -14,11 +14,12 @@ import CardActions from "@mui/material/CardActions";
 import {TextWithEllipsis} from "../../../assets/typography";
 import CreateCollectionModal from "../../../components/modals/collections/CreateCollection";
 import {toast} from "react-toastify";
+import userRole from "../../../auth/roles";
 
 
 export const CollectionCard = ({ collection, isBottomMenuShow = true, onDelete }) => {
     const navigate = useNavigate();
-
+    const { user: authUser, isAuth} = useSelector(store => store.user);
     const getLastImage = (collection) => collection.images && collection.images.length > 0 ?
         getPreview(collection.images[0].preview) : imagePlaceholder
 
@@ -26,7 +27,14 @@ export const CollectionCard = ({ collection, isBottomMenuShow = true, onDelete }
         <FavoriteCardWrapper style={{ height: isBottomMenuShow ? '350px' : '300px' }} key={collection.id}>
             <Card>
                 <Box sx={{ cursor: 'pointer' }}
-                     onClick={() => navigate(`/collections/${collection.id}`)}>
+                     onClick={() => {
+                         if(!isAuth || authUser.role.name !== userRole.Creator)
+                             navigate(`/images?collectionId=${collection.id}`);
+                         else if(collection.creator_id !== authUser.creator.id)
+                             navigate(`/images?collectionId=${collection.id}`);
+                         else
+                            navigate(`/collections/${collection.id}`);
+                     }}>
                     <Box sx={{ height: '140px', overflow: 'hidden', position: 'relative'}}>
                         <FavoriteCardImage src={getLastImage(collection)} alt="green iguana"/>
                     </Box>

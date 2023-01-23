@@ -35,6 +35,7 @@ class CreatorController extends Controller
 
         $collections = $creator->collections->map(function ($item) {
            $item->images = $item->images->take(1);
+           $item->images_count = Collection::where('id', $item->id)->count();
            return $item;
         });
 //        $images = Image::where('creator_id', $creator->id)

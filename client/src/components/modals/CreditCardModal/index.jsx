@@ -48,11 +48,11 @@ const CreditCardModal = ({
 
         if(mode === 'create')  {
             const { data } = await CreditCardService.addCard(card);
-            setCards([...cards, card]);
+            setCards([...cards, data]);
         }
         else if(mode === 'update') {
             const { data } = await CreditCardService.updateCard(card);
-            setCards([...cards, card]);
+            setCards([...cards, data]);
         }
     }
 

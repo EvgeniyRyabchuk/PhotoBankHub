@@ -37,8 +37,10 @@ class CreditCardController extends Controller
 
         if($mode === 'create') {
             $card = new CreditCard();
+            $card->isMain = false;
         } else if($mode === 'update') {
             $card = CreditCard::findOrFail($creditCardId);
+            $card->isMain = $isMain;
         }
 
         $card->number = $number;
@@ -46,7 +48,7 @@ class CreditCardController extends Controller
         $card->expire_year = $expire_year;
         $card->cvc = $cvc;
         $card->issuer = $issuer;
-        $card->isMain = $isMain;
+
         $card->client()->associate($client);
         $card->save();
 

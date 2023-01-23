@@ -4,7 +4,7 @@ import PostCard from "./PostCard";
 import {FlexBox, FollowWrapper, IconWrapper, JustifySpaceBetween, ObserverItem} from "../../assets/shared/styles";
 import {H3, H4, H6, Small} from "../../assets/typography";
 import MoreOptions from "../MoreOptions";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import moment from "moment";
 import {useFetching} from "../../hooks/useFetching";
 import ClientService from "../../services/ClientService";
@@ -34,11 +34,11 @@ const postList = [
 const Profile = ({
        isPostShow = true,
        countList = [],
-       counterFullWidth = false
+       counterFullWidth = false,
+                   user
   }) => {
-
   const navigate = useNavigate();
-  const { user } = useSelector(state => state.user);
+  const { user: authUser, isAuth } = useSelector(state => state.user);
   const lastElementRef = useRef();
 
   const [moreEl, setMoreEl] = useState(null);
@@ -54,7 +54,7 @@ const Profile = ({
   const handleMoreClose = () => setMoreEl(null);
 
   const [fetchPosts, isLoading, error] = useFetching(async () => {
-      const { data } = await ClientService.getSubscriptionContent(user.client.id, page);
+      const { data } = await ClientService.getSubscriptionContent(authUser.client.id, page);
       setTotalPage(getPageCount(data.total, 5));
 
     if(page > 1) {
@@ -68,35 +68,41 @@ const Profile = ({
     }
   });
 
-  const details = [
-    {
-      Icon: Place,
-      boldText: "Kuwait",
-      smallText: "Lives at",
-    },
-    {
-      Icon: Mail,
-      boldText: user.email,
-      smallText: "Email: " ,
-    },
-    {
-      Icon: BusinessCenter,
-      boldText: <a style={{ color: 'blue' }} href={user.website}>{user.website}</a>,
-      smallText:  "WebSite: "
-    },
-    {
-      Icon: BusinessCenter,
-      smallText: "Created Account at: ",
-      boldText: moment(user.created_at).format('DD-MM-yyyy'),
-    },
-  ];
+
+  const details = useMemo(() => {
+    if(!isAuth) return [];
+
+    return [
+      {
+        Icon: Place,
+        boldText: "Kuwait",
+        smallText: "Lives at",
+      },
+      {
+        Icon: Mail,
+        boldText: user.email,
+        smallText: "Email: " ,
+      },
+      {
+        Icon: BusinessCenter,
+        boldText: <a style={{ color: 'blue' }} href={user.website}>{user.website}</a>,
+        smallText:  "WebSite: "
+      },
+      {
+        Icon: BusinessCenter,
+        smallText: "Created Account at: ",
+        boldText: moment(user.created_at).format('DD-MM-yyyy'),
+      },
+    ]
+  }, [isAuth])
+
 
   useObserver(lastElementRef, page < totalPage, isLoading, () => {
     setPage(page + 1);
   })
 
   useEffect(() => {
-    if(isPostShow) {
+    if(isPostShow && isAuth) {
       fetchPosts();
     }
   }, [page, isPostShow]);
@@ -128,7 +134,7 @@ const Profile = ({
           <Box padding={3}>
             <H4 fontWeight={600}>About</H4>
             <Small mt={1} display="block" lineHeight={1.9}>
-              {user.about} ...
+              {isAuth && user.about} ...
             </Small>
 
             <Box mt={3}>
@@ -145,7 +151,7 @@ const Profile = ({
         </Card>
       </Grid>
 
-        { isPostShow && user.role.name === userRole.Client &&
+        { isPostShow && isAuth && authUser.role.name === userRole.Client &&
             <Grid item md={counterFullWidth ? 12 : 7} xs={12}>
               {posts.map((post) => (
                   <PostCard post={post} key={post.id} handleMore={handleMoreOpen} />
@@ -155,22 +161,19 @@ const Profile = ({
             </Grid>
         }
 
-        { user.role.name === userRole.Creator && !counterFullWidth &&
+        { isAuth && authUser.role.name === userRole.Creator && !counterFullWidth &&
             <Grid item md={7} xs={12}>
-              { user.role.name === userRole.Creator &&
                   <JustifySpaceBetween sx={{ flexDirection: 'column' }}>
                     <OwnCreatorGallery preview={true} style={{ overflow: 'hidden', maxHeight: '467px'}}/>
                     <Button fullWidth variant='outlined' color={"primary"} onClick={() => navigate(`/profile?tab=4`)}>
                       Show More
                     </Button>
                   </JustifySpaceBetween>
-
-              }
               <MoreOptions anchorEl={moreEl} handleMoreClose={handleMoreClose} />
             </Grid>
         }
 
-       <ObserverItem ref={lastElementRef} isShow={user.role.name === userRole.Client} />
+       <ObserverItem ref={lastElementRef} isShow={isAuth && authUser.role.name === userRole.Client} />
 
     </Grid>
   );

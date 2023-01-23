@@ -391,8 +391,7 @@ const ShowImagePage = () => {
              </ImageContainerWrapper>
             }
 
-            { image &&
-                user.role.name === userRole.Creator &&
+            { image && isAuth && user.role.name === userRole.Creator &&
                 image.creator_id == user.creator.id &&
                 <Box sx={{ display: 'flex', justifyContent: 'left', px: 5}}>
                     <Button sx={{ mx: 1}} type='button' variant='contained' color='error' onClick={handleImageDelete}>
@@ -406,11 +405,9 @@ const ShowImagePage = () => {
                 </Box>
             }
 
-            { likeable &&
-                renderLikeableSections()
-            }
+            { likeable && renderLikeableSections() }
 
-            { image && user && user.client &&
+            { image && isAuth && user.client &&
                 <AddToFavorite
                     isOpen={addToFavoriteOpen}
                     onClose={() => setAddToFavoriteOpen(false)}
@@ -418,7 +415,7 @@ const ShowImagePage = () => {
                 />
             }
 
-            { image && user && user.creator && user.creator.id === image.creator.id &&
+            { image && isAuth && user.creator && user.creator.id === image.creator.id &&
                 <AddToCollection
                     isOpen={addToFavoriteOpen}
                     onClose={() => setAddToFavoriteOpen(false)}

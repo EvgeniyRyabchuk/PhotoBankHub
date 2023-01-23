@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Collection;
 use App\Models\CreditCard;
+use App\Models\Image;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +13,11 @@ use Illuminate\Support\Facades\Auth;
 class CategoryController extends Controller
 {
     public function index(Request $request) {
-        $categories = Category::all();
+        $categories = Category::withCount('images')->get();
+        $categories = $categories->map(function ($item) {
+            $item->image = Image::where('category_id', $item->id)->first();
+            return $item;
+        });
         return response()->json($categories);
     }
 

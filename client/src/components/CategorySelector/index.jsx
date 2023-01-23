@@ -71,7 +71,9 @@ const CategorySelector = ({
                                             {subCategory.name}
                                         </H1>
                                     </DarkBg>
-                                    <PostImage imageSrc={getPreview(subCategory.preview)} />
+                                    <PostImage imageSrc={getPreview(
+                                        subCategory.image ? subCategory.image.preview : subCategory.preview)}
+                                    />
                                 </Box>
 
                                 <PostText>

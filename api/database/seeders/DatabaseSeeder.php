@@ -83,7 +83,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CategorySeeder::class);
 
-        $this->call(ImageSeeder::class, false, ['count' => 50]);
+        // image seeders
+//        $this->call(ImageSeeder::class, false, ['count' => 50]);
+        $this->call(StaticImageSeeder::class, false, ['count' => 50]);
 
         $this->call(SizeSeeder::class);
 

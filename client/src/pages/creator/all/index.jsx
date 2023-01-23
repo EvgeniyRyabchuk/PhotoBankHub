@@ -94,36 +94,35 @@ const AllCreators = () => {
     return (
         <Box sx={{ p: 5}}>
             { isLoading && <CircularProgress /> }
-            { !isLoading && creators.length > 0 ?
-                <>
-                    <Typography variant='h5'>
-                        All Creators
-                    </Typography>
-                    <Box pt={2} pb={4}>
-                        <StyledFlexBox>
-                            <SearchInput
-                                placeholder="Search creator by name..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
-                            <Button variant="contained" onClick={() => navigate(`/images`)}>
-                                Go To Gallery
-                            </Button>
-                        </StyledFlexBox>
 
-                        <Grid container spacing={3}>
-                            {creators.map((creator, index) => (
-                                <Grid key={creator.id} item md={4} sm={6} xs={12}>
-                                    <NavLink to={`/creators/${creator.id}`}>
-                                        <UserCard user={creator} />
-                                    </NavLink>
-                                </Grid>
-                            ))}
+            <Typography variant='h5'>
+                All Creators
+            </Typography>
+            <Box pt={2} pb={4}>
+                <StyledFlexBox>
+                    <SearchInput
+                        placeholder="Search creator by name..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                    <Button variant="contained" onClick={() => navigate(`/images`)}>
+                        Go To Gallery
+                    </Button>
+                </StyledFlexBox>
+
+                { !isLoading && creators.length > 0 ?
+                <Grid container spacing={3}>
+                    {creators.map((creator, index) => (
+                        <Grid key={creator.id} item md={4} sm={6} xs={12}>
+                            <NavLink to={`/creators/${creator.id}`}>
+                                <UserCard user={creator} />
+                            </NavLink>
                         </Grid>
-                    </Box>
-                </>
-                : 'no data'
-            }
+                    ))}
+                </Grid>
+                : 'no data' }
+            </Box>
+
             <PaginationBar limit={limit} page={page} totalPage={totalPage}
                    onLimitChange={onLimitChange}
                    onPageChange={onPageChange}

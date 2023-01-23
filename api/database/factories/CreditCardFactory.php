@@ -34,7 +34,7 @@ class CreditCardFactory extends Factory
             'expire_year' => Carbon::now()->addYear(rand(1, 4))->year,
             'cvc' => rand(100, 999),
             'issuer' => fake()->creditCardType,
-            'client_id' => 1
+            'client_id' => 1,
         ];
     }
 }
