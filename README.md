@@ -9,7 +9,7 @@ The project was implemented using the React, Laravel, Mysql technology stack
 src="assets/logo/logo_with_lable.png" 
 alt="Markdownify" 
 width="400" 
-style="max-width: 100%; display: block; margin: 0 auto;" 
+style="display: block; margin: 0 auto;" 
 />
 
 
