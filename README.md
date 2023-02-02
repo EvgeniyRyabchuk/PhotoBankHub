@@ -5,12 +5,14 @@
 The project was implemented using the React, Laravel, Mysql technology stack
 
 
-<img 
-src="assets/logo/logo_with_lable.png" 
-alt="Markdownify" 
-width="400" 
-style="display: block; margin: 0 auto;" 
-/>
+<div align="center">
+    <img 
+        src="assets/logo/logo_with_lable.png" 
+        alt="Markdownify" 
+        width="400" 
+    />
+</div>
+
 
 
 ## Links 
