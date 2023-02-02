@@ -251,9 +251,9 @@ const ImageGalleryPage = () => {
                     onSelect={handleSelect}
                     enableImageSelection={true}
                     onClick={handleClick}
+                    // rowHeight={400}
                 />
-                {
-                    !isLoading && images.length === 0 &&
+                {!isLoading && images.length === 0 &&
                     <h3>No data</h3>
                 }
                 { isLoading && <CircularProgress /> }

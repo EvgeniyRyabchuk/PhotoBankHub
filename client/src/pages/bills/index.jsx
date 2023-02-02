@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import AddBillingInfo from "../../components/AddBillingInfo";
 import {
-    Box,
+    Box, Button,
     Grid,
     Paper,
     Table,
@@ -25,10 +25,12 @@ import CustomTable from "../../components/userManagement/CustomTable";
 
 import moment from "moment";
 import BillsListColumnShape from "./columnShape";
+import {useAction} from "../../hooks/useAction";
 
 const Bills = () => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const { profile } = useAction();
 
     const { user } = useSelector(state => state.user);
     const [billingInfo, setBillingInfo] = useState(null);
@@ -68,7 +70,7 @@ const Bills = () => {
         const expiredAt = moment(user.client.plan_expired_at).format('yyyy-MM-DD');
 
         const rows = [
-            { title: 'Plan Name', value: plan.name },
+            { title: 'Plan Name', value: plan ? plan.name : 'no plan' },
             { title: 'Period', value: period },
             { title: 'Current Available Image Count', value: image_count },
             { title: 'Expired At', value: expiredAt },
@@ -87,6 +89,10 @@ const Bills = () => {
         setIsInitialized(true);
     }, [cards]);
 
+    const unsubscribe = async () => {
+        await BillingService.unsubscribe();
+        await profile();
+    }
 
     return (
         <Box sx={{ my: 5}}>
@@ -94,6 +100,14 @@ const Bills = () => {
                 Bills
             </Typography>
 
+            <Box>
+                { user.client.valid_period_type &&
+                    <Button fullWidth variant='outlined' onClick={unsubscribe}>
+                        Unsubscribe
+                    </Button>
+                }
+
+            </Box>
             <Grid container spacing={3} sx={{ mt: 1, mb: 3, px: 3}}>
                 <Grid item xs={12} sm={12} md={12} lg={6} xl={6}
                       sx={{ paddingTop: '0 !important'}}>

@@ -34,6 +34,7 @@ class StaticImageSeeder extends Seeder
         ];
         $resultImgData = ImageHandler::generateImage($relativeImgPath,
             $imgData, 5, false);
+
         return [
             'name' => $name,
             'image_orientation_id' => $randImageOrientation->id,

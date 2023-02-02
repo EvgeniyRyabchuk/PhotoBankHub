@@ -6,8 +6,8 @@ import {Container, Description, Heading, HeadingContainer, Stat, StatKey, StatsC
 
 const CounterPanel = ({
       subheading = "",
-      heading = "Over 9000 Projects Completed",
-      description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      heading = "Over 9000 Professional Image",
+      description = "Evaluate all the advantages of the stock photos, illustrations, videos and music site. We are chosen by the world's largest companies.",
       stats = [
           {
               key: "Clients",
@@ -18,7 +18,7 @@ const CounterPanel = ({
               value: "$100M+",
           },
           {
-              key: "Employees",
+              key: "Authors",
               value: "150+",
           },
       ]

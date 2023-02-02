@@ -192,7 +192,9 @@ const Navbar = () => {
                                 Left image: {user.client.left_image_count}
                             </p>
                             <p>
-                                Your plan: {user.client.plan.name}
+                                { user.client.plan &&
+                                    <>Your plan: {user.client.plan.name}</>
+                                }
                             </p>
                         </Box>
                     }

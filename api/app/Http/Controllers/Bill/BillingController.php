@@ -122,10 +122,9 @@ class BillingController extends Controller
 
     public function unsubscribe(Request $request) {
         $client = Auth::user()->client;
-        $newStatus = BillStatus::where('name', 'New')
-            ->first();
+        $newStatus = BillStatus::where('name', 'New')->first();
 
-        $client->plan()->dissociate();
+//        $client->plan()->dissociate();
         $client->valid_period_type = null;
 
         $client->save();

@@ -1,9 +1,9 @@
 import React from 'react';
-import LogoImage from "../../assets/images/logo-light.svg";
+// import LogoImage from "../../assets/images/logo-full.png";
 import {ReactComponent as FacebookIcon} from "../../assets/images/facebook-icon.svg";
 import {ReactComponent as TwitterIcon} from "../../assets/images/twitter-icon.svg";
 import {ReactComponent as YoutubeIcon} from "../../assets/images/youtube-icon.svg";
-
+import LogoImage from '../../assets/images/custom/small_logo_main.png';
 import {
     Column,
     ColumnHeading,
@@ -17,8 +17,7 @@ import {
     Link,
     LinkList,
     LinkListItem,
-    LogoContainer,
-    LogoImg,
+    LogoContainer, LogoImg,
     LogoText,
     SocialLink,
     SocialLinksContainer
@@ -34,7 +33,7 @@ const Footer = () => {
                     <CompanyColumn>
                         <LogoContainer>
                             <LogoImg src={LogoImage} />
-                            <LogoText>Treact Inc.</LogoText>
+                            <LogoText>PhotoBankHub.Inc</LogoText>
                         </LogoContainer>
                         <CompanyAddress>
                             123 Road, New Startup Building
@@ -124,7 +123,7 @@ const Footer = () => {
                 </FiveColumns>
                 <Divider/>
                 <CopyrightAndCompanyInfoRow>
-                    <CopyrightNotice>&copy; Copyright 2020, Treact Inc.</CopyrightNotice>
+                    <CopyrightNotice>&copy; Copyright 2020, PhotoBankHub Inc.</CopyrightNotice>
                     <CompanyInfo>An Internet Company.</CompanyInfo>
                 </CopyrightAndCompanyInfoRow>
             </Content>

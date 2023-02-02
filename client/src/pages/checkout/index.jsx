@@ -49,7 +49,7 @@ const CheckOut = () => {
 
     const periods = [
         'monthly',
-        'yearly'
+        'annual'
     ];
 
     const { user } = useSelector(state => state.user);
@@ -86,7 +86,8 @@ const CheckOut = () => {
     }, []);
 
     const onBuyClickHandler = async () => {
-        if(!selectedCard) toast.error('Please add/select for your credit card');
+        const mainCard = cards.find(card => card.isMain == true);
+        if(!mainCard) toast.error('Please add/select for your credit card');
         if(!plan) toast.error('Please select plan');
         if(!billingInfo) toast.error('Please add billing info');
 
@@ -95,7 +96,7 @@ const CheckOut = () => {
         try {
             const { data } = await BillingService.subscribe(
                 plan.id,
-                selectedCard.id,
+                mainCard.id,
                 period,
                 billingInfo.id
             );

@@ -17,19 +17,12 @@ const CustomDivider = ({index, length}) => {
 )}
 
 const Home = () => {
-
     const navigate = useNavigate();
-
     const { categories } = useSelector(state => state.general);
-
     const parentless = useMemo(() => {
         return categories.filter((c => c.parent_id === null));
     }, [categories])
-
     const [search, setSearch] = useState('');
-
-
-
     const onSearchHandler = () => {
         navigate(`/images?search=${search}`);
     }
@@ -43,7 +36,8 @@ const Home = () => {
                 <HeroContainer>
                     <Content>
                         <Heading>
-                            Book Music & Comedy Events<br /> anywhere in New York
+                            Premium photographers & vectors.
+                            <br /> Find the visual content you need
                         </Heading>
                         {/*<PrimaryAction>Search Events Near Me</PrimaryAction>*/}
                         <Divider />
@@ -78,10 +72,8 @@ const Home = () => {
                         />
                         <CustomDivider length={parentless.length} index={index} />
                     </>
-
                 )
             }
-
             <FaqPanel />
         </Box>
     );

@@ -16,7 +16,6 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,13 +27,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 //// public storage route
 //Route::get('storage/{path}', [ImageController::class, 'show'])
 //    ->where('path', '.*');
 
 //Route::redirect('')
-
 
 Route::controller(ImageController::class)
     ->prefix('images')
@@ -45,11 +42,8 @@ Route::controller(ImageController::class)
         Route::get('sizes', 'getSizes');
         Route::get('orientations', 'getOrientations');
 
-
         Route::get('/{imageId}', 'show');
         Route::get('/{imageId}/likeable', 'likeable');
-
-
 
         Route::middleware('auth:api')
             ->group(function () {
@@ -72,8 +66,7 @@ Route::controller(ImageController::class)
             });
 
         Route::post('/{imageId}/views','addView');
-
-    });
+});
 
 
 // Auth routes
@@ -86,8 +79,7 @@ Route::controller(AuthController::class)
             Route::delete('/logout', 'logout');
         });
         Route::post('google/callback', 'loginWithGoogleApi');
-
-    });
+});
 
 Route::controller(VerifyEmailController::class)
     ->middleware('auth:api')
@@ -103,9 +95,6 @@ Route::controller(ResetPasswordController::class)->group(function () {
 });
 
 
-
-
-
 Route::prefix('users')
     ->controller(UserController::class)
     ->group(function () {
@@ -115,7 +104,7 @@ Route::prefix('users')
             Route::put('/{userId}', 'update');
             Route::delete('/{userId}', 'delete');
         });
-    });
+});
 
 
 Route::prefix('photo-models')
@@ -134,9 +123,7 @@ Route::prefix('photo-models')
                 Route::delete('/{photoModelId}', 'delete');
             });
 
-
-
-    });
+});
 
 
 Route::prefix('credit-cards')
@@ -148,7 +135,7 @@ Route::prefix('credit-cards')
         Route::post('/', 'store');
         Route::put('/{creditCardId}', 'update');
         Route::delete('/{creditCardId}', 'delete');
-    });
+});
 
 Route::controller(CategoryController::class)
     ->prefix('categories')
@@ -164,8 +151,7 @@ Route::controller(CategoryController::class)
                 Route::put('/{categoryId}', 'update');
                 Route::delete('/{categoryId}', 'delete');
             });
-    });
-
+});
 
 Route::prefix('creators')
     ->controller(CreatorController::class)
@@ -202,8 +188,7 @@ Route::prefix('clients/{clientId}')
         Route::get('/subscriptions/content', 'getSubscriptionContent');
         Route::post('/content-subscribe', 'contentSubscribe');
         Route::delete('/content-subscribe', 'contentUnSubscribe');
-    });
-
+});
 
 Route::controller(CollectionController::class)
     ->prefix('collections')
@@ -224,7 +209,6 @@ Route::controller(CollectionController::class)
                 Route::delete('/{collectionId}', 'delete');
             });
 });
-
 
 Route::controller(BillingController::class)
     ->prefix('billings')
@@ -249,7 +233,6 @@ Route::controller(PlanController::class)
 
     });
 
-
 Route::controller(BillingInfoController::class)
     ->prefix('billing-infos')
     ->middleware('isClient')
@@ -257,10 +240,6 @@ Route::controller(BillingInfoController::class)
         Route::get('/', 'show');
         Route::post('/', 'store');
         Route::put('/{billingInfoId}', 'update');
-
-
 });
-
-
 
 Route::get('/tags', [\App\Http\Controllers\TagController::class, 'index']);
