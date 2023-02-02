@@ -11,7 +11,7 @@ import {FlexBox} from "../../../assets/shared/styles";
 import {H1, Small} from "../../../assets/typography";
 import LightTextField from "../../../components/UI/LightTextField";
 import AuthService from "../../../services/AuthService";
-
+import LogoImage from '../../../assets/images/custom/small_logo_main.png';
 
 const ForgetPassword = () => {
     const [error, setError] = useState("");
@@ -55,8 +55,8 @@ const ForgetPassword = () => {
                     justifyContent="center"
                     mb={5}
                 >
-                    <Box width={38} mb={1}>
-                        <img src="/static/logo/logo.svg" width="100%" alt="Uko Logo" />
+                    <Box width={50} mb={1}>
+                        <img src={LogoImage} width="100%" alt="Uko Logo" />
                     </Box>
                     <H1 fontSize={24} fontWeight={700}>
                         Please enter you email to reset your password

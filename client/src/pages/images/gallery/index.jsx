@@ -7,7 +7,7 @@ import {defLimit, defOrder, defPage, defSort} from "../../../utills/const";
 import ImageService from "../../../services/ImageService";
 import {getPageCount} from "../../../utills/pages";
 import {useFetching} from "../../../hooks/useFetching";
-import {Box, CircularProgress, IconButton, MenuItem, Select} from "@mui/material";
+import {Box, CircularProgress, IconButton, MenuItem, Select, Typography} from "@mui/material";
 import {JustifyContent, ObserverItem} from "../../../assets/shared/styles";
 import GalleryFilter from "../../../components/GalleryFilter";
 import defOrderSortOrderData, {getSortOrderOptionValue} from "./sortOptions";
@@ -174,17 +174,17 @@ const ImageGalleryPage = () => {
 
     return (
         <div>
-            <h1>Gallery</h1>
+            <Typography sx={{ my: 3}} variant="h4">Gallery</Typography>
 
             {/*<button onClick={() => setToggler(!toggler)}>*/}
             {/*    Open the lightbox.*/}
             {/*</button>*/}
 
-            <div className="p-t-1 p-b-1">
-                <button onClick={handleSelectAllClick}>
-                    {hasSelected ? "Clear selection" : "Select all"}
-                </button>
-            </div>
+            {/*<div className="p-t-1 p-b-1">*/}
+            {/*    <button onClick={handleSelectAllClick}>*/}
+            {/*        {hasSelected ? "Clear selection" : "Select all"}*/}
+            {/*    </button>*/}
+            {/*</div>*/}
 
             <Box sx={{ my: 3}}>
                 <JustifyContent>
@@ -242,8 +242,6 @@ const ImageGalleryPage = () => {
                     onClose={() => setIsFilterOpen(false)}
                 />
             </Box>
-
-
 
             <Box>
                 <Gallery

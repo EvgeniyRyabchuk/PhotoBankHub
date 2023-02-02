@@ -3,19 +3,15 @@ import {useAction} from "../../../hooks/useAction";
 import {NavLink, useNavigate} from "react-router-dom";
 import {LoadingButton} from "@mui/lab";
 import {Box, Button, Card, Divider, FormControlLabel, FormHelperText, Switch,} from "@mui/material";
-import {SocialIconButton, TextFieldWrapper,} from "../../../components/UI/SocialButtons";
+import {TextFieldWrapper,} from "../../../components/UI/SocialButtons";
 import {FlexBox, JustifyBox} from "../../../assets/shared/styles/index";
 import LightTextField from "../../../components/UI/LightTextField";
 import {useFormik} from "formik";
-import FacebookIcon from "../../../assets/icons/FacebookIcon";
-import GoogleIcon from "../../../assets/icons/GoogleIcon";
 import * as Yup from "yup";
 import {toast} from "react-toastify";
 import {H1, H3, Paragraph, Small} from "../../../assets/typography";
-import {GoogleLogin, useGoogleLogin} from '@react-oauth/google';
-import jwt_decode from "jwt-decode";
-import AuthService from "../../../services/AuthService";
 import SocialAuth from "../SocialAuth";
+import LogoImage from '../../../assets/images/custom/small_logo_main.png';
 
 const Login = () => {
     const { login } = useAction();
@@ -63,8 +59,6 @@ const Login = () => {
             onSubmit: submit
     });
 
-
-
     return (
         <JustifyBox sx={{mt: 5, height: { sm: "100%" } }}>
             <Card sx={{ padding: 4, maxWidth: 600, boxShadow: 1 }}>
@@ -74,11 +68,11 @@ const Login = () => {
                     justifyContent="center"
                     mb={5}
                 >
-                    <Box width={38} mb={1}>
-                        <img src="/static/logo/logo.svg" width="100%" alt="Uko Logo" />
+                    <Box width={100} mb={1}>
+                        <img src={LogoImage} width="100%" alt="Uko Logo" />
                     </Box>
                     <H1 fontSize={24} fontWeight={700}>
-                        Sign In to Uko
+                        Sign In
                     </H1>
                 </FlexBox>
 
