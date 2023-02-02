@@ -4,9 +4,9 @@
 
 The project was implemented using the React, Laravel, Mysql technology stack
 
-<div style="display: flex; justify-content: center;">
-<img src="assets/logo/logo_with_lable.png" alt="Markdownify" width="400" style="max-width: 100%;">
-</div>
+
+<img src="assets/logo/logo_with_lable.png" alt="Markdownify" width="400" style="max-width: 100%; display: block;">
+
 
 ## Links 
 
