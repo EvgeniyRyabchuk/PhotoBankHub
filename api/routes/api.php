@@ -57,7 +57,7 @@ Route::controller(ImageController::class)
                 Route::delete('/{imageId}', 'delete')
                     ->middleware('adminOrCreator');
 
-                Route::get('/{imageId}/download','downloadPreview');
+
                 Route::get('/{imageId}/variants/{variantId}/download','download');
 
                 Route::post('/{imageId}/likes','addLike')
@@ -65,6 +65,7 @@ Route::controller(ImageController::class)
 
             });
 
+        Route::get('/{imageId}/download','downloadPreview');
         Route::post('/{imageId}/views','addView');
 });
 

@@ -19,6 +19,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Google\Cloud\Vision\V1\Feature\Type;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\Likelihood;
 
 
 class ImageController extends Controller
@@ -343,6 +346,23 @@ class ImageController extends Controller
 
         if($mode === 'create') {
             // save image in storage folder
+
+
+//            $client = new ImageAnnotatorClient([
+//                'credentials' => json_decode(file_get_contents(base_path() . '/google-vision-api-key.json'), true)
+//            ]);
+//
+//            $blob = file_get_contents($imageFile->getRealPath());
+//            $annotation = $client->annotateImage($blob, [Type::OBJECT_LOCALIZATION]);
+//
+//
+//
+//            return [
+//                "error_message" => json_decode($annotation->serializeToJsonString()),
+//                "error_code" => 404,
+//                'payload' =>json_decode($annotation->serializeToJsonString()),
+//            ];
+
             $processedImage = new ImageHandler($imageFile, $image, $name);
             $previewPath = $processedImage->savePreview();
             $originalFile = $processedImage->saveOriginal();
@@ -510,7 +530,7 @@ class ImageController extends Controller
     public function addView(Request $request, $imageId) {
 
         //TODO: test on server
-//        $ip1 = request()->ip();
+        $ip1 = request()->ip();
 //        $ip2 = $request->ip();
 //        $ip3 = \Request::ip();
 //        $ip4 = \Request::getClientIp(true);
@@ -521,7 +541,8 @@ class ImageController extends Controller
         $image = Image::findOrFail($imageId);
         $viewExist = View::where([
             'image_id' => $image->id,
-            'client_id' => $client ? $client->id : null
+            'client_id' => $client ? $client->id : null,
+            'ip' => $ip1
         ])->first();
 
         if($viewExist){

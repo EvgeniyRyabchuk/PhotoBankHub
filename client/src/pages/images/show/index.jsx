@@ -63,7 +63,7 @@ const ShowImagePage = () => {
     const [fetchingImage, isLoading, error] = useFetching(async () => {
         const { data: imageData } = await ImageService.show(id);
         const { data: likeableData } = await ImageService.likeable(id);
-        const { data: viewsData } = await ImageService.view(id);
+        const { data: viewsData } = await ImageService.view(id); 
 
         if(viewsData.currentViewCount) {
             setImage({...imageData, views_count: viewsData.currentViewCount});

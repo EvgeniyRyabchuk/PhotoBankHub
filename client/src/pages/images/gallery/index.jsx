@@ -52,6 +52,8 @@ const ImageGalleryPage = () => {
 
         const newImagesWithLayout = getImagesWithOverlay(data.data);
 
+        console.log(newImagesWithLayout, 'sadgsdfgsdfgsdfg');
+
         if(isShowMoreMode)
             setImages([...images, ...newImagesWithLayout]);
         else

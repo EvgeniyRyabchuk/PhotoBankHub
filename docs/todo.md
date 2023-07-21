@@ -27,3 +27,19 @@
 13. Redirect to log in page if not auth + 
 
 14. Dumb 
+
+15. More Photo On Image List Page 
+
+16. More Informated Alerts 
+
+17. Phone Layout 
+
+18. Print Payment 
+
+19. Hosting 
+
+20. Downloads List Download repeat and link to page 
+
+21. Image Processing on background 
+
+22. Edit Image 

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "idyllic-chimera-379412",
+  "private_key_id": "a5a4a31fa31f8ecc3210acc483eb335ae14b973e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCy3fXXPceuVdbr\nsAbAp1Rxyr4JMzZQKEij6rKxdfEiTcTIVAXaPK+QTHIV7ejjHBdBBuzoTUQiqurp\n+KhC4PyQrfyCwJI71pWlnv97dVwv515j4TTo+aFW61N8rbsTbGaY9WVUwIdW01cV\n3ckSti5fLF0TzWsqizO2tLFW+3TLV+hF1gkhyP00FX4295jNyidFNCSmTNaX7x6P\nDxGqXb/WdwZVLjAedbPAgJfM0W4+4odT7COtBnutm3rXl2O4KAV5r7KYd4x5E0O1\nKqnYa6bVN2Vw70vTFUNGeVGJ2zwxppnJ/OoFEKBsxFnTIfXRlHbwvGNcc4gE1feo\nGqFfdmxnAgMBAAECggEAKzMxn6lDs4b28BilIN2pJwydBlLQoN6B4NkcDIFcWnkm\n+G1WtoVmr7bO7R33W/baZPG7wUV8GdVnBFhypyh4x6bF8Hx7NSmYHha/RL2tJMLA\nSOZJJaW5Amm20cuR/dh2FSZbsXMInP9RLq5Q1IycuY7Y8iHwaqeRN2T/2e7EoCG1\nRcjQRtC73vZ7Nd4U1daGA/kVaiXK09CDvLk/fyVogVxxfJRoPBs690UdAxY/Ji6K\nAqNgv8uSvMUEMohlDSFwW2BQ23GMXdgqeA1X+bxJe/52bMNE14QCZ3dEQ1V27vYC\nFP60MddCoCHMgAiCIMaM7juz1EsIxF0e1XsiVy4xKQKBgQDcgdEIloVeeH48jbrE\nhiulerE4lRtAPK83F2TeqsBygtwY6csvwNnwFnvjeSZpCTnoSLREHfdQ9zjtht4c\nk0Liccg0O9fCVoSIpkPlVLTjBV6wwoJduSdHje0vzRKSEB+kvMx1++ozm3lgk8D+\nbL+rGotPaMMpR6CWqEdgVSNZfwKBgQDPqFRQtpenX882qFXUd5E/SUjgtbCITNFE\n/GyRK2nYFOCtb/MHNwDShwaqNxoJ3mJaXm6W7femdyav1ikZYZXzyIzpMuYATzQd\nSJhHIymuXpwOl+7uCkKSPRfoBWw80xRJlN78KHh09muHSON5hSabF/uXdSJ2zHIV\nGJpysg7RGQKBgQC6KTrx9in4vN9OfhVczy1QEopGC9Qq4lDGwRBe0GeTBZmNyuvI\nkBcuk7zaKbDc4nYp/h96lpXynBVKqx8fns/L32W3e4JHRsWznDMcDOx98U2lC0IG\noEdiKJdDUO3JtKUSbnZrcVejZDIP8A3yfps+eDV+wCJr2lXge4du89HZPwKBgDos\ntjJGdQX22V4+mo0DUjWgmkIZpHMK0jW5YdDpkKVwc+Ei07rZtelE2qEk/q51Fqiq\ne+DcmdyQ1M29+ZWauR+qt489KyI7DiaGB+Ml/q9S4fVUqyMUzMGbS+88Va5UlAJp\nKm8KB3T88/LagJ+ypbYdaeZsclNFw1AVrG8lYvFBAoGAU60FJPA8ny59kNOwa3o3\nkBIOM9zkbvghJDusLVKYoPeo+g6YdHh/O39XqVHLpE6MjE1lZ8ascdQ+CyZJTHnX\nEMIRdbvAvK1lEbVqWZXN1QjdDhLThmjc+ByZx5GmEfTSqB1Bqf8njb+PL0iiPGch\nWxnIHqETmc2YxNHdKA0k40c=\n-----END PRIVATE KEY-----\n",
+  "client_email": "google-vision-ai-api@idyllic-chimera-379412.iam.gserviceaccount.com",
+  "client_id": "114593583532116812174",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/google-vision-ai-api%40idyllic-chimera-379412.iam.gserviceaccount.com"
+}
