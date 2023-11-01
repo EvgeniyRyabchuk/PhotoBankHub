@@ -28,7 +28,11 @@
 
 14. Dumb 
 
-15. More Photo On Image List Page 
+
+
+
+
+
 
 16. More Informated Alerts 
 
@@ -43,3 +47,16 @@
 21. Image Processing on background 
 
 22. Edit Image 
+
+23. Creator try to download image error 
+
+24. Add Dmg Type 
+
+25. Limit for show more 
+
+26. Dynamic tag load 
+
+27. Fix Image Overscan 
+
+28. Delete collection and edit model features 
+

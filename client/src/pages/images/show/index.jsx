@@ -394,11 +394,13 @@ const ShowImagePage = () => {
             { image && isAuth && user.role.name === userRole.Creator &&
                 image.creator_id == user.creator.id &&
                 <Box sx={{ display: 'flex', justifyContent: 'left', px: 5}}>
-                    <Button sx={{ mx: 1}} type='button' variant='contained' color='error' onClick={handleImageDelete}>
+                    <Button sx={{ mx: 1}} type='button' variant='contained' color='error'
+                            onClick={handleImageDelete}>
                         <Delete />
                         Delete
                     </Button>
-                    <Button sx={{ mx: 1}} type='button' variant='contained' color='secondary' onClick={() => {}} >
+                    <Button sx={{ mx: 1}} type='button' variant='contained' color='secondary'
+                            onClick={() => {navigate(`/edit/${image.id}`)}} >
                         <Edit />
                         Edit
                     </Button>

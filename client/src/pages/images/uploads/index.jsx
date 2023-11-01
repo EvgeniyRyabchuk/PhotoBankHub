@@ -10,24 +10,24 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import FileUploader from "../../components/FileUploader";
-import {ErrorSpan, ImageWrapper, JustifyContent, JustifySpaceBetween, JustifyStart} from "../../assets/shared/styles";
-import {ImageName} from "../images/show/styled";
-import EmptyImage from '../../assets/images/browser_not_supported.webp';
+import FileUploader from "../../../components/FileUploader";
+import {ErrorSpan, ImageWrapper, JustifyContent, JustifySpaceBetween, JustifyStart} from "../../../assets/shared/styles";
+import {ImageName} from "../show/styled";
+import EmptyImage from '../../../assets/images/browser_not_supported.webp';
 import {Delete, Tag} from "@mui/icons-material";
-import {Small} from "../../assets/typography";
+import {Small} from "../../../assets/typography";
 import * as Yup from "yup";
 import {Formik} from 'formik';
-import {CreativeGridContainer, LeftGridContainer, RightGridContainer, RightGridContent} from "./styled";
-import {calculateAspectRatioFit} from "../../utills/utils";
+import {CreativeGridContainer, LeftGridContainer, RightGridContainer, RightGridContent} from "../shared";
+import {calculateAspectRatioFit} from "../../../utills/utils";
 import {useSelector} from "react-redux";
-import CategoryTree from "../../components/CategoryTree";
-import CollectionService from "../../services/CollectionService";
-import TagServiec from "../../services/TagServiec";
-import PhotoModelService from "../../services/PhotoModelService";
-import {getAvatar} from "../../utills/axios";
-import CreatePhotoModel from "../../components/modals/CreatePhotoModel";
-import ImageService from "../../services/ImageService";
+import CategoryTree from "../../../components/CategoryTree";
+import CollectionService from "../../../services/CollectionService";
+import TagServiec from "../../../services/TagServiec";
+import PhotoModelService from "../../../services/PhotoModelService";
+import {getAvatar} from "../../../utills/axios";
+import CreatePhotoModel from "../../../components/modals/CreatePhotoModel";
+import ImageService from "../../../services/ImageService";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 
@@ -87,6 +87,7 @@ const Uploads = () => {
         png: 'image/png',
         raw: 'image/raw',
     }
+
     const { user } = useSelector(state => state.user);
     const navigate = useNavigate();
 
@@ -126,7 +127,7 @@ const Uploads = () => {
 
     const submit = async (values) => {
         if(!file) {
-            toast.error('For Publish Image Your Must To Attach Image');
+            toast.error('To Publish Image Your Must To Attach Image');
             return;
         }
         try {

@@ -19,7 +19,6 @@ import useLoadParam from "../../../hooks/useLoadParam";
 
 
 const ImageGalleryPage = () => {
-
     const loadParam = useLoadParam();
     const [isInitialized, setIsInitialized] = useState(false);
 
@@ -34,16 +33,14 @@ const ImageGalleryPage = () => {
 
     const [page, setPage] = useState(loadParam('page', defPage, true));
     const [totalPage, setTotalPage] = useState(0);
-    const [limit, setLimit] = useState(loadParam('limit', defLimit, true));
+    const [limit, setLimit] = useState(loadParam('limit', 40, true));
 
     const [sort, setSort] = useState(loadParam('sort', defSort));
     const [order, setOrder] = useState(loadParam('orderDirection', defOrder));
 
     const [filterOptionData, setFilterOptionData] = useState();
 
-
     const [isShowMoreMode, setIsShowMoreMode] = useState(false);
-
 
     const [fetchImages, isLoading, error ] = useFetching(async () => {
         const { data } = await ImageService.getAll(location.search);
@@ -67,6 +64,7 @@ const ImageGalleryPage = () => {
     useEffect(() => {
         if(!isShowMoreMode)
             window.scrollTo(0, 0);
+
         fetchImages();
     }, [searchParams]);
 
@@ -170,7 +168,7 @@ const ImageGalleryPage = () => {
     const handlerFilterChange = useCallback((data, isReset) => {
         setFilterOptionData({...data});
         setPage(defPage);
-        setLimit(defLimit);
+        setLimit(40);
     }, []);
 
 
@@ -246,20 +244,33 @@ const ImageGalleryPage = () => {
             </Box>
 
             <Box>
-                <Gallery
-                    images={images}
-                    onSelect={handleSelect}
-                    enableImageSelection={true}
-                    onClick={handleClick}
-                    // rowHeight={400}
-                />
+
                 {!isLoading && images.length === 0 &&
                     <h3>No data</h3>
                 }
-                { isLoading && <CircularProgress /> }
+                {/*{*/}
+                {/*   !isShowMoreMode && */}
+                {/*    <Gallery*/}
+                {/*        images={images}*/}
+                {/*        onSelect={handleSelect}*/}
+                {/*        enableImageSelection={true}*/}
+                {/*        onClick={handleClick}*/}
+                {/*        // rowHeight={400}*/}
+                {/*    />*/}
+                {/*}*/}
+                { isLoading && !isShowMoreMode ? <CircularProgress /> :
+                        <Gallery
+                            images={images}
+                            onSelect={handleSelect}
+                            enableImageSelection={true}
+                            onClick={handleClick}
+                            // rowHeight={400}
+                        />
+                }
+                { isLoading && isShowMoreMode && <CircularProgress /> }
                 <ObserverItem ref={lastElementRef} />
 
-                <PaginationBar limit={limit} page={page} totalPage={totalPage}
+                <PaginationBar limit={limit} minLimit={40} page={page} totalPage={totalPage}
                     onLimitChange={onLimitChange}
                     onPageChange={onPageChange}
                     onShowMore={showMore}

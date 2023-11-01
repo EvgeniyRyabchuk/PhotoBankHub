@@ -85,11 +85,12 @@ const StyledTreeItem = styled((props) => (
 }));
 
 
-const CategoryTree = ({ title, data, onSelect }) => {
+const CategoryTree = ({ title, data, onSelect, defVal }) => {
 
     const renderNode = (parentId = null) => {
         const category = data.find(c => c.id == parentId);
         const children = data.filter(c => c.parent_id == parentId);
+
 
         if(children.length > 0) {
             const childNodeList = children.map(child => renderNode(child.id));
@@ -113,6 +114,7 @@ const CategoryTree = ({ title, data, onSelect }) => {
             <Box sx={{ border: '1px dashed #16ABA8'}}>
                 <TreeView
                     aria-label="customized"
+                    defaultValue={defVal}
                     defaultExpanded={['1']}
                     defaultCollapseIcon={<MinusSquare />}
                     defaultExpandIcon={<PlusSquare />}
@@ -122,6 +124,8 @@ const CategoryTree = ({ title, data, onSelect }) => {
                         const children = data.filter(c => c.parent_id == nodeId);
                         if(children.length === 0)
                             onSelect(nodeId)
+
+                        console.log(nodeId);
                     }}
                 >
                     {data.filter(c => c.parent_id == null).map(c =>

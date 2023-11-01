@@ -29,7 +29,7 @@ class ImageController extends Controller
     // fetching gallery
     public function index(Request $request) {
         // search by photo model
-        $limit = $request->limit ?? 15;
+        $limit = $request->limit ?? 40;
         $orderTarget = $request->order ?? 'created_at';
         $orderDirection = $request->orderDirection ?? 'desc';
 
@@ -251,13 +251,18 @@ class ImageController extends Controller
         $creator = $user->creator;
 
         $name = $request->name;
+
         $category = Category::findOrFail($request->category_id);
 
         $photoModelId = $request->photo_model_id;
         $collectionId = $request->collection_id;
         $isFree = filter_var($request->is_free ?? false, FILTER_VALIDATE_BOOLEAN);
         $people_count = $request->people_count ?? 0;
-        $tags = $request->tags ? explode(',', $request->tags) : null;
+        if(!$imageId)
+            $tags = $request->tags ? explode(',', $request->tags) : null;
+        else
+            $tags = $request->tags;
+
 
         $nestedCategory = Category::where('parent_id', $category->id)->first();
         if($nestedCategory) {
@@ -347,21 +352,22 @@ class ImageController extends Controller
         if($mode === 'create') {
             // save image in storage folder
 
+            /*
+            $client = new ImageAnnotatorClient([
+                'credentials' => json_decode(file_get_contents(base_path() . '/google-vision-api-key.json'), true)
+            ]);
 
-//            $client = new ImageAnnotatorClient([
-//                'credentials' => json_decode(file_get_contents(base_path() . '/google-vision-api-key.json'), true)
-//            ]);
-//
-//            $blob = file_get_contents($imageFile->getRealPath());
-//            $annotation = $client->annotateImage($blob, [Type::OBJECT_LOCALIZATION]);
-//
-//
-//
-//            return [
-//                "error_message" => json_decode($annotation->serializeToJsonString()),
-//                "error_code" => 404,
-//                'payload' =>json_decode($annotation->serializeToJsonString()),
-//            ];
+            $blob = file_get_contents($imageFile->getRealPath());
+            $annotation = $client->annotateImage($blob, [Type::OBJECT_LOCALIZATION]);
+
+
+
+            return [
+                "error_message" => json_decode($annotation->serializeToJsonString()),
+                "error_code" => 404,
+                'payload' =>json_decode($annotation->serializeToJsonString()),
+            ];
+            */
 
             $processedImage = new ImageHandler($imageFile, $image, $name);
             $previewPath = $processedImage->savePreview();

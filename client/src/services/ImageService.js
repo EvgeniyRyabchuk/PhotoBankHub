@@ -35,6 +35,22 @@ export default class ImageService {
         return (await promise).data;
     }
 
+    static async updateImage(data, imageId) {
+        console.log(123);
+        const promise = $api.put(`/images/${imageId}`, {
+            ...data
+        });
+
+        toast.promise(promise,
+            {
+                pending: PromiseAlert.FETCH_IMAGE_CREATING,
+                success: PromiseAlert.FETCH_IMAGE_CREATE_SUCCESS,
+                error: `${PromiseAlert.FETCH_IMAGE_CREATE_ERROR}`
+            }
+        )
+        return (await promise).data;
+    }
+
     static async delete(imageId) {
         return await $api.delete(`/images/${imageId}`);
     }
