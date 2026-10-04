@@ -33,14 +33,16 @@ const ImageGalleryPage = () => {
 
     const [page, setPage] = useState(loadParam('page', defPage, true));
     const [totalPage, setTotalPage] = useState(0);
-    const [limit, setLimit] = useState(loadParam('limit', 40, true));
+    const [limit, setLimit] = useState(loadParam('limit', defLimit, true));
 
     const [sort, setSort] = useState(loadParam('sort', defSort));
-    const [order, setOrder] = useState(loadParam('orderDirection', defOrder));
+    const [order, setOrder] = useState(loadParam('order', defOrder));
 
     const [filterOptionData, setFilterOptionData] = useState();
 
     const [isShowMoreMode, setIsShowMoreMode] = useState(false);
+    
+    console.log("Gallery")
 
     const [fetchImages, isLoading, error ] = useFetching(async () => {
         const { data } = await ImageService.getAll(location.search);
@@ -69,29 +71,58 @@ const ImageGalleryPage = () => {
     }, [searchParams]);
 
 
+    // const getOnlyChangedFilterParams = (data) => {
+    //     const formattedFilter = {};
+    //     for (let i in data) {
+    //         const value = data[i];
+    //         if(value === null || value === '' || value === undefined) {
+    //             continue;
+    //         } else if (Array.isArray(value) && value.length === 0) {
+    //             continue;
+    //         }
+    //         formattedFilter[i] = value;
+    //     }
+
+    //     if(page !== defPage)
+    //         formattedFilter.page = page;
+    //     if(limit !== defLimit)
+    //         formattedFilter.limit = limit;
+    //     if(order !== defOrder)
+    //         formattedFilter.order = order;
+    //     if(sort !== defSort)
+    //         formattedFilter.sort = sort;
+
+    //     return formattedFilter;
+    // }
+
+    // changed 
+    
     const getOnlyChangedFilterParams = (data) => {
-        const formattedFilter = {};
-        for (let i in data) {
-            const value = data[i];
-            if(value === null || value === '' || value === undefined) {
-                continue;
-            } else if (Array.isArray(value) && value.length === 0) {
-                continue;
+        // Start with current URL search params converted to an object
+        console.log([...searchParams], searchParams, "==========");
+        
+        const formattedFilter = Object.fromEntries([...searchParams]);
+        // const formattedFilter = { ...currentParams };
+
+        if (data) {
+            for (let i in data) {
+                const value = data[i];
+                if (value === null || value === '' || value === undefined || (Array.isArray(value) && value.length === 0)) {
+                    delete formattedFilter[i]; // remove param if cleared/reset
+                } else {
+                    formattedFilter[i] = value;
+                }
             }
-            formattedFilter[i] = value;
         }
 
-        if(page !== defPage)
-            formattedFilter.page = page;
-        if(limit !== defLimit)
-            formattedFilter.limit = limit;
-        if(order !== defOrder)
-            formattedFilter.order = order;
-        if(sort !== defSort)
-            formattedFilter.sort = sort;
+        // Explicitly handle pagination/sorting state
+        if (page !== defPage) formattedFilter.page = page; else delete formattedFilter.page;
+        if (limit !== defLimit) formattedFilter.limit = limit; else delete formattedFilter.limit;
+        if (order !== defOrder) formattedFilter.order = order; else delete formattedFilter.order;
+        if (sort !== defSort) formattedFilter.sort = sort; else delete formattedFilter.sort;
 
         return formattedFilter;
-    }
+    };
 
     const changeSearchParams = () => {
         const formattedFilter = getOnlyChangedFilterParams(filterOptionData);
@@ -100,9 +131,18 @@ const ImageGalleryPage = () => {
         });
     }
 
+    
+    // useEffect(() => {
+    //     if(isInitialized)
+    //         changeSearchParams();
+    // }, [page, limit, sort, order, debouncedSearch, filterOptionData]);
+
+    // changed 
     useEffect(() => {
-        if(isInitialized)
+        // Prevent overriding URL params on initial mount
+        if (isInitialized && filterOptionData !== undefined) {
             changeSearchParams();
+        }
     }, [page, limit, sort, order, debouncedSearch, filterOptionData]);
 
     const onSortOrderHandleChange = (event) => {
@@ -168,9 +208,9 @@ const ImageGalleryPage = () => {
     const handlerFilterChange = useCallback((data, isReset) => {
         setFilterOptionData({...data});
         setPage(defPage);
-        setLimit(40);
+        setLimit(defLimit);
     }, []);
-
+    
 
     return (
         <div>
@@ -193,9 +233,10 @@ const ImageGalleryPage = () => {
                         style={{ minWidth: '200px' }}
                         labelId="demo-select-small"
                         id="demo-select-small"
-                        defaultValue='2'
+                        // defaultValue='2'
                         label="Sort"
                         onChange={(e) => onSortOrderHandleChange(e)}
+                        defaultValue={defOrderSortOrderData.find(e => e.value == sort && e.order == order).id}
                     >
                         { defOrderSortOrderData.map((e) =>
                             <MenuItem
@@ -270,7 +311,7 @@ const ImageGalleryPage = () => {
                 { isLoading && isShowMoreMode && <CircularProgress /> }
                 <ObserverItem ref={lastElementRef} />
 
-                <PaginationBar limit={limit} minLimit={40} page={page} totalPage={totalPage}
+                <PaginationBar limit={limit} minLimit={defLimit} page={page} totalPage={totalPage}
                     onLimitChange={onLimitChange}
                     onPageChange={onPageChange}
                     onShowMore={showMore}

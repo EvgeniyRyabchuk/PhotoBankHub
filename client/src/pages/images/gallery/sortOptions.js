@@ -43,6 +43,21 @@ const defOrderSortOrderData = [
         order: 'desc',
         name: 'Скачиваниям',
         selected: false
+    },
+
+     {
+        id: 7,
+        value: 'likes',
+        order: 'asc',
+        name: 'Лайки',
+        selected: false
+    },
+    {
+        id: 8,
+        value: 'likes',
+        order: 'desc',
+        name: 'Лайки',
+        selected: false
     }
 ];
 

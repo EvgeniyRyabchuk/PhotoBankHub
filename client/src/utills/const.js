@@ -1,7 +1,7 @@
 
 
 const defPage = 1;
-const defLimit = 15;
+const defLimit = 40;
 const defSort = 'created_at';
 const defOrder = 'desc'
 

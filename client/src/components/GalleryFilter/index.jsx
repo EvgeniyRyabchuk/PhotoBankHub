@@ -82,7 +82,7 @@ const GalleryFilter = ({
         }
     ]);
 
-
+    console.log("Filter")
 
     // model name
     const [photoModelName, setPhotoModelName] = useState('');
@@ -295,7 +295,7 @@ const GalleryFilter = ({
 
 
     useEffect(() => {
-        if(isOpen && isInitialized) {
+        if(isInitialized) {
             let createdAtRangeParam = null;
             let photoModelAgeRangeParam = null;
 

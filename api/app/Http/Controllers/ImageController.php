@@ -30,8 +30,8 @@ class ImageController extends Controller
     public function index(Request $request) {
         // search by photo model
         $limit = $request->limit ?? 40;
-        $orderTarget = $request->order ?? 'created_at';
-        $orderDirection = $request->orderDirection ?? 'desc';
+        $orderTarget = $request->sort ?? 'created_at';
+        $orderDirection = $request->order ?? 'desc';
 
         $level = $request->level ?? 1;
 
@@ -207,8 +207,11 @@ class ImageController extends Controller
             case 'views':
                 $query->orderBy('views_count', $orderDirection);
             break;
-            case 'download':
-                $query->orderBy('downloads_count', $orderDirection);
+            case 'downloads':
+                $query->orderBy('downloads_count', $orderDirection); 
+                break;
+            case 'likes':
+                $query->orderBy('likes_count', $orderDirection);
                 break;
         }
 
