@@ -37,7 +37,7 @@ const ImageGalleryPage = () => {
 
     const [sort, setSort] = useState(loadParam('sort', defSort));
     const [order, setOrder] = useState(loadParam('order', defOrder));
-
+    
     const [filterOptionData, setFilterOptionData] = useState();
 
     const [isShowMoreMode, setIsShowMoreMode] = useState(false);
@@ -50,8 +50,6 @@ const ImageGalleryPage = () => {
         setTotalPage(total);
 
         const newImagesWithLayout = getImagesWithOverlay(data.data);
-
-        console.log(newImagesWithLayout, 'sadgsdfgsdfgsdfg');
 
         if(isShowMoreMode)
             setImages([...images, ...newImagesWithLayout]);
@@ -69,37 +67,10 @@ const ImageGalleryPage = () => {
 
         fetchImages();
     }, [searchParams]);
-
-
-    // const getOnlyChangedFilterParams = (data) => {
-    //     const formattedFilter = {};
-    //     for (let i in data) {
-    //         const value = data[i];
-    //         if(value === null || value === '' || value === undefined) {
-    //             continue;
-    //         } else if (Array.isArray(value) && value.length === 0) {
-    //             continue;
-    //         }
-    //         formattedFilter[i] = value;
-    //     }
-
-    //     if(page !== defPage)
-    //         formattedFilter.page = page;
-    //     if(limit !== defLimit)
-    //         formattedFilter.limit = limit;
-    //     if(order !== defOrder)
-    //         formattedFilter.order = order;
-    //     if(sort !== defSort)
-    //         formattedFilter.sort = sort;
-
-    //     return formattedFilter;
-    // }
-
-    // changed 
     
     const getOnlyChangedFilterParams = (data) => {
         // Start with current URL search params converted to an object
-        console.log([...searchParams], searchParams, "==========");
+        // console.log([...searchParams], searchParams, "==========");
         
         const formattedFilter = Object.fromEntries([...searchParams]);
         // const formattedFilter = { ...currentParams };
@@ -131,19 +102,13 @@ const ImageGalleryPage = () => {
         });
     }
 
-    
-    // useEffect(() => {
-    //     if(isInitialized)
-    //         changeSearchParams();
-    // }, [page, limit, sort, order, debouncedSearch, filterOptionData]);
 
-    // changed 
     useEffect(() => {
         // Prevent overriding URL params on initial mount
         if (isInitialized && filterOptionData !== undefined) {
             changeSearchParams();
         }
-    }, [page, limit, sort, order, debouncedSearch, filterOptionData]);
+    }, [page, limit, sort, order, debouncedSearch, filterOptionData]); 
 
     const onSortOrderHandleChange = (event) => {
         const value = event.target.value;
@@ -205,11 +170,25 @@ const ImageGalleryPage = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isSortOpen, setIsSortOpen] = useState(false);
 
-    const handlerFilterChange = useCallback((data, isReset) => {
+
+    const handlerFilterChange = useCallback((data, isReset, isFirstLoad) => {
         setFilterOptionData({...data});
-        setPage(defPage);
-        setLimit(defLimit);
-    }, []);
+        if(isInitialized) {
+            if(isReset) {   
+                setPage(defPage); 
+                setLimit(defLimit);
+            } else {
+                if(!isFirstLoad) {
+                    setPage(defPage); 
+                    setLimit(defLimit);
+                } else {
+                    setPage(loadParam('page', defPage, true));
+                    setLimit(loadParam('limit', defLimit, true));
+                }
+            }
+        }
+    }, [isInitialized, loadParam]);
+
     
 
     return (
@@ -241,7 +220,7 @@ const ImageGalleryPage = () => {
                         { defOrderSortOrderData.map((e) =>
                             <MenuItem
                                 key={e.id}
-                                value={e.id}>
+                                value={e.id}> 
                                 <IconButton
                                     size="small"
                                     color="primary"

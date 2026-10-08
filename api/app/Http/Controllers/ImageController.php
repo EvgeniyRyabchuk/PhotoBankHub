@@ -93,9 +93,17 @@ class ImageController extends Controller
         }
         // search only by tags
         if($tags) {
+            // full tag name match 
             $tagsDb = Tag::whereIn('name', $tags)->get();
             $query->join('image_tag', 'image_tag.image_id', 'images.id');
             $query->whereIn('image_tag.tag_id', $tagsDb->pluck('id'));
+            
+            // search by tags with "LIKE"
+            // $query->whereHas('tags', function ($q) use ($tags) {
+            //     foreach ($tags as $tag) {
+            //         $q->orWhere('tags.name', 'LIKE', "%{$tag}%");
+            //     }
+            // });
         }
 
         if($level) {
@@ -420,7 +428,7 @@ class ImageController extends Controller
         $creator = Auth::user()->creator;
         $image = Image::where(['creator_id' => $creator->id, 'id' => $imageId])->first();
         if(!$image) {
-            return response()->json(['message' => 'this image doesn\'t belong to you'],404);
+            return response()->json(['message' => 'this image doesn\'t belong to you'], 404);
         }
         $image->delete();
         return response()->json("OK");
@@ -574,7 +582,7 @@ class ImageController extends Controller
         $image = Image::findOrFail($imageId);
 
         // same image (by tags)
-        $tagIds = $image->tags->pluck('id');
+        $tagIds = $image->tags->pluck('id'); 
 
         $sameImageByTagsQuery = DB::table('image_tag')
             ->join('tags', 'image_tag.tag_id', 'tags.id')
@@ -583,7 +591,7 @@ class ImageController extends Controller
             ->where('images.id', '!=', $image->id)
             ->whereIn('tags.id', $tagIds)
             ->orderBy('images.created_at', 'desc')
-            ->distinct();
+            ->distinct(); 
 
         $allTags = implode(',', $image->tags->pluck('name')->toArray());
         $sameImageByTags = $sameImageByTagsQuery->take(20)->get();

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef, useMemo} from 'react';
 import moment from "moment";
 import {
     Box,
@@ -12,7 +12,7 @@ import {
     RadioGroup, Slider, TextField
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {FilterContentGrid, FilterTop, FilterWrapper, ResetBtn} from "./styled";
+import {FilterContentGrid, FilterTop, FilterWrapper, ResetBtn, BadgeWrapper} from "./styled";
 import ImageService from "../../services/ImageService";
 import DateRange from "./FilterSections/DateRange";
 import CheckBoxPicker from "./FilterSections/CheckBoxPicker";
@@ -35,13 +35,16 @@ import {
 import zIndex from "@mui/material/styles/zIndex";
 import {useSelector} from "react-redux";
 import CategoryService from "../../services/CategoryService";
-
+import Badge from './FilterSections/Badge';
+import useLoadParam from "../../hooks/useLoadParam";
 
 const GalleryFilter = ({
      isOpen,
      onFilterChange,
      onClose
 }) => {
+        console.log("Filter")
+    const loadParam = useLoadParam();
     const [searchParams, setSearchParams] = useSearchParams();
     const [defaultValues, setDefaultValues] = useState(null);
 
@@ -56,7 +59,7 @@ const GalleryFilter = ({
     const [sizeIndex, setSizeIndex] = useState(defSizeIndex);
     const [sizeList, setSizeList] = useState([]);
 
-    const [fromCreatedAt, setFromCreatedAt] = useState(new Date('1970-01-01T00:00:00'));
+    const [fromCreatedAt, setFromCreatedAt] = useState(new Date(1970, 1, 1));
     const [toCreatedAt, setToCreatedAt] = useState(new Date());
 
     // image name
@@ -69,20 +72,18 @@ const GalleryFilter = ({
 
     // image tags
     const [tags, setTags] = useState([]);
-    const debouncedTags = useDebounce(tags, 500);
+    const debouncedTags = useDebounce(tags, 1000);
 
     const [peopleCount, setPeopleCount] = useState(defPeopleCount);
     const debouncedPeopleCount = useDebounce(peopleCount, 1000);
-
-    const [peopleCountRange, setPeopleCountRange] = useState(null);
+//  useState(loadParam("peopleCount", defPeopleCount, true));
+    const [peopleCountRange, setPeopleCountRange] = useState(null)
     const [peopleCountMarks, setPeopleCountMarks] = useState([
         {
             value: 0,
             label: '0',
         }
     ]);
-
-    console.log("Filter")
 
     // model name
     const [photoModelName, setPhotoModelName] = useState('');
@@ -96,7 +97,8 @@ const GalleryFilter = ({
     const [checkBoxGenders, setCheckBoxGenders] = useState([]);
     const [checkBoxEthnicities, setCheckBoxEthnicities] = useState([]);
 
-
+    console.log(checkBoxGenders, '=================');
+    
 
     // booleans
     const [isReset, setIsReset] = useState(false);
@@ -106,6 +108,8 @@ const GalleryFilter = ({
     const [isEditorChoice, setIsEditorChoice] = useState(defIsEditorChoice);
 
     const [isInitialized, setIsInitialized] = useState(false);
+
+
 
     const createCheckBoxList = (data, searchParamName, isSimple = true) => {
         const defValues = searchParams.get(searchParamName)
@@ -163,8 +167,8 @@ const GalleryFilter = ({
         const {data} = await ImageService.getMinMaxValues();
         const newDefaultValue = {
             createdAtRange: [
-                new Date(data.createdAt[0]),
-                new Date(data.createdAt[1])
+                 new Date(data.createdAt[0]),
+                 new Date(data.createdAt[1]),
             ],
             selectedLevels: [],
             photoModelAgeRange: data.photoModelAgeRange,
@@ -173,15 +177,15 @@ const GalleryFilter = ({
 
         setDefaultValues(newDefaultValue)
 
-        setPeopleCount(newDefaultValue.peopleCountRange[0]);
+        // setPeopleCount(newDefaultValue.peopleCountRange[0]);
         setPeopleCountRange(newDefaultValue.peopleCountRange);
         setPeopleCountMarks(data.peopleCountMarks.map(e => ({ value: e, label: e }) ));
 
 
-        const searchCreatedAtRange = searchParams.get('created_at_range') &&
-            searchParams.get('created_at_range').split(searchParamSeparator);
-        const searchPhotoModelAgeRange = searchParams.get('photo_model_age_range') &&
-            searchParams.get('photo_model_age').split(searchParamSeparator);
+        const searchCreatedAtRange = searchParams.get('createdAtRange') &&
+            searchParams.get('createdAtRange').split(searchParamSeparator);
+        const searchPhotoModelAgeRange = searchParams.get('photoModelAgeRange') &&
+            searchParams.get('photoModelAgeRange').split(searchParamSeparator);
 
         if(searchPhotoModelAgeRange) {
             setPhotoModelAgeRange(searchPhotoModelAgeRange);
@@ -221,7 +225,7 @@ const GalleryFilter = ({
             id: o.id,
             name: `${o.name} (${o.ratio_side_1}:${o.ratio_side_2})`,
         }));
-        return  createCheckBoxList(fotmatted, 'orientations', false);
+        return createCheckBoxList(fotmatted, 'orientations', false);
     }
 
 
@@ -240,7 +244,7 @@ const GalleryFilter = ({
     useEffect(() => {
         if(isInitialized)
             fetchSiblingCategoriesCheckBoxList();
-    }, [categoriesIds]);
+    }, [categoriesIds, isInitialized]);
 
 
     const [ fetchInitData, isLoading, error ] = useFetching(async () => {
@@ -268,7 +272,6 @@ const GalleryFilter = ({
         const creatorName = searchParams.get('creatorName') ?? '';
         const tags = searchParams.get('tags') ? searchParams.get('tags').split(searchParamSeparator) : [];
 
-
         setIsEditorChoice(isEditorChoice == 'true' ? true : false);
 
         setLevel(level);
@@ -292,23 +295,33 @@ const GalleryFilter = ({
     useEffect(() => {
         fetchInitData();
     }, [])
-
-
+   
+    
+    const prevDataRef = useRef(null);
+    const [badges, setBadges] = useState([])
+    const [isFilterClick, setIsFilterClick] = useState(false); 
+    const [isFirstLoad, setIsFirstLoad] = useState(true); 
+    
     useEffect(() => {
         if(isInitialized) {
             let createdAtRangeParam = null;
             let photoModelAgeRangeParam = null;
-
-            if(fromCreatedAt != defaultValues.createdAtRange[0] ||
-                toCreatedAt != defaultValues.createdAtRange[1]) {
-                createdAtRangeParam = [
-                    moment(fromCreatedAt).format('DD-MM-yyyy'),
-                    moment(toCreatedAt).format('DD-MM-yyyy'),
-                ].join(searchParamSeparator);
-            }
+console.log(fromCreatedAt, typeof fromCreatedAt);
+console.log(defaultValues.createdAtRange);
+            
+if (
+    !moment(fromCreatedAt).isSame(defaultValues.createdAtRange[0], 'day') ||
+    !moment(toCreatedAt).isSame(defaultValues.createdAtRange[1], 'day')
+) {
+    createdAtRangeParam = [
+        moment(fromCreatedAt).format('YYYY-MM-DD'),
+        moment(toCreatedAt).format('YYYY-MM-DD'),
+    ].join(searchParamSeparator);
+}
+            
             if(photoModelAgeRange[0] != defaultValues.photoModelAgeRange[0]
-            && photoModelAgeRange[1] != defaultValues.photoModelAgeRange[1]) {
-                photoModelAgeRangeParam = debouncedPhotoModelAgeRange.join(searchParamSeparator)
+            || photoModelAgeRange[1] != defaultValues.photoModelAgeRange[1]) {
+                photoModelAgeRangeParam = photoModelAgeRange.join(searchParamSeparator)
             }
 
             const data = {
@@ -320,18 +333,128 @@ const GalleryFilter = ({
                 sizeIndex: sizeIndex === defSizeIndex ? null : sizeIndex,
                 isEditorChoice: isEditorChoice === defIsEditorChoice ? null : isEditorChoice,
                 createdAtRange: createdAtRangeParam,
-                name: debouncedSearchByName,
-                creatorName: debouncedSearchByAuthorName,
-                tags: debouncedTags.join(','),
-                photoModelName: debouncedPhotoModelName,
+                name: searchByName,
+                creatorName: searchByAuthorName,
+                tags: tags.join(','),
+                photoModelName: photoModelName,
                 photoModelAgeRange: photoModelAgeRangeParam,
                 genders: checkBoxGenders.filter(e => e.checked).map(e => e.name).join(searchParamSeparator),
                 ethnicities: checkBoxEthnicities.filter(e => e.checked).map(e => e.name).join(searchParamSeparator),
-                peopleCount: debouncedPeopleCount === defPeopleCount ? null : debouncedPeopleCount,
-
+                peopleCount: peopleCount === defPeopleCount ? null : peopleCount,
             };
-            onFilterChange(data, isReset);
+            console.log(data, "====================================================="); 
+            const stringifiedData = JSON.stringify(data);
+            
+           // If the filter data has NOT actually changed, do not call onFilterChange!
+            if (prevDataRef.current === stringifiedData) { 
+                return; 
+            }
+            prevDataRef.current = stringifiedData;
+   
+            setBadges(
+                [
+                    {   
+                        name: "categoriesIds",
+                        label: "Category",
+                        value: data.categoriesIds === "" ? null : 
+                            checkBoxCategories.filter(e => e.checked).map(e => e.name).join(searchParamSeparator),                                                               
+                        onRemove: () => setCheckBoxCategories(prev => prev.map(e => ({ ...e, checked: false })))   
+                    },
+                    {   
+                        name: "isModelExist",
+                        label: "Model Included",
+                        value: data.isModelExist === defIsModelExist ? null : data.isModelExist,                   
+                        onRemove: () => setIsModelExist(defIsModelExist)   
+                    },
+                    {   
+                        name: "level",
+                        label: "Level",
+                        value: data.level === defLevel ? null : data.level,              
+                        onRemove: () => setLevel(defLevel)   
+                    },
+                    {   
+                        name: "orientationsIds",
+                        label: "Orientation",
+                        value: data.orientationsIds === "" ? null : 
+                        checkBoxOrientations.filter(e => e.checked).map(e => e.name).join(searchParamSeparator),    
+                        onRemove: () => setCheckBoxOrientations(prev => prev.map(e => ({ ...e, checked: false })))  
+                    },
+                    {   
+                        name: "sizeIndex",
+                        label: "Size",
+                        value: data.sizeIndex === defSizeIndex ? null : data.sizeIndex,          
+                        onRemove: () => setSizeIndex(defSizeIndex)  
+                    },
+                    {   
+                        name: "isEditorChoice",
+                        label: "Editor's Choice",
+                        value: data.isEditorChoice === defIsEditorChoice ? null : data.isEditorChoice,     
+                        onRemove: () => setIsEditorChoice(defIsEditorChoice)   
+                    },
+                    {   
+                        name: "createdAtRange",
+                        label: "Created Date",
+                        value: data.createdAtRange,     
+                        onRemove: () => {
+                            setFromCreatedAt(defaultValues.createdAtRange[0]); 
+                            setToCreatedAt(defaultValues.createdAtRange[1]); 
+                        }   
+                    },
+                    {   
+                        name: "name",
+                        label: "Name",
+                        value: data.name === "" ? null : data.name,               
+                        onRemove: () => setSearchByName('')   
+                    },
+                    {   
+                        name: "creatorName",
+                        label: "Author",
+                        value: data.creatorName === "" ? null : data.creatorName,        
+                        onRemove: () => setSearchByAuthorName('')   
+                    },
+                    {   
+                        name: "tags",
+                        label: "Tags",
+                        value: data.tags === "" ? null : data.tags.split(searchParamSeparator).map(t => `#${t}`).join(searchParamSeparator),               
+                        onRemove: () => setTags([])   
+                    },
+                    {   
+                        name: "photoModelName",
+                        label: "Model Name",
+                        value: data.photoModelName === "" ? null : data.photoModelName,     
+                        onRemove: () => setPhotoModelName('')   
+                    },
+                    {   
+                        name: "photoModelAgeRange",
+                        label: "Model Age",
+                        value: data.photoModelAgeRange === defaultValues.photoModelAgeRange.join(searchParamSeparator) ? null : data.photoModelAgeRange, 
+                        onRemove: () => setPhotoModelAgeRange(defaultValues.photoModelAgeRange) 
+                    },
+                    {   
+                        name: "genders",
+                        label: "Gender",
+                        value: data.genders === "" ? null : data.genders,            
+                        onRemove: () => setCheckBoxGenders(prev => prev.map(e => ({ ...e, checked: false })))   
+                    },
+                    {   
+                        name: "ethnicities",
+                        label: "Ethnicity",
+                        value: data.ethnicities === "" ? null : data.ethnicities,        
+                        onRemove: () => setCheckBoxEthnicities(prev => prev.map(e => ({ ...e, checked: false })))   
+                    },
+                    {   
+                        name: "peopleCount",
+                        label: "People Count",
+                        value: data.peopleCount === defPeopleCount ? null : data.peopleCount, 
+                        onRemove: () => setPeopleCount(defPeopleCount) 
+                    }, 
+                ].filter(badge => badge.value !== null && badge.value !== undefined && badge.value !== "")
+            );
+  
+            onFilterChange(data, isReset, isFirstLoad); 
             if(isReset) setIsReset(false);
+            // if(isFilterClick) setIsReset(false);
+            setIsFirstLoad(false); 
         }
     }, [
         checkBoxCategories,
@@ -347,15 +470,17 @@ const GalleryFilter = ({
 
         debouncedSearchByName,
         debouncedSearchByAuthorName,
-        debouncedTags,
+        debouncedTags, //
 
         debouncedPhotoModelName,
-        debouncedPhotoModelAgeRange,
+        debouncedPhotoModelAgeRange, // 
         checkBoxGenders,
         checkBoxEthnicities,
+        searchParams
 
     ]);
-
+    console.log(defaultValues, "def val");
+    
     const resetToDefault = () => {
         setIsEditorChoice(false);
         setLevel(defLevel);
@@ -378,14 +503,24 @@ const GalleryFilter = ({
         setIsReset(true);
     }
 
+    console.log(fromCreatedAt);
+    console.log(toCreatedAt); 
+    
+    
 
     return (
-        <FilterWrapper isOpen={isOpen}>
+        <FilterWrapper isOpen={isOpen} onClick={() => setIsFilterClick(true)}>
             <FilterTop>
+        
                 <ResetBtn variant='contained' onClick={resetToDefault}>
                     Reset
                 </ResetBtn>
-
+                <BadgeWrapper>
+                    {/* Removable Tag */}
+                    {badges.map(badge => 
+                        <Badge variant="default" removable onRemove={badge.onRemove}>{badge.label}: {badge.value}</Badge>
+                    )}
+                </BadgeWrapper>
                 <FormGroup>
                     <FormControlLabel
                         control={<Checkbox
@@ -408,11 +543,6 @@ const GalleryFilter = ({
                     <CircularProgress /> :
                     <FilterContentGrid container spacing={3}>
                         <Grid item md={4} xs={12}>
-                            {/*<CheckBoxPicker*/}
-                            {/*    title='Access Levels'*/}
-                            {/*    checkBoxList={checkBoxLevels}*/}
-                            {/*    setCheckBoxList={setCheckBoxLevels}*/}
-                            {/*/>*/}
                             <FilterSectionLayout title='Levels'>
                                 <FormControl>
                                     <FormLabel id="demo-row-radio-buttons-group-label">
@@ -638,12 +768,15 @@ const GalleryFilter = ({
                                     }}
                                 />
                             </FilterSectionLayout>
-
-                            <CheckBoxPicker
-                                title='Categories'
-                                checkBoxList={checkBoxCategories}
-                                setCheckBoxList={setCheckBoxCategories}
-                            />
+                            
+                            { checkBoxCategories && checkBoxCategories.length > 0 &&
+                               <CheckBoxPicker
+                                    title='Categories'
+                                    checkBoxList={checkBoxCategories}
+                                    setCheckBoxList={setCheckBoxCategories}
+                                />  
+                            }
+                         
                         </Grid>
                     </FilterContentGrid>
             }

@@ -16,8 +16,19 @@ const FilterTop = styled(Box)(() => ({
     display: 'flex',
     position: 'relative',
     justifyContent: 'space-between',
-    padding: '0 10px'
+    padding: '0 10px',
+    flexWrap: "wrap"
 }));
+
+const BadgeWrapper = styled(Box)(() => ({ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    flexWrap: 'wrap', 
+    maxWidth: '800px' 
+}));
+
+
 
 const FilterContentGrid = styled(Grid)(() => ({
     padding: '15px',
@@ -37,5 +48,6 @@ export {
     FilterWrapper,
     FilterTop,
     FilterContentGrid,
-    ResetBtn
+    ResetBtn,
+    BadgeWrapper
 }
